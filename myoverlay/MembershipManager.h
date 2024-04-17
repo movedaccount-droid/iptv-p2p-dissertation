@@ -39,16 +39,15 @@ public:
 
     // timers, public for checking in parent
     cMessage *resubscription_timer;
+    cMessage *unsubscription_timer;
     cMessage *send_heartbeat_timer;
     cMessage *no_heartbeat_timer;
 
     // lifecycle functions
     void init(Node* p, int cin, int scr, int sch, int schf);
     void join_overlay();
-    void contact_deputy_and_enter_network(TransportAddress deputy);
     void resubscribe();
     void unsubscribe();
-    void gossip_and_unsubscribe_failed_partner(TransportAddress failing);
     void send_heartbeats();
     void no_heartbeat();
     void leave_overlay();
@@ -59,13 +58,6 @@ public:
     void insert_mcache_entry(int seq_num, TransportAddress tad, int num_partner, simtime_t ttl);
     void remove_mcache_entry(TransportAddress tad);
     void remove_inview_entry(TransportAddress tad);
-
-    // GET DEPUTY MESSAGES // TCP
-    // gets deputy from origin node
-    void send_get_deputy_message(TransportAddress tad);
-    void receive_get_deputy_message_and_respond(GetDeputyCall* get_deputy_call);
-    void timeout_get_deputy_response(GetDeputyCall* get_deputy_call);
-    void receive_get_deputy_response(GetDeputyResponse* get_deputy_response);
 
     // MEMBERSHIP MESSAGES // UDP
     // advertises existence of node to recipients
@@ -95,12 +87,6 @@ public:
     void send_unsubscribe_message(TransportAddress tad, bool inview, TransportAddress replacement = TransportAddress());
     void receive_unsubscribe_message(Unsubscription* unsubscription);
 
-    // GOSSIPED UNSUBSCRIBE MESSAGES // UDP
-    // . okay. . Sent on Behalf of Failing Nodes when there has been no BM or Packet Transfer ???? in the . partner manager?? and no the fucking.  the fucking mcache???/
-    // and Gossiped Similarly to SCAMP ?????????? What the fuck are you talking about
-    void send_gossiped_unsubscribe_message(TransportAddress tad, TransportAddress failing);
-    void receive_gossiped_unsubscribe_message(GossipedUnsubscription* gossiped_unsubscription);
-
     // HEARTBEAT MESSAGES // UDP
     // sent to nodes to inform that their neighbours are still alive.
     // if no heartbeat is received in some time, a node will resubscribe
@@ -112,7 +98,7 @@ public:
         mCache(),
         seq_num(0),
         c()
-    { resubscription_timer = NULL; send_heartbeat_timer = NULL; no_heartbeat_timer = NULL; };
+    { resubscription_timer = NULL; unsubscription_timer = NULL; send_heartbeat_timer = NULL; no_heartbeat_timer = NULL; };
 
     ~MembershipManager() {};
 };

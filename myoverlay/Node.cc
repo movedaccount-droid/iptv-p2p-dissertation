@@ -44,7 +44,6 @@ void Node::joinOverlay() {
 
 // called at overlay leave time
 void Node::finishOverlay() {
-    leaving = true;
     membership_manager.leave_overlay();
     setOverlayReady(false);
 }
@@ -54,14 +53,13 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
     if (!leaving) {
         if (Membership* membership = dynamic_cast<Membership*>(msg)) {
             membership_manager.receive_membership_message(membership);
-        } else if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
+        }
+        if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
             membership_manager.receive_heartbeat_message(heartbeat);
         }
     }
     if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
         membership_manager.receive_unsubscribe_message(unsubscription);
-    } else if (GossipedUnsubscription* gossiped_unsubscription = dynamic_cast<GossipedUnsubscription*>(msg)) {
-        membership_manager.receive_gossiped_unsubscribe_message(gossiped_unsubscription);
     }
     delete msg;
 }
@@ -70,14 +68,8 @@ bool Node::handleRpcCall(BaseCallMessage* msg) {
     if (leaving) return true;
     RPC_SWITCH_START(msg);
     RPC_ON_CALL(Inview) {
-        membership_manager.receive_inview_message_and_respond(_InviewCall);
+        membership_manager.receive_inview_message_and_respond((InviewCall*)msg);
         RPC_HANDLED = true;
-        break;
-    }
-    RPC_ON_CALL(GetDeputy) {
-        membership_manager.receive_get_deputy_message_and_respond(_GetDeputyCall);
-        RPC_HANDLED = true;
-        break;
     }
     RPC_SWITCH_END();
     return RPC_HANDLED;
@@ -92,12 +84,6 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
     RPC_ON_RESPONSE(Inview) {
         membership_manager.receive_inview_ack();
         RPC_HANDLED = true;
-        break;
-    }
-    RPC_ON_RESPONSE(GetDeputy) {
-        membership_manager.receive_get_deputy_response(_GetDeputyResponse);
-        RPC_HANDLED = true;
-        break;
     }
     RPC_SWITCH_END();
 }
@@ -109,14 +95,8 @@ void Node::handleRpcTimeout(BaseCallMessage* msg,
     if (leaving) return;
     RPC_SWITCH_START(msg);
     RPC_ON_CALL(Inview) {
-        membership_manager.timeout_inview_ack(_InviewCall);
+        membership_manager.timeout_inview_ack((InviewCall*)msg);
         RPC_HANDLED = true;
-        break;
-    }
-    RPC_ON_CALL(GetDeputy) {
-        membership_manager.timeout_get_deputy_response(_GetDeputyCall);
-        RPC_HANDLED = true;
-        break;
     }
     RPC_SWITCH_END();
 }
@@ -125,6 +105,10 @@ void Node::handleTimerEvent(cMessage *msg) {
     if (leaving) return;
     if (msg == membership_manager.resubscription_timer) {
         membership_manager.resubscribe();
+    } else if (msg == membership_manager.unsubscription_timer) {
+        // TODO: move this switch somewhere else
+        leaving = true;
+        membership_manager.unsubscribe();
     } else if (msg == membership_manager.send_heartbeat_timer) {
         membership_manager.send_heartbeats();
     } else if (msg == membership_manager.no_heartbeat_timer) {

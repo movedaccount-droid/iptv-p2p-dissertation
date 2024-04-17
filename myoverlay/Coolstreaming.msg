@@ -62,21 +62,5 @@ packet Unsubscription extends BaseOverlayMessage {
 	bool inview;
 }
 
-// coolstreaming-extended scamp gossiped unsubscription message .
-// i feel the need to again mentino that this is a Very Fucking Bad Idea
-packet GossipedUnsubscription extends BaseOverlayMessage {
-    TransportAddress from;
-    TransportAddress failing;
-}
-
 // scamp/mcache heartbeat message
 packet Heartbeat extends BaseOverlayMessage {}
-
-// coolstreaming origin deputy list request message
-packet GetDeputyCall extends BaseCallMessage {
-	TransportAddress dest;
-}
-
-packet GetDeputyResponse extends BaseResponseMessage {
- 	TransportAddress deputy;   
-}
