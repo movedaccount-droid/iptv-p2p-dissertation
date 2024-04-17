@@ -1,0 +1,39 @@
+1. download and unpack omnet 5.4.2
+https://omnetpp.org/download-items/omnetpp/omnetpp-542.html
+
+2. install dependencies. i installed everything available
+from both the current version of the install guide and the
+guide that comes with the download
+https://doc.omnetpp.org/omnetpp/InstallGuide.pdf
+
+3. make and install via configure
+./configure WITH_OSG=no WITH_OSGEARTH=no
+
+4. add omnet "bins" folder to path
+
+5. attempt to launch omnet. if needed, update ide config
+https://stackoverflow.com/questions/54093703/omnet-5-4-1-running-error-on-ubuntu-18-10-after-succesfull-installation
+
+6. download and unpack inet and oversim to any location
+https://github.com/inet-framework/inet/releases/tag/v3.6.8
+https://github.com/inet-framework/oversim/releases/tag/v20190424
+
+7. open omnet. when prompted, do not automatically install inet
+or any other options.
+
+8. file -> import -> general -> existing into workspace -> next
+-> select your unpacked inet directory -> finish
+
+9. repeat for oversim directory
+
+10. ctrl+b to check initial build
+
+11. copy the contents of this directory over oversim directory
+
+12. hit f11 or run with omnetpp.ini focused in the editor. select
+"myoverlay" or "myapplication" to run
+
+HostOverlay and MyOverlay under src/overlays are the most edited
+files. to enable a more realistic underlay, uncomment the
+commented lines under the myoverlay listing in omnetpp.ini and
+rebuild
