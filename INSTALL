@@ -28,12 +28,12 @@ or any other options.
 
 10. ctrl+b to check initial build
 
-11. copy the contents of this directory over oversim directory
+11. copy the contents of this directory:
+oversim-20190424/src/overlay/myoverlay
+oversim-20190424/simulations/omnetpp.ini
 
 12. hit f11 or run with omnetpp.ini focused in the editor. select
 "myoverlay" or "myapplication" to run
 
-HostOverlay and MyOverlay under src/overlays are the most edited
-files. to enable a more realistic underlay, uncomment the
-commented lines under the myoverlay listing in omnetpp.ini and
-rebuild
+HostOverlay and MyOverlay are the old build serving example of. some kind of protocol
+Node is the coolstreaming implementation
