@@ -20,15 +20,17 @@
 
 // cplusplus {{
 #include <chrono>
+#include <vector>
 #include "common/NodeHandle.h"
 #include "common/OverlayKey.h"
 #include "common/CommonMessages_m.h"
 #include "common/TransportAddress.h"
 typedef std::chrono::duration<int,std::milli> duration_ms;
+typedef std::vector<TransportAddress> TadVec;
 // }}
 
 /**
- * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:39</tt> by nedtool.
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:42</tt> by nedtool.
  * <pre>
  * // scamp/mcache membership message
  * packet Membership extends BaseOverlayMessage
@@ -92,7 +94,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Membership& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Membership& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:50</tt> by nedtool.
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:53</tt> by nedtool.
  * <pre>
  * // scamp/inview membership message
  * packet InviewCall extends BaseCallMessage
@@ -137,7 +139,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const InviewCall& obj) {obj
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, InviewCall& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:56</tt> by nedtool.
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:59</tt> by nedtool.
  * <pre>
  * // scamp/inview insertion acknowledgement
  * packet InviewResponse extends BaseResponseMessage
@@ -172,7 +174,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const InviewResponse& obj) 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, InviewResponse& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:59</tt> by nedtool.
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:62</tt> by nedtool.
  * <pre>
  * // scamp/mcache unsubscription message
  * packet Unsubscription extends BaseOverlayMessage
@@ -221,7 +223,53 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Unsubscription& obj) 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Unsubscription& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:66</tt> by nedtool.
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:70</tt> by nedtool.
+ * <pre>
+ * // coolstreaming-extended scamp gossiped unsubscription message .
+ * // i feel the need to again mentino that this is a Very Fucking Bad Idea
+ * packet GossipedUnsubscription extends BaseOverlayMessage
+ * {
+ *     TransportAddress from;
+ *     TransportAddress failing;
+ * }
+ * </pre>
+ */
+class GossipedUnsubscription : public ::BaseOverlayMessage
+{
+  protected:
+    TransportAddress from;
+    TransportAddress failing;
+
+  private:
+    void copy(const GossipedUnsubscription& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const GossipedUnsubscription&);
+
+  public:
+    GossipedUnsubscription(const char *name=nullptr, short kind=0);
+    GossipedUnsubscription(const GossipedUnsubscription& other);
+    virtual ~GossipedUnsubscription();
+    GossipedUnsubscription& operator=(const GossipedUnsubscription& other);
+    virtual GossipedUnsubscription *dup() const override {return new GossipedUnsubscription(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<GossipedUnsubscription*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
+    virtual TransportAddress& getFailing();
+    virtual const TransportAddress& getFailing() const {return const_cast<GossipedUnsubscription*>(this)->getFailing();}
+    virtual void setFailing(const TransportAddress& failing);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const GossipedUnsubscription& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GossipedUnsubscription& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:76</tt> by nedtool.
  * <pre>
  * // scamp/mcache heartbeat message
  * packet Heartbeat extends BaseOverlayMessage
@@ -254,6 +302,203 @@ class Heartbeat : public ::BaseOverlayMessage
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const Heartbeat& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Heartbeat& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:79</tt> by nedtool.
+ * <pre>
+ * // coolstreaming origin deputy list request message
+ * packet GetDeputyCall extends BaseCallMessage
+ * {
+ *     TransportAddress dest;
+ * }
+ * </pre>
+ */
+class GetDeputyCall : public ::BaseCallMessage
+{
+  protected:
+    TransportAddress dest;
+
+  private:
+    void copy(const GetDeputyCall& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const GetDeputyCall&);
+
+  public:
+    GetDeputyCall(const char *name=nullptr, short kind=0);
+    GetDeputyCall(const GetDeputyCall& other);
+    virtual ~GetDeputyCall();
+    GetDeputyCall& operator=(const GetDeputyCall& other);
+    virtual GetDeputyCall *dup() const override {return new GetDeputyCall(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getDest();
+    virtual const TransportAddress& getDest() const {return const_cast<GetDeputyCall*>(this)->getDest();}
+    virtual void setDest(const TransportAddress& dest);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetDeputyCall& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetDeputyCall& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:83</tt> by nedtool.
+ * <pre>
+ * packet GetDeputyResponse extends BaseResponseMessage
+ * {
+ *     TransportAddress deputy;
+ * }
+ * </pre>
+ */
+class GetDeputyResponse : public ::BaseResponseMessage
+{
+  protected:
+    TransportAddress deputy;
+
+  private:
+    void copy(const GetDeputyResponse& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const GetDeputyResponse&);
+
+  public:
+    GetDeputyResponse(const char *name=nullptr, short kind=0);
+    GetDeputyResponse(const GetDeputyResponse& other);
+    virtual ~GetDeputyResponse();
+    GetDeputyResponse& operator=(const GetDeputyResponse& other);
+    virtual GetDeputyResponse *dup() const override {return new GetDeputyResponse(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getDeputy();
+    virtual const TransportAddress& getDeputy() const {return const_cast<GetDeputyResponse*>(this)->getDeputy();}
+    virtual void setDeputy(const TransportAddress& deputy);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetDeputyResponse& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetDeputyResponse& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:88</tt> by nedtool.
+ * <pre>
+ * // coolstreaming deputy partner list request message
+ * packet GetCandidatePartnersCall extends BaseCallMessage
+ * {
+ *     TransportAddress from;
+ * }
+ * </pre>
+ */
+class GetCandidatePartnersCall : public ::BaseCallMessage
+{
+  protected:
+    TransportAddress from;
+
+  private:
+    void copy(const GetCandidatePartnersCall& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const GetCandidatePartnersCall&);
+
+  public:
+    GetCandidatePartnersCall(const char *name=nullptr, short kind=0);
+    GetCandidatePartnersCall(const GetCandidatePartnersCall& other);
+    virtual ~GetCandidatePartnersCall();
+    GetCandidatePartnersCall& operator=(const GetCandidatePartnersCall& other);
+    virtual GetCandidatePartnersCall *dup() const override {return new GetCandidatePartnersCall(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<GetCandidatePartnersCall*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetCandidatePartnersCall& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetCandidatePartnersCall& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:92</tt> by nedtool.
+ * <pre>
+ * packet GetCandidatePartnersResponse extends BaseResponseMessage
+ * {
+ *     TadVec candidates;
+ * }
+ * </pre>
+ */
+class GetCandidatePartnersResponse : public ::BaseResponseMessage
+{
+  protected:
+    TadVec candidates;
+
+  private:
+    void copy(const GetCandidatePartnersResponse& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const GetCandidatePartnersResponse&);
+
+  public:
+    GetCandidatePartnersResponse(const char *name=nullptr, short kind=0);
+    GetCandidatePartnersResponse(const GetCandidatePartnersResponse& other);
+    virtual ~GetCandidatePartnersResponse();
+    GetCandidatePartnersResponse& operator=(const GetCandidatePartnersResponse& other);
+    virtual GetCandidatePartnersResponse *dup() const override {return new GetCandidatePartnersResponse(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TadVec& getCandidates();
+    virtual const TadVec& getCandidates() const {return const_cast<GetCandidatePartnersResponse*>(this)->getCandidates();}
+    virtual void setCandidates(const TadVec& candidates);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetCandidatePartnersResponse& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetCandidatePartnersResponse& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:96</tt> by nedtool.
+ * <pre>
+ * packet Partnership extends BaseOverlayMessage
+ * {
+ *     TransportAddress from;
+ * }
+ * </pre>
+ */
+class Partnership : public ::BaseOverlayMessage
+{
+  protected:
+    TransportAddress from;
+
+  private:
+    void copy(const Partnership& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const Partnership&);
+
+  public:
+    Partnership(const char *name=nullptr, short kind=0);
+    Partnership(const Partnership& other);
+    virtual ~Partnership();
+    Partnership& operator=(const Partnership& other);
+    virtual Partnership *dup() const override {return new Partnership(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<Partnership*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const Partnership& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Partnership& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __COOLSTREAMING_M_H

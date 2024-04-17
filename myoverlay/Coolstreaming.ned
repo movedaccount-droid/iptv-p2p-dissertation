@@ -34,6 +34,10 @@ simple Node extends BaseOverlay
         int scamp_resubscription_interval; // delay before resubscriptions, sub ttl
     	int scamp_heartbeat_interval; // delay between heartbeats being sent
    	 	int scamp_heartbeat_failure_interval; // delay between received heartbeats before resubbing
+   	 	
+   	 	int bm_exchange_interval; // delay between buffermap being sent
+   	 	int M; // target number of partners held by a node
+   	 	
         bool origin; // if this node should act as the origin
 }
 

@@ -25,7 +25,7 @@
 class Node : public BaseOverlay {
 
     // node components - see paper fig. 1
-//    PartnershipManager partnership_manager;
+    PartnershipManager partnership_manager;
     MembershipManager membership_manager;
 //    Buffer buffer;
 //    Scheduler scheduler;

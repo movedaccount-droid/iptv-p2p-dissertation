@@ -20,16 +20,19 @@
 
 cplusplus {{
 #include <chrono>
+#include <vector>
 #include "common/NodeHandle.h"
 #include "common/OverlayKey.h"
 #include "common/CommonMessages_m.h"
 #include "common/TransportAddress.h"
 typedef std::chrono::duration<int,std::milli> duration_ms;
+typedef std::vector<TransportAddress> TadVec;
 }}
 class noncobject NodeHandle;
 class noncobject OverlayKey;
 class noncobject TransportAddress;
 class noncobject duration_ms;
+class noncobject TadVec;
 
 class BaseOverlayMessage;
 class BaseCallMessage;
@@ -62,5 +65,34 @@ packet Unsubscription extends BaseOverlayMessage {
 	bool inview;
 }
 
+// coolstreaming-extended scamp gossiped unsubscription message .
+// i feel the need to again mentino that this is a Very Fucking Bad Idea
+packet GossipedUnsubscription extends BaseOverlayMessage {
+    TransportAddress from;
+    TransportAddress failing;
+}
+
 // scamp/mcache heartbeat message
 packet Heartbeat extends BaseOverlayMessage {}
+
+// coolstreaming origin deputy list request message
+packet GetDeputyCall extends BaseCallMessage {
+	TransportAddress dest;
+}
+
+packet GetDeputyResponse extends BaseResponseMessage {
+ 	TransportAddress deputy;   
+}
+
+// coolstreaming deputy partner list request message
+packet GetCandidatePartnersCall extends BaseCallMessage {
+	TransportAddress from;
+}
+
+packet GetCandidatePartnersResponse extends BaseResponseMessage {
+ 	TadVec candidates;   
+}
+
+packet Partnership extends BaseOverlayMessage {
+	TransportAddress from;
+}
