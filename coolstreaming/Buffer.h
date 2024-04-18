@@ -37,6 +37,7 @@ public:
     void set_playout_index(int pind);
     void start();
     double percent_filled();
+    std::unordered_set<int> get_expected_set(); // return the "inverse" of our buffer
     void receive(int block); // receive a block
     void playout(); // playout a block
 

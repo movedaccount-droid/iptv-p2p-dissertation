@@ -52,6 +52,16 @@ double Buffer::percent_filled() {
     return buffer.size() / buffer_size;
 }
 
+std::unordered_set<int> Buffer::get_expected_set() {
+    std::unordered_set<int> expected_set;
+    for (int i = playout_index; i < playout_index + buffer_size; ++i) {
+        if (buffer.find(i) == buffer.end()) {
+            expected_set.insert(i);
+        }
+    }
+    return expected_set;
+}
+
 void Buffer::receive(int block) {
     if (buffer.find(block) != buffer.end()) {
         // TODO: this block was wasted. stats or whatever

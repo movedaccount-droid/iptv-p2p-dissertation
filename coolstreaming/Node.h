@@ -30,7 +30,7 @@ class Node : public BaseOverlay {
     PartnershipManager partnership_manager;
     MembershipManager membership_manager;
     Buffer buffer;
-    // Scheduler scheduler;
+    Scheduler scheduler;
 
     // overlay routines
     void initializeOverlay(int stage); // called at overlay construction

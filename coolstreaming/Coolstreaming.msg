@@ -21,18 +21,21 @@
 cplusplus {{
 #include <chrono>
 #include <vector>
+#include <unordered_set>
 #include "common/NodeHandle.h"
 #include "common/OverlayKey.h"
 #include "common/CommonMessages_m.h"
 #include "common/TransportAddress.h"
 typedef std::chrono::duration<int,std::milli> duration_ms;
 typedef std::vector<TransportAddress> TadVec;
+typedef std::unordered_set<int> BM;
 }}
 class noncobject NodeHandle;
 class noncobject OverlayKey;
 class noncobject TransportAddress;
 class noncobject duration_ms;
 class noncobject TadVec;
+class noncobject BM;
 
 class BaseOverlayMessage;
 class BaseCallMessage;
@@ -94,10 +97,25 @@ packet GetCandidatePartnersResponse extends BaseResponseMessage {
  	TadVec candidates;   
 }
 
+// coolstreaming partnership initiation/ending
 packet Partnership extends BaseOverlayMessage {
 	TransportAddress from;
 }
 
 packet PartnershipEnd extends BaseOverlayMessage {
     TransportAddress from;
+}
+
+// coolstreaming buffermap exchange
+packet BufferMap extends BaseOverlayMessage {
+ 	BM buffer_map;
+}
+
+// coolstreaming block request
+packet BlockCall extends BaseCallMessage {
+ 	BM blocks;   
+}
+
+packet BlockResponse extends BaseResponseMessage {
+ 	int index;   
 }
