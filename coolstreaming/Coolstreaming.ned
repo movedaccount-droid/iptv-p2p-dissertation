@@ -21,20 +21,34 @@
 //
 
 
-package oversim.overlay.myoverlay;
+package oversim.overlay.coolstreaming;
 
 import oversim.common.BaseOverlay;
 import oversim.common.IOverlay;
 
-simple MyOverlay extends BaseOverlay
+simple Node extends BaseOverlay
 {
     parameters:
-        @class(MyOverlay);
-        bool enableDrops;       // do we enable random packet drops for testing?
-        double dropChance;      // chance that we drop a packet
+        @class(Node);
+        int c; // SCAMP constant determining proportion of tolerated failures
+        int scamp_resubscription_interval; // delay before resubscriptions, sub ttl
+    	int scamp_heartbeat_interval; // delay between heartbeats being sent
+   	 	int scamp_heartbeat_failure_interval; // delay between received heartbeats before resubbing
+   	 	
+   	 	int switch_interval; // delay between scoring and trying out new partners from mcache
+   	 	int M; // target number of partners held by a node
+   	 	
+   	 	int playout_interval; // duration between blocks
+    	int buffer_size; // stored blocks in buffer. probably just 120
+    	int start_threshold; // percentage filled before we start playback
+   	 	
+   	 	int bm_exchange_interval; // delay between buffermap being sent
+   	 	
+        bool origin; // if this node should act as the origin
+        string arrow_type; // which arrow type to display
 }
 
-module MyOverlayModules like IOverlay
+module NodeModules like IOverlay
 {
     gates:
         input udpIn;   // gate from the UDP layer
@@ -45,7 +59,7 @@ module MyOverlayModules like IOverlay
         output appOut;    // gate to the application
 
     submodules:
-        overlay: MyOverlay;
+        overlay: Node;
 
     connections allowunconnected:
         udpIn --> overlay.udpIn;

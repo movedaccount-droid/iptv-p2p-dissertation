@@ -13,14 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include "../coolstreaming/MembershipManager.h"
+
 #include <algorithm>
 #include <cstdlib>
 #include <random>
 #include <vector>
-#include "MembershipManager.h"
-#include "mCacheEntry.h"
-#include "Node.h"
-#include "Coolstreaming_m.h"
+
+#include "../coolstreaming/Coolstreaming_m.h"
+#include "../coolstreaming/mCacheEntry.h"
+#include "../coolstreaming/Node.h"
 
 // utility functions
 #define setOrReplace(timer, name, offset) if (timer != NULL && timer->isScheduled()) { \

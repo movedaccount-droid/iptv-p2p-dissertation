@@ -13,13 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_BUFFERMAP_H_
-#define OVERLAY_MYOVERLAY_BUFFERMAP_H_
+#include "../coolstreaming/mCacheEntry.h"
 
-class BufferMap {
-public:
-    BufferMap();
-    virtual ~BufferMap();
-};
-
-#endif /* OVERLAY_MYOVERLAY_BUFFERMAP_H_ */
+bool mCacheEntry::expired() {
+    return ttl - (simTime() - last_update_time) < SimTime().dbl();
+}

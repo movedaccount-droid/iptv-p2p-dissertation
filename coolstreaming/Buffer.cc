@@ -13,8 +13,9 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "Buffer.h"
-#include "Node.h"
+#include "../coolstreaming/Buffer.h"
+
+#include "../coolstreaming/Node.h"
 
 #define setOrReplace(timer, name, offset) if (timer != NULL && timer->isScheduled()) { \
     parent->cancelEvent(timer); \

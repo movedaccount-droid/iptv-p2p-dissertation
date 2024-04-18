@@ -13,13 +13,38 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_SCHEDULER_H_
-#define OVERLAY_MYOVERLAY_SCHEDULER_H_
+#include "../coolstreaming/Coolstreaming_m.h"
+#include "../coolstreaming/MembershipManager.h"
 
-class Scheduler {
+#ifndef OVERLAY_MYOVERLAY_MCACHEENTRY_H_
+#define OVERLAY_MYOVERLAY_MCACHEENTRY_H_
+
+class mCacheEntry {
 public:
-    Scheduler();
-    virtual ~Scheduler();
+
+    int seq_num;
+    TransportAddress tad;
+    int num_partner;
+    simtime_t ttl;
+    simtime_t last_update_time;
+
+    bool expired();
+
+    mCacheEntry(
+            int s,
+            TransportAddress t,
+            int np,
+            simtime_t ttl):
+
+            seq_num(s),
+            tad(t),
+            num_partner(np),
+            ttl(ttl),
+            last_update_time(simTime())
+    {};
+
+    ~mCacheEntry() {};
+
 };
 
-#endif /* OVERLAY_MYOVERLAY_SCHEDULER_H_ */
+#endif /* OVERLAY_MYOVERLAY_MCACHEENTRY_H_ */

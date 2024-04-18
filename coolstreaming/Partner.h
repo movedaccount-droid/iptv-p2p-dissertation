@@ -13,21 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "PartnerEntry.h"
-#include <cassert>
-#include <iostream>
-#include <set>
-#include <string>
-#include <tuple>
+#ifndef OVERLAY_COOLSTREAMING_PARTNER_H_
+#define OVERLAY_COOLSTREAMING_PARTNER_H_
 
-void PartnerEntry::add_sent() {
-    sent++;
-}
+class Partner {
+public:
+    Partner();
+    virtual ~Partner();
+};
 
-void PartnerEntry::add_retrieved() {
-    retrieved++;
-}
-
-bool operator<(const PartnerEntry& l, const PartnerEntry& r) {
-    return l.score() < r.score();
-}
+#endif /* OVERLAY_COOLSTREAMING_PARTNER_H_ */

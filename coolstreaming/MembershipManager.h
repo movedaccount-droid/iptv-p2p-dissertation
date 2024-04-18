@@ -13,12 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_MEMBERSHIPMANAGER_H_
-#define OVERLAY_MYOVERLAY_MEMBERSHIPMANAGER_H_
+#ifndef OVERLAY_COOLSTREAMING_MEMBERSHIPMANAGER_H_
+#define OVERLAY_COOLSTREAMING_MEMBERSHIPMANAGER_H_
 
 #include <chrono>
 #include <unordered_map>
-#include "mCacheEntry.h"
+
+#include "../coolstreaming/mCacheEntry.h"
 #include "common/TransportAddress.h"
 
 class Node;
@@ -120,4 +121,4 @@ public:
     ~MembershipManager() {};
 };
 
-#endif /* OVERLAY_MYOVERLAY_MEMBERSHIPMANAGER_H_ */
+#endif /* OVERLAY_COOLSTREAMING_MEMBERSHIPMANAGER_H_ */

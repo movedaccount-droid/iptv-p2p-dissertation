@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_BUFFER_H_
-#define OVERLAY_MYOVERLAY_BUFFER_H_
+#ifndef OVERLAY_COOLSTREAMING_BUFFER_H_
+#define OVERLAY_COOLSTREAMING_BUFFER_H_
 
 #include <unordered_set>
 #include "common/TransportAddress.h"
@@ -43,4 +43,4 @@ public:
     virtual ~Buffer() { playout_timer = NULL; };
 };
 
-#endif /* OVERLAY_MYOVERLAY_BUFFER_H_ */
+#endif /* OVERLAY_COOLSTREAMING_BUFFER_H_ */

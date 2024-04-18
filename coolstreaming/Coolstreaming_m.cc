@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "Coolstreaming_m.h"
+#include "../coolstreaming/Coolstreaming_m.h"
 
 namespace omnetpp {
 

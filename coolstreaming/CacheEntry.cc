@@ -13,14 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "Partner.h"
+#include "../coolstreaming/CacheEntry.h"
 
-Partner::Partner() {
+CacheEntry::CacheEntry() {
     // TODO Auto-generated constructor stub
 
 }
 
-Partner::~Partner() {
+CacheEntry::~CacheEntry() {
     // TODO Auto-generated destructor stub
 }
 

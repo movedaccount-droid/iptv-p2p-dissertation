@@ -13,14 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "BufferMap.h"
+#include "../coolstreaming/Partner.h"
 
-BufferMap::BufferMap() {
+Partner::Partner() {
     // TODO Auto-generated constructor stub
 
 }
 
-BufferMap::~BufferMap() {
+Partner::~Partner() {
     // TODO Auto-generated destructor stub
 }
 

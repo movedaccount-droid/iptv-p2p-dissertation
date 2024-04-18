@@ -13,8 +13,8 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_CACHEENTRY_H_
-#define OVERLAY_MYOVERLAY_CACHEENTRY_H_
+#ifndef OVERLAY_COOLSTREAMING_CACHEENTRY_H_
+#define OVERLAY_COOLSTREAMING_CACHEENTRY_H_
 
 class CacheEntry {
 public:
@@ -22,4 +22,4 @@ public:
     virtual ~CacheEntry();
 };
 
-#endif /* OVERLAY_MYOVERLAY_CACHEENTRY_H_ */
+#endif /* OVERLAY_COOLSTREAMING_CACHEENTRY_H_ */

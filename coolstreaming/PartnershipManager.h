@@ -13,13 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_PARTNERSHIPMANAGER_H_
-#define OVERLAY_MYOVERLAY_PARTNERSHIPMANAGER_H_
+#ifndef OVERLAY_COOLSTREAMING_PARTNERSHIPMANAGER_H_
+#define OVERLAY_COOLSTREAMING_PARTNERSHIPMANAGER_H_
 
 #include <vector>
+
+#include "../coolstreaming/Coolstreaming_m.h"
+#include "../coolstreaming/PartnerEntry.h"
 #include "common/TransportAddress.h"
-#include "Coolstreaming_m.h"
-#include "PartnerEntry.h"
 
 class Node;
 class PartnershipManager {
@@ -68,4 +69,4 @@ public:
     virtual ~PartnershipManager();
 };
 
-#endif /* OVERLAY_MYOVERLAY_PARTNERSHIPMANAGER_H_ */
+#endif /* OVERLAY_COOLSTREAMING_PARTNERSHIPMANAGER_H_ */

@@ -13,38 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "MembershipManager.h"
-#include "Coolstreaming_m.h"
+#ifndef OVERLAY_COOLSTREAMING_BUFFERMAP_H_
+#define OVERLAY_COOLSTREAMING_BUFFERMAP_H_
 
-#ifndef OVERLAY_MYOVERLAY_MCACHEENTRY_H_
-#define OVERLAY_MYOVERLAY_MCACHEENTRY_H_
-
-class mCacheEntry {
+class BufferMap {
 public:
-
-    int seq_num;
-    TransportAddress tad;
-    int num_partner;
-    simtime_t ttl;
-    simtime_t last_update_time;
-
-    bool expired();
-
-    mCacheEntry(
-            int s,
-            TransportAddress t,
-            int np,
-            simtime_t ttl):
-
-            seq_num(s),
-            tad(t),
-            num_partner(np),
-            ttl(ttl),
-            last_update_time(simTime())
-    {};
-
-    ~mCacheEntry() {};
-
+    BufferMap();
+    virtual ~BufferMap();
 };
 
-#endif /* OVERLAY_MYOVERLAY_MCACHEENTRY_H_ */
+#endif /* OVERLAY_COOLSTREAMING_BUFFERMAP_H_ */

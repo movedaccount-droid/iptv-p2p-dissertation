@@ -13,17 +13,18 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include "../coolstreaming/Node.h"
+
 #include "iostream"
 #include <functional>
 #include <iostream>
 #include <utility>
 #include <unordered_set>
 
+#include "../coolstreaming/Coolstreaming_m.h"
 #include "common/UnderlayConfigurator.h"
 #include "common/GlobalStatistics.h"
 
-#include "Node.h"
-#include "Coolstreaming_m.h"
 
 Define_Module(Node);
 

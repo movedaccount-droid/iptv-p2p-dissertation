@@ -13,14 +13,13 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "CacheEntry.h"
+#ifndef OVERLAY_COOLSTREAMING_SCHEDULER_H_
+#define OVERLAY_COOLSTREAMING_SCHEDULER_H_
 
-CacheEntry::CacheEntry() {
-    // TODO Auto-generated constructor stub
+class Scheduler {
+public:
+    Scheduler();
+    virtual ~Scheduler();
+};
 
-}
-
-CacheEntry::~CacheEntry() {
-    // TODO Auto-generated destructor stub
-}
-
+#endif /* OVERLAY_COOLSTREAMING_SCHEDULER_H_ */

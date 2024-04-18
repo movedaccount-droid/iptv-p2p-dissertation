@@ -13,13 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_PARTNER_H_
-#define OVERLAY_MYOVERLAY_PARTNER_H_
+#include "../coolstreaming/BufferMap.h"
 
-class Partner {
-public:
-    Partner();
-    virtual ~Partner();
-};
+BufferMap::BufferMap() {
+    // TODO Auto-generated constructor stub
 
-#endif /* OVERLAY_MYOVERLAY_PARTNER_H_ */
+}
+
+BufferMap::~BufferMap() {
+    // TODO Auto-generated destructor stub
+}
+

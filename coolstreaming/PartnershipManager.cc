@@ -13,10 +13,12 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include "../coolstreaming/PartnershipManager.h"
+
 #include <algorithm>
-#include "PartnershipManager.h"
-#include "PartnerEntry.h"
-#include "Node.h"
+
+#include "../coolstreaming/Node.h"
+#include "../coolstreaming/PartnerEntry.h"
 #include "common/TransportAddress.h"
 
 // utility functions

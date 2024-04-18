@@ -13,8 +13,22 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#include "mCacheEntry.h"
+#include "../coolstreaming/PartnerEntry.h"
 
-bool mCacheEntry::expired() {
-    return ttl - (simTime() - last_update_time) < SimTime().dbl();
+#include <cassert>
+#include <iostream>
+#include <set>
+#include <string>
+#include <tuple>
+
+void PartnerEntry::add_sent() {
+    sent++;
+}
+
+void PartnerEntry::add_retrieved() {
+    retrieved++;
+}
+
+bool operator<(const PartnerEntry& l, const PartnerEntry& r) {
+    return l.score() < r.score();
 }

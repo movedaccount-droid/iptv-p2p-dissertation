@@ -13,15 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef OVERLAY_MYOVERLAY_NODE_H_
-#define OVERLAY_MYOVERLAY_NODE_H_
+#ifndef OVERLAY_COOLSTREAMING_NODE_H_
+#define OVERLAY_COOLSTREAMING_NODE_H_
 
 #include <unordered_set>
+
+#include "../coolstreaming/Buffer.h"
+#include "../coolstreaming/MembershipManager.h"
+#include "../coolstreaming/PartnershipManager.h"
+#include "../coolstreaming/Scheduler.h"
 #include "common/BaseOverlay.h"
-#include "Buffer.h"
-#include "MembershipManager.h"
-#include "PartnershipManager.h"
-#include "Scheduler.h"
 
 class Node : public BaseOverlay {
 
@@ -74,4 +75,4 @@ public:
     virtual ~Node();
 };
 
-#endif /* OVERLAY_MYOVERLAY_NODE_H_ */
+#endif /* OVERLAY_COOLSTREAMING_NODE_H_ */
