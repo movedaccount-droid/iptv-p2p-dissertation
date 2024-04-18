@@ -230,7 +230,7 @@ void MembershipManager::send_get_deputy_message(TransportAddress tad) {
     parent->send_rpc(tad, get_deputy_call);
 }
 
-void MembershipManager::receive_get_deputy_message_and_respond(GetDeputyCall* get_deputy_call) {
+void MembershipManager::receive_get_deputy_message_and_respond(GetDeputyCall* get_deputy_call, int block_index) {
     if (!parent->origin) {
         EV << "[MembershipManager::receive_get_deputy_message_and_respond() @ " << parent->getThisNode().getIp() << "]\n"
            << "    node that was not an origin took a GetDeputy message ????"
@@ -244,6 +244,7 @@ void MembershipManager::receive_get_deputy_message_and_respond(GetDeputyCall* ge
     } catch (const char* c) {
         get_deputy_response->setDeputy(parent->getThisNode());
     }
+    get_deputy_response->setBlock_index(block_index);
     parent->send_rpc_response(get_deputy_call, get_deputy_response);
 }
 

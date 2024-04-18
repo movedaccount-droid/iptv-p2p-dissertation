@@ -14,7 +14,6 @@
 // 
 
 #include "../coolstreaming/Buffer.h"
-
 #include "../coolstreaming/Node.h"
 
 #define setOrReplace(timer, name, offset) if (timer != NULL && timer->isScheduled()) { \
@@ -24,16 +23,33 @@
 } \
 parent->scheduleAt(simTime() + offset, timer)
 
-void Buffer::init(Node* p, int pint, int pind, int bs, double st) {
+void Buffer::init(Node* p, int pint, int bs, double st) {
     parent = p;
     playout_interval = pint;
-    playout_index = pind;
     buffer_size = bs;
     start_threshold = st;
+    // we act as if the stream has been running a while
+    if (parent->origin) {
+        playout_index = 100;
+        for (int all_blocks = playout_index; all_blocks < buffer_size; ++all_blocks) {
+            buffer.insert(all_blocks);
+        }
+        start();
+    }
+}
+
+void Buffer::set_playout_index(int pind) {
+    if (parent->origin) return;
+    playout_index = pind;
 }
 
 void Buffer::start() {
+    started = true;
     playout();
+}
+
+double Buffer::percent_filled() {
+    return buffer.size() / buffer_size;
 }
 
 void Buffer::receive(int block) {
@@ -43,19 +59,20 @@ void Buffer::receive(int block) {
     if (block >= playout_index && block < playout_index + buffer_size) {
         buffer.insert(block);
     }
-}
-
-double Buffer::percent_filled() {
-    return buffer.size() / buffer_size;
+    if (!started && percent_filled() >= start_threshold) start();
 }
 
 void Buffer::playout() {
-    if (buffer.find(playout_index) != buffer.end()) {
-        // TODO: block was not present. stats
-    } else {
-        // TODO: block was present. stats
+    if (!parent->origin) {
+        if (buffer.find(playout_index) != buffer.end()) {
+            // TODO: block was not present. stats
+        } else {
+            // TODO: block was present. stats
+        }
     }
     buffer.erase(playout_index);
     playout_index++;
+    // origin always has full buffer
+    if (parent->origin) buffer.insert(playout_index + buffer_size - 1);
     setOrReplace(playout_timer, "playout_timer", playout_interval);
 }

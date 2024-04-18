@@ -75,13 +75,14 @@ packet GossipedUnsubscription extends BaseOverlayMessage {
 // scamp/mcache heartbeat message
 packet Heartbeat extends BaseOverlayMessage {}
 
-// coolstreaming origin deputy list request message
+// coolstreaming origin deputy list request message. also contains the starting block index
 packet GetDeputyCall extends BaseCallMessage {
 	TransportAddress dest;
 }
 
 packet GetDeputyResponse extends BaseResponseMessage {
- 	TransportAddress deputy;   
+ 	TransportAddress deputy;
+ 	int block_index;
 }
 
 // coolstreaming deputy partner list request message

@@ -51,6 +51,10 @@ void Node::initializeOverlay(int stage) {
             par("scamp_heartbeat_interval"),
             par("scamp_heartbeat_failure_interval"),
             par("M"));
+    buffer.init(this,
+            par("playout_interval"),
+            par("buffer_size"),
+            par("start_threshold"));
     origin = par("origin");
     arrow_type = par("arrow_type").stdstringValue();
     leaving = false;
@@ -105,7 +109,7 @@ bool Node::handleRpcCall(BaseCallMessage* msg) {
         break;
     }
     RPC_ON_CALL(GetDeputy) {
-        membership_manager.receive_get_deputy_message_and_respond(_GetDeputyCall);
+        membership_manager.receive_get_deputy_message_and_respond(_GetDeputyCall, buffer.playout_index);
         RPC_HANDLED = true;
         break;
     }
@@ -131,6 +135,7 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
         break;
     }
     RPC_ON_RESPONSE(GetDeputy) {
+        buffer.set_playout_index(_GetDeputyResponse->getBlock_index());
         partnership_manager.get_candidate_partners_from_deputy(_GetDeputyResponse->getDeputy());
         membership_manager.receive_get_deputy_response(_GetDeputyResponse);
         RPC_HANDLED = true;
@@ -181,6 +186,8 @@ void Node::handleTimerEvent(cMessage *msg) {
     } else if (msg == partnership_manager.switch_timer) {
         TransportAddress to = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads()).tad;
         partnership_manager.score_and_switch(to);
+    } else if (msg == buffer.playout_timer) {
+        buffer.playout();
     }
 }
 

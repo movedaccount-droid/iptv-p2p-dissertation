@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.4 from overlay/myoverlay/Coolstreaming.msg.
+// Generated file, do not edit! Created by nedtool 5.4 from overlay/coolstreaming/../coolstreaming/Coolstreaming.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "../coolstreaming/Coolstreaming_m.h"
+#include "Coolstreaming_m.h"
 
 namespace omnetpp {
 
@@ -2283,6 +2283,7 @@ Register_Class(GetDeputyResponse)
 
 GetDeputyResponse::GetDeputyResponse(const char *name, short kind) : ::BaseResponseMessage(name,kind)
 {
+    this->block_index = 0;
 }
 
 GetDeputyResponse::GetDeputyResponse(const GetDeputyResponse& other) : ::BaseResponseMessage(other)
@@ -2305,18 +2306,21 @@ GetDeputyResponse& GetDeputyResponse::operator=(const GetDeputyResponse& other)
 void GetDeputyResponse::copy(const GetDeputyResponse& other)
 {
     this->deputy = other.deputy;
+    this->block_index = other.block_index;
 }
 
 void GetDeputyResponse::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseResponseMessage::parsimPack(b);
     doParsimPacking(b,this->deputy);
+    doParsimPacking(b,this->block_index);
 }
 
 void GetDeputyResponse::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseResponseMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->deputy);
+    doParsimUnpacking(b,this->block_index);
 }
 
 TransportAddress& GetDeputyResponse::getDeputy()
@@ -2327,6 +2331,16 @@ TransportAddress& GetDeputyResponse::getDeputy()
 void GetDeputyResponse::setDeputy(const TransportAddress& deputy)
 {
     this->deputy = deputy;
+}
+
+int GetDeputyResponse::getBlock_index() const
+{
+    return this->block_index;
+}
+
+void GetDeputyResponse::setBlock_index(int block_index)
+{
+    this->block_index = block_index;
 }
 
 class GetDeputyResponseDescriptor : public omnetpp::cClassDescriptor
@@ -2394,7 +2408,7 @@ const char *GetDeputyResponseDescriptor::getProperty(const char *propertyname) c
 int GetDeputyResponseDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
 unsigned int GetDeputyResponseDescriptor::getFieldTypeFlags(int field) const
@@ -2407,8 +2421,9 @@ unsigned int GetDeputyResponseDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISCOMPOUND,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
 const char *GetDeputyResponseDescriptor::getFieldName(int field) const
@@ -2421,8 +2436,9 @@ const char *GetDeputyResponseDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "deputy",
+        "block_index",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
 int GetDeputyResponseDescriptor::findField(const char *fieldName) const
@@ -2430,6 +2446,7 @@ int GetDeputyResponseDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='d' && strcmp(fieldName, "deputy")==0) return base+0;
+    if (fieldName[0]=='b' && strcmp(fieldName, "block_index")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -2443,8 +2460,9 @@ const char *GetDeputyResponseDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "TransportAddress",
+        "int",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **GetDeputyResponseDescriptor::getFieldPropertyNames(int field) const
@@ -2512,6 +2530,7 @@ std::string GetDeputyResponseDescriptor::getFieldValueAsString(void *object, int
     GetDeputyResponse *pp = (GetDeputyResponse *)object; (void)pp;
     switch (field) {
         case 0: {std::stringstream out; out << pp->getDeputy(); return out.str();}
+        case 1: return long2string(pp->getBlock_index());
         default: return "";
     }
 }
@@ -2526,6 +2545,7 @@ bool GetDeputyResponseDescriptor::setFieldValueAsString(void *object, int field,
     }
     GetDeputyResponse *pp = (GetDeputyResponse *)object; (void)pp;
     switch (field) {
+        case 1: pp->setBlock_index(string2long(value)); return true;
         default: return false;
     }
 }

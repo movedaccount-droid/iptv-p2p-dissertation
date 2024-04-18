@@ -30,9 +30,7 @@ class Node : public BaseOverlay {
     PartnershipManager partnership_manager;
     MembershipManager membership_manager;
     Buffer buffer;
-//    Scheduler scheduler;
-
-    TransportAddress temp_gettad();
+    // Scheduler scheduler;
 
     // overlay routines
     void initializeOverlay(int stage); // called at overlay construction
@@ -71,7 +69,7 @@ public:
     void send_rpc(TransportAddress tad, BaseCallMessage* msg);
     void send_rpc_response(BaseCallMessage* call, BaseResponseMessage* response);
 
-    Node(): membership_manager(), partnership_manager(), buffer() {};
+    Node(): partnership_manager(), membership_manager(), buffer() {};
     virtual ~Node();
 };
 

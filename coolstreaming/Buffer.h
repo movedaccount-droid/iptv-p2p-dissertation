@@ -21,24 +21,25 @@
 
 class Node;
 class Buffer {
-private:
+public:
     Node* parent; // object ... structure ..
     std::unordered_set<int> buffer; // set of block indexes we own
     int playout_interval; // duration between blocks
     int playout_index; // next block index to be played out. also the lowest block that should be in the buffer
     int buffer_size; // stored blocks in buffer. probably just 120
     int start_threshold; // percentage filled before we start playback
+    bool started; // if running
 
     cMessage* playout_timer;
 
     // lifecycle
-    void init(Node* p, int pint, int pind, int bs, double st);
+    void init(Node* p, int pint, int bs, double st);
+    void set_playout_index(int pind);
     void start();
     double percent_filled();
     void receive(int block); // receive a block
     void playout(); // playout a block
 
-public:
     Buffer() {};
     virtual ~Buffer() { playout_timer = NULL; };
 };

@@ -67,7 +67,7 @@ public:
     // GET DEPUTY MESSAGES // TCP
     // gets deputy from origin node
     void send_get_deputy_message(TransportAddress tad);
-    void receive_get_deputy_message_and_respond(GetDeputyCall* get_deputy_call);
+    void receive_get_deputy_message_and_respond(GetDeputyCall* get_deputy_call, int block_index);
     void timeout_get_deputy_response(GetDeputyCall* get_deputy_call);
     void receive_get_deputy_response(GetDeputyResponse* get_deputy_response);
 
