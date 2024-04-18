@@ -14,6 +14,10 @@
 // 
 
 #include "iostream"
+#include <functional>
+#include <iostream>
+#include <utility>
+#include <unordered_set>
 
 #include "common/UnderlayConfigurator.h"
 #include "common/GlobalStatistics.h"
@@ -23,11 +27,23 @@
 
 Define_Module(Node);
 
+// arrow drawing/handling
+void Node::set_arrow(TransportAddress tad, std::string requested_type, bool enable) {
+    if (requested_type != arrow_type) return;
+    deleteOverlayNeighborArrow(tad);
+    if (!enable) return;
+    if (arrow_type == std::string("MCACHE") && requested_type == std::string("MCACHE")) {
+        showOverlayNeighborArrow(tad, false, "ls=#B99DE8,2,s");
+    } else if (arrow_type == std::string("PARTNER") && requested_type == std::string("PARTNER")) {
+        showOverlayNeighborArrow(tad, false, "ls=#334455,3,s");
+    }
+}
+
 // overlay routines
 // called at overlay construction
 void Node::initializeOverlay(int stage) {
     if (stage != MIN_STAGE_OVERLAY) return;
-    partnership_manager.init(this, par("bm_exchange_interval"), par("M"));
+    partnership_manager.init(this, par("switch_interval"), par("M"));
     membership_manager.init(this,
             par("c"),
             par("scamp_resubscription_interval"),
@@ -35,6 +51,7 @@ void Node::initializeOverlay(int stage) {
             par("scamp_heartbeat_failure_interval"),
             par("M"));
     origin = par("origin");
+    arrow_type = par("arrow_type").stdstringValue();
     leaving = false;
 }
 
@@ -55,9 +72,19 @@ void Node::finishOverlay() {
 void Node::handleUDPMessage(BaseOverlayMessage* msg) {
     if (!leaving) {
         if (Membership* membership = dynamic_cast<Membership*>(msg)) {
-            membership_manager.receive_membership_message(membership);
+            bool accepted = membership_manager.receive_membership_message(membership);
+            if (accepted) partnership_manager.insert_new_partner_if_needed(membership->getTad());
         } else if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
             membership_manager.receive_heartbeat_message(heartbeat);
+        } else if (Partnership* partnership = dynamic_cast<Partnership*>(msg)) {
+            partnership_manager.receive_partnership_message(partnership);
+        } else if (PartnershipEnd* partnership_end = dynamic_cast<PartnershipEnd*>(msg)) {
+            try {
+                TransportAddress replacement = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads()).tad;
+                partnership_manager.receive_partnership_end_message(partnership_end, replacement);
+            } catch (const char* c) {
+                partnership_manager.remove_partner(partnership_end->getFrom());
+            }
         }
     }
     if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
@@ -82,7 +109,7 @@ bool Node::handleRpcCall(BaseCallMessage* msg) {
         break;
     }
     RPC_ON_CALL(GetCandidatePartners) {
-        std::vector<TransportAddress> candidates = membership_manager.get_partner_candidates(_GetCandidatePartnersCall->getFrom());
+        std::vector<TransportAddress> candidates = membership_manager.get_partner_candidates(_GetCandidatePartnersCall->getFrom(), partnership_manager.partners.size());
         partnership_manager.receive_get_candidate_partners_message_and_respond(_GetCandidatePartnersCall, candidates);
         RPC_HANDLED = true;
         break;
@@ -150,6 +177,9 @@ void Node::handleTimerEvent(cMessage *msg) {
         membership_manager.send_heartbeats();
     } else if (msg == membership_manager.no_heartbeat_timer) {
         membership_manager.no_heartbeat();
+    } else if (msg == partnership_manager.switch_timer) {
+        TransportAddress to = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads()).tad;
+        partnership_manager.score_and_switch(to);
     }
 }
 

@@ -500,6 +500,45 @@ class Partnership : public ::BaseOverlayMessage
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const Partnership& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Partnership& obj) {obj.parsimUnpack(b);}
 
+/**
+ * Class generated from <tt>overlay/myoverlay/Coolstreaming.msg:100</tt> by nedtool.
+ * <pre>
+ * packet PartnershipEnd extends BaseOverlayMessage
+ * {
+ *     TransportAddress from;
+ * }
+ * </pre>
+ */
+class PartnershipEnd : public ::BaseOverlayMessage
+{
+  protected:
+    TransportAddress from;
+
+  private:
+    void copy(const PartnershipEnd& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const PartnershipEnd&);
+
+  public:
+    PartnershipEnd(const char *name=nullptr, short kind=0);
+    PartnershipEnd(const PartnershipEnd& other);
+    virtual ~PartnershipEnd();
+    PartnershipEnd& operator=(const PartnershipEnd& other);
+    virtual PartnershipEnd *dup() const override {return new PartnershipEnd(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<PartnershipEnd*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const PartnershipEnd& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PartnershipEnd& obj) {obj.parsimUnpack(b);}
+
 
 #endif // ifndef __COOLSTREAMING_M_H
 

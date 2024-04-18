@@ -51,7 +51,28 @@ mCacheEntry MembershipManager::random_mcache_entry(TransportAddress exclude) {
 
 }
 
-std::vector<TransportAddress> MembershipManager::get_partner_candidates(TransportAddress requester) {
+mCacheEntry MembershipManager::random_mcache_entry(std::vector<TransportAddress> exclude) {
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    std::shuffle(mCache.begin(), mCache.end(), g);
+
+    for (auto i = mCache.begin(); i != mCache.end(); ++i) {
+        if (i->expired()) {
+            parent->getParentModule()->getParentModule()->bubble(std::string("expired random ip ").append(i->tad.getIp().str()).append("...").c_str());
+            remove_mcache_entry(i->tad);
+            return random_mcache_entry(exclude);
+        }
+        if (std::find(exclude.begin(), exclude.end(), i->tad) != exclude.end()) continue;
+        return *i;
+    }
+
+    throw "no entries in cache";
+
+}
+
+std::vector<TransportAddress> MembershipManager::get_partner_candidates(TransportAddress requester, int partner_count) {
 
     std::random_device rd;
     std::mt19937 g(rd());
@@ -63,13 +84,14 @@ std::vector<TransportAddress> MembershipManager::get_partner_candidates(Transpor
         if (i->expired()) {
             parent->getParentModule()->getParentModule()->bubble(std::string("expired random ip ").append(i->tad.getIp().str()).append("...").c_str());
             remove_mcache_entry(i->tad);
-            return get_partner_candidates(requester);
+            return get_partner_candidates(requester, partner_count);
         }
         if (i->tad == requester) continue;
         candidates.push_back(i->tad);
+        i->num_partner++;
     }
 
-    if (candidates.size() < M) candidates.push_back(parent->getThisNode());
+    if (candidates.size() < M && partner_count < M) candidates.push_back(parent->getThisNode());
 
     return candidates;
 
@@ -84,7 +106,7 @@ bool MembershipManager::mcache_contains_tad(TransportAddress tad) {
 
 void MembershipManager::insert_mcache_entry(int seq_num, TransportAddress tad, int num_partner, simtime_t ttl) {
     remove_mcache_entry(tad);
-    parent->showOverlayNeighborArrow(tad, false, "ls=red,1");
+    parent->set_arrow(tad, "MCACHE", true);
     mCacheEntry insert(seq_num, tad, num_partner, ttl);
     // TODO: we need to run a similar check for partner candidates,
     // TODO: we beed to u a similar check for when creating partnerships
@@ -93,9 +115,9 @@ void MembershipManager::insert_mcache_entry(int seq_num, TransportAddress tad, i
 }
 
 void MembershipManager::remove_mcache_entry(TransportAddress tad) {
-    parent->deleteOverlayNeighborArrow(tad);
     for (auto i = mCache.begin(); i != mCache.end(); i++) {
         if (i->tad == tad) {
+            parent->set_arrow(i->tad, "MCACHE", false);
             mCache.erase(i);
             return;
         }
@@ -310,7 +332,8 @@ void MembershipManager::absorb_membership_message(Membership* membership) {
     generate_inview_message(membership->getTad());
 }
 
-void MembershipManager::receive_membership_message(Membership* membership) {
+// returns if mcache entry was accepted, so we shortcircuit partnershipmanager behaviour later
+bool MembershipManager::receive_membership_message(Membership* membership) {
     if (!membership->getForwarded()) {
         if (mCache.size() == 0 && parent->origin) {
             // special case if we are the origin
@@ -318,7 +341,7 @@ void MembershipManager::receive_membership_message(Membership* membership) {
             parent->getParentModule()->getParentModule()->bubble("origin had no mcache, forced bar with node...");
             absorb_membership_message(membership);
             send_forced_membership_message(membership->getTad());
-            return;
+            return true;
         }
         // algorithm 1: forward to all nodes of view
         int c = 0;
@@ -348,13 +371,14 @@ void MembershipManager::receive_membership_message(Membership* membership) {
         if (membership->getEntry()) {
             send_forced_membership_message(membership->getTad());
         }
+        return false;
     } else {
         // drop if seen too many times
         auto seenCount = uuidCounts.find(membership->getUuid());
         if (seenCount != uuidCounts.end()) {
             if (seenCount->second > 10) {
                 parent->getParentModule()->getParentModule()->bubble("dropped message...");
-                return;
+                return false;
             }
             uuidCounts[membership->getUuid()] = seenCount->second + 1;
         } else {
@@ -366,6 +390,7 @@ void MembershipManager::receive_membership_message(Membership* membership) {
         if (success && !mcache_contains_tad(membership->getTad())) {
             absorb_membership_message(membership);
             parent->getParentModule()->getParentModule()->bubble("absorbed message...");
+            return true;
         } else {
             try {
                 forward_membership_message(membership, random_mcache_entry(membership->getTad()).tad);
@@ -375,6 +400,7 @@ void MembershipManager::receive_membership_message(Membership* membership) {
                    << "    attempted to forward membership message but had nobody to forward to, dropping..."
                    << endl;
             }
+            return false;
         }
     }
 }
@@ -447,8 +473,7 @@ void MembershipManager::receive_unsubscribe_message(Unsubscription* unsubscripti
                 if (node.tad == unsubscription->getLeaving()) {
                     parent->getParentModule()->getParentModule()->bubble(std::string("replaced leaving ip ").append(unsubscription->getLeaving().getIp().str())
                             .append(" with ").append(unsubscription->getReplacement().getIp().str()).append("...").c_str());
-                    parent->deleteOverlayNeighborArrow(node.tad);
-                    parent->showOverlayNeighborArrow(unsubscription->getReplacement(), false, "ls=red,1");
+                    parent->set_arrow(node.tad, "MCACHE", true);
                     node.tad = unsubscription->getReplacement();
                     return;
                 }

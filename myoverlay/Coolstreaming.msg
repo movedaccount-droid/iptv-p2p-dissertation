@@ -96,3 +96,7 @@ packet GetCandidatePartnersResponse extends BaseResponseMessage {
 packet Partnership extends BaseOverlayMessage {
 	TransportAddress from;
 }
+
+packet PartnershipEnd extends BaseOverlayMessage {
+    TransportAddress from;
+}

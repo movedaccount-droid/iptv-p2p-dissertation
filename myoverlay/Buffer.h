@@ -16,10 +16,31 @@
 #ifndef OVERLAY_MYOVERLAY_BUFFER_H_
 #define OVERLAY_MYOVERLAY_BUFFER_H_
 
+#include <unordered_set>
+#include "common/TransportAddress.h"
+
+class Node;
 class Buffer {
+private:
+    Node* parent; // object ... structure ..
+    std::unordered_set<int> buffer; // set of block indexes we own
+    int playout_interval; // duration between blocks
+    int playout_index; // next block index to be played out. also the lowest block that should be in the buffer
+    int buffer_size; // stored blocks in buffer. probably just 120
+    int start_threshold; // percentage filled before we start playback
+
+    cMessage* playout_timer;
+
+    // lifecycle
+    void init(Node* p, int pint, int pind, int bs, double st);
+    void start();
+    double percent_filled();
+    void receive(int block); // receive a block
+    void playout(); // playout a block
+
 public:
-    Buffer();
-    virtual ~Buffer();
+    Buffer() {};
+    virtual ~Buffer() { playout_timer = NULL; };
 };
 
 #endif /* OVERLAY_MYOVERLAY_BUFFER_H_ */

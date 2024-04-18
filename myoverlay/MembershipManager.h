@@ -25,7 +25,7 @@ class Node;
 class MembershipManager {
 
 private:
-    Node* parent; // tad of parent
+    Node* parent; // parent
     std::vector<mCacheEntry> mCache; // membership cache
     std::vector<TransportAddress> inview; // inview listing
     std::unordered_map<int, int> uuidCounts; // message uuid counting
@@ -56,7 +56,8 @@ public:
 
     // utility functions
     mCacheEntry random_mcache_entry(TransportAddress exclude = TransportAddress());
-    std::vector<TransportAddress> get_partner_candidates(TransportAddress requester);
+    mCacheEntry random_mcache_entry(std::vector<TransportAddress> exclude);
+    std::vector<TransportAddress> get_partner_candidates(TransportAddress requester, int partner_count);
     bool mcache_contains_tad(TransportAddress tad);
     void insert_mcache_entry(int seq_num, TransportAddress tad, int num_partner, simtime_t ttl);
     void remove_mcache_entry(TransportAddress tad);
@@ -80,7 +81,7 @@ public:
     void send_forced_membership_message(TransportAddress tad);
     void forward_membership_message(Membership* membership, TransportAddress tad);
     void absorb_membership_message(Membership* membership); // adds to mcache and sends inview
-    void receive_membership_message(Membership* membership);
+    bool receive_membership_message(Membership* membership);
 
     // INVIEW MESSAGES // TCP
     // informs node of membership acceptance and requests initiation to

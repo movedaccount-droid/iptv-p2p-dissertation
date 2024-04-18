@@ -23,18 +23,29 @@
 
 class Node;
 class PartnershipManager {
+public:
     Node* parent; // object structure ....
     std::vector<PartnerEntry> partners; // currently active partners
-    int bm_exchange_interval; // seconds between buffermap sends
+    int switch_interval; // between trying out a new partner from mcache
     int M; // target number of partners
 
-    cMessage* exchange_timer;
+    cMessage* switch_timer;
 
-public:
     // lifecycle
     void init(Node* p, int bmei, int m);
     void get_candidate_partners_from_deputy(TransportAddress deputy);
     void take_new_partner(TransportAddress tad);
+    void replace_partner_with_new(TransportAddress from, TransportAddress with);
+    void score_and_switch(TransportAddress with);
+
+    // utils
+    bool is_partner(TransportAddress tad);
+    void insert_partner(TransportAddress partner);
+    void insert_new_partner(TransportAddress partner);
+    void insert_new_partner_if_needed(TransportAddress partner);
+    void remove_partner(TransportAddress partner);
+    void remove_worst_scoring_partner();
+    std::vector<TransportAddress> get_partner_tads();
 
     // GET CANDIDATE PARTNERS MESSAGES // TCP
     // get list of possible starting partners from the deputy
@@ -51,9 +62,9 @@ public:
     // PARTNERSHIP ENDING MESSAGES // UDP
     // cuts a partnership with a node cleanly
     void send_partnership_end_message(TransportAddress tad);
-    void receive_partnership_end_message(PartnershipEnd* partnership_end);
+    void receive_partnership_end_message(PartnershipEnd* partnership_end, TransportAddress with);
 
-    PartnershipManager() { exchange_timer = NULL; };
+    PartnershipManager() { switch_timer = NULL; };
     virtual ~PartnershipManager();
 };
 

@@ -35,10 +35,13 @@ simple Node extends BaseOverlay
     	int scamp_heartbeat_interval; // delay between heartbeats being sent
    	 	int scamp_heartbeat_failure_interval; // delay between received heartbeats before resubbing
    	 	
-   	 	int bm_exchange_interval; // delay between buffermap being sent
+   	 	int switch_interval; // delay between scoring and trying out new partners from mcache
    	 	int M; // target number of partners held by a node
    	 	
+   	 	int bm_exchange_interval; // delay between buffermap being sent
+   	 	
         bool origin; // if this node should act as the origin
+        string arrow_type; // which arrow type to display
 }
 
 module NodeModules like IOverlay

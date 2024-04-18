@@ -14,13 +14,47 @@
 // 
 
 #include "Buffer.h"
+#include "Node.h"
 
-Buffer::Buffer() {
-    // TODO Auto-generated constructor stub
+#define setOrReplace(timer, name, offset) if (timer != NULL && timer->isScheduled()) { \
+    parent->cancelEvent(timer); \
+} else if (!timer) { \
+    timer = new cMessage(name); \
+} \
+parent->scheduleAt(simTime() + offset, timer)
 
+void Buffer::init(Node* p, int pint, int pind, int bs, double st) {
+    parent = p;
+    playout_interval = pint;
+    playout_index = pind;
+    buffer_size = bs;
+    start_threshold = st;
 }
 
-Buffer::~Buffer() {
-    // TODO Auto-generated destructor stub
+void Buffer::start() {
+    playout();
 }
 
+void Buffer::receive(int block) {
+    if (buffer.find(block) != buffer.end()) {
+        // TODO: this block was wasted. stats or whatever
+    }
+    if (block >= playout_index && block < playout_index + buffer_size) {
+        buffer.insert(block);
+    }
+}
+
+double Buffer::percent_filled() {
+    return buffer.size() / buffer_size;
+}
+
+void Buffer::playout() {
+    if (buffer.find(playout_index) != buffer.end()) {
+        // TODO: block was not present. stats
+    } else {
+        // TODO: block was present. stats
+    }
+    buffer.erase(playout_index);
+    playout_index++;
+    setOrReplace(playout_timer, "playout_timer", playout_interval);
+}

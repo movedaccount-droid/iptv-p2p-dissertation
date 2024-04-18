@@ -3399,4 +3399,284 @@ void *PartnershipDescriptor::getFieldStructValuePointer(void *object, int field,
     }
 }
 
+Register_Class(PartnershipEnd)
+
+PartnershipEnd::PartnershipEnd(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+}
+
+PartnershipEnd::PartnershipEnd(const PartnershipEnd& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+PartnershipEnd::~PartnershipEnd()
+{
+}
+
+PartnershipEnd& PartnershipEnd::operator=(const PartnershipEnd& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void PartnershipEnd::copy(const PartnershipEnd& other)
+{
+    this->from = other.from;
+}
+
+void PartnershipEnd::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->from);
+}
+
+void PartnershipEnd::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->from);
+}
+
+TransportAddress& PartnershipEnd::getFrom()
+{
+    return this->from;
+}
+
+void PartnershipEnd::setFrom(const TransportAddress& from)
+{
+    this->from = from;
+}
+
+class PartnershipEndDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    PartnershipEndDescriptor();
+    virtual ~PartnershipEndDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(PartnershipEndDescriptor)
+
+PartnershipEndDescriptor::PartnershipEndDescriptor() : omnetpp::cClassDescriptor("PartnershipEnd", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+PartnershipEndDescriptor::~PartnershipEndDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool PartnershipEndDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<PartnershipEnd *>(obj)!=nullptr;
+}
+
+const char **PartnershipEndDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *PartnershipEndDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int PartnershipEndDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
+}
+
+unsigned int PartnershipEndDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+}
+
+const char *PartnershipEndDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "from",
+    };
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+}
+
+int PartnershipEndDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *PartnershipEndDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+    };
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **PartnershipEndDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *PartnershipEndDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int PartnershipEndDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *PartnershipEndDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string PartnershipEndDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        default: return "";
+    }
+}
+
+bool PartnershipEndDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *PartnershipEndDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *PartnershipEndDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        case 0: return (void *)(&pp->getFrom()); break;
+        default: return nullptr;
+    }
+}
+
 

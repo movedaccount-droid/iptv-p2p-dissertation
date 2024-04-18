@@ -16,6 +16,7 @@
 #ifndef OVERLAY_MYOVERLAY_NODE_H_
 #define OVERLAY_MYOVERLAY_NODE_H_
 
+#include <unordered_set>
 #include "common/BaseOverlay.h"
 #include "Buffer.h"
 #include "MembershipManager.h"
@@ -27,7 +28,7 @@ class Node : public BaseOverlay {
     // node components - see paper fig. 1
     PartnershipManager partnership_manager;
     MembershipManager membership_manager;
-//    Buffer buffer;
+    Buffer buffer;
 //    Scheduler scheduler;
 
     TransportAddress temp_gettad();
@@ -59,13 +60,17 @@ class Node : public BaseOverlay {
 
 public:
     bool origin; // if we are the origin node
+    std::string arrow_type; // type of arrow to draw
     bool leaving; // if we are leaving the network
+
+    // arrow drawing/handling
+    void set_arrow(TransportAddress tad, std::string requested_type, bool enable);
 
     // message sending. our object structure is bad
     void send_rpc(TransportAddress tad, BaseCallMessage* msg);
     void send_rpc_response(BaseCallMessage* call, BaseResponseMessage* response);
 
-    Node(): membership_manager() {};
+    Node(): membership_manager(), partnership_manager(), buffer() {};
     virtual ~Node();
 };
 

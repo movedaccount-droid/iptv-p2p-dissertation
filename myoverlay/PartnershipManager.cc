@@ -27,10 +27,59 @@
 } \
 parent->scheduleAt(simTime() + offset, timer)
 
+bool PartnershipManager::is_partner(TransportAddress tad) {
+    for (PartnerEntry partner : partners) {
+        if (partner.tad == tad) return true;
+    }
+    return false;
+}
+
+void PartnershipManager::insert_partner(TransportAddress partner) {
+    if (is_partner(partner)) return;
+    partners.push_back(PartnerEntry(partner));
+    parent->set_arrow(partner, "PARTNER", true);
+}
+
+void PartnershipManager::insert_new_partner(TransportAddress partner) {
+    if (is_partner(partner)) return;
+    insert_partner(partner);
+    send_partnership_message(partner);
+}
+
+void PartnershipManager::insert_new_partner_if_needed(TransportAddress tad) {
+    if (partners.size() >= M) return;
+    insert_new_partner(tad);
+}
+
+void PartnershipManager::remove_partner(TransportAddress partner) {
+    for (auto i = partners.begin(); i != partners.end(); ++i) {
+        if (i->tad == partner) {
+            parent->set_arrow(i->tad, "PARTNER", false);
+            partners.erase(i);
+            return;
+        }
+    }
+}
+
+void PartnershipManager::remove_worst_scoring_partner() {
+    auto erased = min_element(partners.begin(), partners.end());
+    parent->set_arrow(erased->tad, "PARTNER", false);
+    send_partnership_end_message(erased->tad);
+    partners.erase(erased);
+}
+
+std::vector<TransportAddress> PartnershipManager::get_partner_tads() {
+    std::vector<TransportAddress> tads;
+    for (PartnerEntry partner : partners) {
+        tads.push_back(partner.tad);
+    }
+    return tads;
+}
+
 // lifecycle
-void PartnershipManager::init(Node* p, int bmei, int m) {
+void PartnershipManager::init(Node* p, int si, int m) {
     parent = p;
-    bm_exchange_interval = bmei;
+    switch_interval = si;
     M = m;
 }
 
@@ -40,20 +89,28 @@ void PartnershipManager::get_candidate_partners_from_deputy(TransportAddress dep
 }
 
 void PartnershipManager::take_new_partner(TransportAddress tad) {
+    if (is_partner(tad)) return;
     while (partners.size() >= M) {
-        partners.erase(min_element(partners.begin(), partners.end()));
+        // is this an optimization over the original? should it be random? Good Fuciing Luck finding Out!!
+        remove_worst_scoring_partner();
     }
-    partners.push_back(PartnerEntry(tad));
+    insert_partner(tad);
 }
 
 void PartnershipManager::replace_partner_with_new(TransportAddress from, TransportAddress with) {
     for (auto i = partners.begin(); i != partners.end(); ++i) {
         if (i->tad == from) {
+            parent->set_arrow(i->tad, "PARTNER", false);
             partners.erase(i);
-            partners.push_back(PartnerEntry(with));
-            send_partnership_message(with);
+            insert_new_partner(with);
         }
     } // else we just didn't have it. whatever i don't wcare !!
+}
+
+void PartnershipManager::score_and_switch(TransportAddress with) {
+    remove_worst_scoring_partner();
+    insert_new_partner(with);
+    setOrReplace(switch_timer, "switch_timer", switch_interval);
 }
 
 // GET CANDIDATE PARTNERS MESSAGES // TCP
@@ -76,9 +133,11 @@ void PartnershipManager::timeout_get_candidate_partners_response(GetCandidatePar
 
 void PartnershipManager::receive_get_candidate_partners_response(GetCandidatePartnersResponse* get_candidate_partners_response) {
     for (TransportAddress candidate : get_candidate_partners_response->getCandidates()) {
-        send_partnership_message(candidate);
+        // because of mcache gossiping and our addition of insert_new_partner_if_needed, we might already have partners by now
+        if (partners.size() >= M) break;
+        insert_new_partner(candidate);
     }
-    setOrReplace(exchange_timer, "exchange_timer", 5);
+    setOrReplace(switch_timer, "switch_timer", switch_interval);
     parent->getParentModule()->getParentModule()->bubble(std::string("received ").append(std::to_string(partners.size())).append(" candidates...").c_str());
 }
 
@@ -105,11 +164,9 @@ void PartnershipManager::send_partnership_end_message(TransportAddress tad) {
 }
 
 void PartnershipManager::receive_partnership_end_message(PartnershipEnd* partnership_end, TransportAddress with) {
-    // TODO: remember to use exclude when getting the partner so that we don't
-    // immiediately resucvbscribe oth the nasmae node
-    replace_partner_with_new(partnership->getFrom(), with);
+    replace_partner_with_new(partnership_end->getFrom(), with);
 }
 
 PartnershipManager::~PartnershipManager() {
-    parent->cancelAndDelete(exchange_timer);
+    parent->cancelAndDelete(switch_timer);
 }
