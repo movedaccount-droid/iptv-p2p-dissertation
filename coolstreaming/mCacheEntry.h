@@ -23,7 +23,6 @@ class mCacheEntry {
 public:
 
     int seq_num;
-    TransportAddress tad;
     int num_partner;
     simtime_t ttl;
     simtime_t last_update_time;
@@ -32,12 +31,10 @@ public:
 
     mCacheEntry(
             int s,
-            TransportAddress t,
             int np,
             simtime_t ttl):
 
             seq_num(s),
-            tad(t),
             num_partner(np),
             ttl(ttl),
             last_update_time(simTime())

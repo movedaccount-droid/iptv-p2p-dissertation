@@ -14,16 +14,18 @@
 // 
 
 #include "common/TransportAddress.h"
+#include <unordered_set>
 
 #ifndef OVERLAY_MYOVERLAY_PARTNERENTRY_H_
 #define OVERLAY_MYOVERLAY_PARTNERENTRY_H_
 
 class PartnerEntry {
 public:
-    TransportAddress tad;
     int sent;
     int retrieved;
     simtime_t start;
+    int bandwidth;
+    std::unordered_set<int> buffer_map;
 
     double score() const {
         double time_units = (simTime() - start).dbl();
@@ -36,11 +38,12 @@ public:
 
     friend bool operator<(const PartnerEntry& l, const PartnerEntry& r);
 
-    PartnerEntry(TransportAddress t):
-        tad(t),
+    PartnerEntry(int b):
         sent(0),
         retrieved(0),
-        start(simTime())
+        start(simTime()),
+        bandwidth(b),
+        buffer_map()
     {};
 
     virtual ~PartnerEntry() {};

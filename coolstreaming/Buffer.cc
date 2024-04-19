@@ -23,11 +23,12 @@
 } \
 parent->scheduleAt(simTime() + offset, timer)
 
-void Buffer::init(Node* p, int pint, int bs, double st) {
+void Buffer::init(Node* p, int pint, int bs, double st, int bsb) {
     parent = p;
     playout_interval = pint;
     buffer_size = bs;
     start_threshold = st;
+    block_size_bits = bsb;
     // we act as if the stream has been running a while
     if (parent->origin) {
         playout_index = 100;
@@ -52,6 +53,10 @@ double Buffer::percent_filled() {
     return buffer.size() / buffer_size;
 }
 
+std::unordered_set<int> Buffer::get_buffer_map() {
+    return buffer;
+}
+
 std::unordered_set<int> Buffer::get_expected_set() {
     std::unordered_set<int> expected_set;
     for (int i = playout_index; i < playout_index + buffer_size; ++i) {
@@ -60,6 +65,10 @@ std::unordered_set<int> Buffer::get_expected_set() {
         }
     }
     return expected_set;
+}
+
+int Buffer::get_playout_index() {
+    return playout_index;
 }
 
 void Buffer::receive(int block) {
@@ -85,4 +94,26 @@ void Buffer::playout() {
     // origin always has full buffer
     if (parent->origin) buffer.insert(playout_index + buffer_size - 1);
     setOrReplace(playout_timer, "playout_timer", playout_interval);
+}
+
+// BLOCK // TCP
+// requesting blocks from partners to play
+// extended from main functions in Scheduler.h
+void Buffer::receive_block_message_and_respond(BlockCall* block_call) {
+    for (int block : block_call->getBlocks()) {
+        if (buffer.find(block) != buffer.end()) {
+            BlockResponse* block_response = new BlockResponse();
+            block_response->setIndex(block);
+            block_response->setBitLength(block_size_bits);
+            parent->send_rpc_response(block_call, block_response);
+        }
+    }
+}
+
+void Buffer::receive_block_response(BlockResponse* block_response) {
+    buffer.insert(block_response->getIndex());
+}
+
+Buffer::~Buffer() {
+    if (playout_timer != NULL) parent->cancelAndDelete(playout_timer);
 }

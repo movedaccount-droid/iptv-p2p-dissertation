@@ -20,14 +20,14 @@
 
 // cplusplus {{
 #include <chrono>
-#include <vector>
+#include <set>
 #include <unordered_set>
 #include "common/NodeHandle.h"
 #include "common/OverlayKey.h"
 #include "common/CommonMessages_m.h"
 #include "common/TransportAddress.h"
 typedef std::chrono::duration<int,std::milli> duration_ms;
-typedef std::vector<TransportAddress> TadVec;
+typedef std::set<TransportAddress> TadSet;
 typedef std::unordered_set<int> BM;
 // }}
 
@@ -433,14 +433,14 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetCandidatePartnersCall&
  * <pre>
  * packet GetCandidatePartnersResponse extends BaseResponseMessage
  * {
- *     TadVec candidates;
+ *     TadSet candidates;
  * }
  * </pre>
  */
 class GetCandidatePartnersResponse : public ::BaseResponseMessage
 {
   protected:
-    TadVec candidates;
+    TadSet candidates;
 
   private:
     void copy(const GetCandidatePartnersResponse& other);
@@ -459,9 +459,9 @@ class GetCandidatePartnersResponse : public ::BaseResponseMessage
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
-    virtual TadVec& getCandidates();
-    virtual const TadVec& getCandidates() const {return const_cast<GetCandidatePartnersResponse*>(this)->getCandidates();}
-    virtual void setCandidates(const TadVec& candidates);
+    virtual TadSet& getCandidates();
+    virtual const TadSet& getCandidates() const {return const_cast<GetCandidatePartnersResponse*>(this)->getCandidates();}
+    virtual void setCandidates(const TadSet& candidates);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetCandidatePartnersResponse& obj) {obj.parsimPack(b);}
@@ -552,6 +552,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PartnershipEnd& obj) {obj
  * // coolstreaming buffermap exchange
  * packet BufferMap extends BaseOverlayMessage
  * {
+ *     TransportAddress from;
  *     BM buffer_map;
  * }
  * </pre>
@@ -559,6 +560,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PartnershipEnd& obj) {obj
 class BufferMap : public ::BaseOverlayMessage
 {
   protected:
+    TransportAddress from;
     BM buffer_map;
 
   private:
@@ -578,6 +580,9 @@ class BufferMap : public ::BaseOverlayMessage
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<BufferMap*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
     virtual BM& getBuffer_map();
     virtual const BM& getBuffer_map() const {return const_cast<BufferMap*>(this)->getBuffer_map();}
     virtual void setBuffer_map(const BM& buffer_map);
@@ -587,7 +592,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BufferMap& obj) {obj.
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BufferMap& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:115</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:116</tt> by nedtool.
  * <pre>
  * // coolstreaming block request
  * packet BlockCall extends BaseCallMessage
@@ -627,7 +632,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BlockCall& obj) {obj.
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BlockCall& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:119</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:120</tt> by nedtool.
  * <pre>
  * packet BlockResponse extends BaseResponseMessage
  * {

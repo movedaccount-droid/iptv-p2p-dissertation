@@ -17,6 +17,8 @@
 #define OVERLAY_COOLSTREAMING_MEMBERSHIPMANAGER_H_
 
 #include <chrono>
+#include <map>
+#include <set>
 #include <unordered_map>
 
 #include "../coolstreaming/mCacheEntry.h"
@@ -27,9 +29,10 @@ class MembershipManager {
 
 private:
     Node* parent; // parent
-    std::vector<mCacheEntry> mCache; // membership cache
-    std::vector<TransportAddress> inview; // inview listing
+    std::map<TransportAddress, mCacheEntry> mCache; // membership cache
+    std::set<TransportAddress> inview; // inview listing
     std::unordered_map<int, int> uuidCounts; // message uuid counting
+    TransportAddress origin_tad; // tad to contact to reach the origin
     int seq_num; // sequence number for next message
     int c; // SCAMP constant determining proportion of tolerated failures
     int scamp_resubscription_interval; // delay before resubscriptions, sub ttl
@@ -45,7 +48,7 @@ public:
     cMessage *no_heartbeat_timer;
 
     // lifecycle functions
-    void init(Node* p, int cin, int scr, int sch, int schf, int m);
+    void init(Node* p, TransportAddress ot, int cin, int scr, int sch, int schf, int m);
     void join_overlay();
     void contact_deputy_and_enter_network(TransportAddress deputy);
     void resubscribe();
@@ -56,13 +59,11 @@ public:
     void leave_overlay();
 
     // utility functions
-    mCacheEntry random_mcache_entry(TransportAddress exclude = TransportAddress());
-    mCacheEntry random_mcache_entry(std::vector<TransportAddress> exclude);
-    std::vector<TransportAddress> get_partner_candidates(TransportAddress requester, int partner_count);
-    bool mcache_contains_tad(TransportAddress tad);
-    void insert_mcache_entry(int seq_num, TransportAddress tad, int num_partner, simtime_t ttl);
+    std::pair<const TransportAddress, mCacheEntry> random_mcache_entry(TransportAddress exclude = TransportAddress());
+    std::pair<const TransportAddress, mCacheEntry> random_mcache_entry(std::set<TransportAddress> exclude);
+    std::set<TransportAddress> get_partner_candidates(TransportAddress requester, int this_node_partner_count);
+    void insert_mcache_entry(TransportAddress tad, int seq_num, int num_partner, simtime_t ttl);
     void remove_mcache_entry(TransportAddress tad);
-    void remove_inview_entry(TransportAddress tad);
 
     // GET DEPUTY MESSAGES // TCP
     // gets deputy from origin node

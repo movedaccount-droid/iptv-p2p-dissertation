@@ -29,53 +29,47 @@
 } \
 parent->scheduleAt(simTime() + offset, timer)
 
-bool PartnershipManager::is_partner(TransportAddress tad) {
-    for (PartnerEntry partner : partners) {
-        if (partner.tad == tad) return true;
-    }
-    return false;
-}
-
 void PartnershipManager::insert_partner(TransportAddress partner) {
-    if (is_partner(partner)) return;
-    partners.push_back(PartnerEntry(partner));
+    if (partners.find(partner) != partners.end()) return;
+    partners.insert({partner, PartnerEntry(100)});
     parent->set_arrow(partner, "PARTNER", true);
 }
 
 void PartnershipManager::insert_new_partner(TransportAddress partner) {
-    if (is_partner(partner)) return;
-    insert_partner(partner);
+    if (partners.find(partner) != partners.end()) return;
     send_partnership_message(partner);
+    partners.insert({partner, PartnerEntry(100)});
+    parent->set_arrow(partner, "PARTNER", true);
 }
 
 void PartnershipManager::insert_new_partner_if_needed(TransportAddress tad) {
-    if (partners.size() >= M) return;
-    insert_new_partner(tad);
+    if (partners.size() < M) insert_new_partner(tad);
 }
 
-void PartnershipManager::remove_partner(TransportAddress partner) {
-    for (auto i = partners.begin(); i != partners.end(); ++i) {
-        if (i->tad == partner) {
-            parent->set_arrow(i->tad, "PARTNER", false);
-            partners.erase(i);
-            return;
-        }
-    }
+void PartnershipManager::erase_partner(TransportAddress tad) {
+    partners.erase(tad);
+    parent->set_arrow(tad, "PARTNER", false);
 }
 
 void PartnershipManager::remove_worst_scoring_partner() {
-    auto erased = min_element(partners.begin(), partners.end());
-    parent->set_arrow(erased->tad, "PARTNER", false);
-    send_partnership_end_message(erased->tad);
+    typedef typename decltype(partners)::value_type& Comp;
+    auto erased = min_element(partners.begin(), partners.end(),
+            [](Comp l, Comp r) -> bool { return l.second < r.second;});
+    parent->set_arrow(erased->first, "PARTNER", false);
+    send_partnership_end_message(erased->first);
     partners.erase(erased);
 }
 
-std::vector<TransportAddress> PartnershipManager::get_partner_tads() {
-    std::vector<TransportAddress> tads;
-    for (PartnerEntry partner : partners) {
-        tads.push_back(partner.tad);
+std::set<TransportAddress> PartnershipManager::get_partner_tads() {
+    std::set<TransportAddress> tads;
+    for (auto entry : partners) {
+        tads.insert(entry.first);
     }
     return tads;
+}
+
+std::map<TransportAddress, PartnerEntry> PartnershipManager::get_partners() {
+    return partners;
 }
 
 // lifecycle
@@ -91,7 +85,7 @@ void PartnershipManager::get_candidate_partners_from_deputy(TransportAddress dep
 }
 
 void PartnershipManager::take_new_partner(TransportAddress tad) {
-    if (is_partner(tad)) return;
+    if (partners.find(tad) != partners.end()) return;
     while (partners.size() >= M) {
         // is this an optimization over the original? should it be random? Good Fuciing Luck finding Out!!
         remove_worst_scoring_partner();
@@ -100,18 +94,17 @@ void PartnershipManager::take_new_partner(TransportAddress tad) {
 }
 
 void PartnershipManager::replace_partner_with_new(TransportAddress from, TransportAddress with) {
-    for (auto i = partners.begin(); i != partners.end(); ++i) {
-        if (i->tad == from) {
-            parent->set_arrow(i->tad, "PARTNER", false);
-            partners.erase(i);
-            insert_new_partner(with);
-        }
-    } // else we just didn't have it. whatever i don't wcare !!
+    erase_partner(from);
+    insert_new_partner(with);
 }
 
 void PartnershipManager::score_and_switch(TransportAddress with) {
     remove_worst_scoring_partner();
     insert_new_partner(with);
+    setOrReplace(switch_timer, "switch_timer", switch_interval);
+}
+
+void PartnershipManager::reset_switch_timer() {
     setOrReplace(switch_timer, "switch_timer", switch_interval);
 }
 
@@ -123,7 +116,7 @@ void PartnershipManager::send_get_candidate_partners_message(TransportAddress ta
     parent->send_rpc(tad, get_candidate_partners_call);
 }
 
-void PartnershipManager::receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::vector<TransportAddress> from_mCache) {
+void PartnershipManager::receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::set<TransportAddress> from_mCache) {
     GetCandidatePartnersResponse* get_candidate_partners_response = new GetCandidatePartnersResponse();
     get_candidate_partners_response->setCandidates(from_mCache);
     parent->send_rpc_response(get_candidate_partners_call, get_candidate_partners_response);
@@ -167,6 +160,13 @@ void PartnershipManager::send_partnership_end_message(TransportAddress tad) {
 
 void PartnershipManager::receive_partnership_end_message(PartnershipEnd* partnership_end, TransportAddress with) {
     replace_partner_with_new(partnership_end->getFrom(), with);
+}
+
+void PartnershipManager::receive_buffer_map_message(BufferMap* buffer_map) {
+    auto partner = partners.find(buffer_map->getFrom());
+    if (partner != partners.end()) {
+        partner->second.buffer_map = buffer_map->getBuffer_map();
+    }
 }
 
 PartnershipManager::~PartnershipManager() {

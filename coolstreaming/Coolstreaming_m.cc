@@ -2899,12 +2899,12 @@ void GetCandidatePartnersResponse::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->candidates);
 }
 
-TadVec& GetCandidatePartnersResponse::getCandidates()
+TadSet& GetCandidatePartnersResponse::getCandidates()
 {
     return this->candidates;
 }
 
-void GetCandidatePartnersResponse::setCandidates(const TadVec& candidates)
+void GetCandidatePartnersResponse::setCandidates(const TadSet& candidates)
 {
     this->candidates = candidates;
 }
@@ -3022,7 +3022,7 @@ const char *GetCandidatePartnersResponseDescriptor::getFieldTypeString(int field
         field -= basedesc->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
-        "TadVec",
+        "TadSet",
     };
     return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
 }
@@ -3119,7 +3119,7 @@ const char *GetCandidatePartnersResponseDescriptor::getFieldStructName(int field
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 0: return omnetpp::opp_typename(typeid(TadVec));
+        case 0: return omnetpp::opp_typename(typeid(TadSet));
         default: return nullptr;
     };
 }
@@ -3724,19 +3724,32 @@ BufferMap& BufferMap::operator=(const BufferMap& other)
 
 void BufferMap::copy(const BufferMap& other)
 {
+    this->from = other.from;
     this->buffer_map = other.buffer_map;
 }
 
 void BufferMap::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->from);
     doParsimPacking(b,this->buffer_map);
 }
 
 void BufferMap::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->from);
     doParsimUnpacking(b,this->buffer_map);
+}
+
+TransportAddress& BufferMap::getFrom()
+{
+    return this->from;
+}
+
+void BufferMap::setFrom(const TransportAddress& from)
+{
+    this->from = from;
 }
 
 BM& BufferMap::getBuffer_map()
@@ -3814,7 +3827,7 @@ const char *BufferMapDescriptor::getProperty(const char *propertyname) const
 int BufferMapDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
 unsigned int BufferMapDescriptor::getFieldTypeFlags(int field) const
@@ -3827,8 +3840,9 @@ unsigned int BufferMapDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
 const char *BufferMapDescriptor::getFieldName(int field) const
@@ -3840,16 +3854,18 @@ const char *BufferMapDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
+        "from",
         "buffer_map",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
 int BufferMapDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='b' && strcmp(fieldName, "buffer_map")==0) return base+0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
+    if (fieldName[0]=='b' && strcmp(fieldName, "buffer_map")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -3862,9 +3878,10 @@ const char *BufferMapDescriptor::getFieldTypeString(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
+        "TransportAddress",
         "BM",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **BufferMapDescriptor::getFieldPropertyNames(int field) const
@@ -3931,7 +3948,8 @@ std::string BufferMapDescriptor::getFieldValueAsString(void *object, int field, 
     }
     BufferMap *pp = (BufferMap *)object; (void)pp;
     switch (field) {
-        case 0: {std::stringstream out; out << pp->getBuffer_map(); return out.str();}
+        case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        case 1: {std::stringstream out; out << pp->getBuffer_map(); return out.str();}
         default: return "";
     }
 }
@@ -3959,7 +3977,8 @@ const char *BufferMapDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 0: return omnetpp::opp_typename(typeid(BM));
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 1: return omnetpp::opp_typename(typeid(BM));
         default: return nullptr;
     };
 }
@@ -3974,7 +3993,8 @@ void *BufferMapDescriptor::getFieldStructValuePointer(void *object, int field, i
     }
     BufferMap *pp = (BufferMap *)object; (void)pp;
     switch (field) {
-        case 0: return (void *)(&pp->getBuffer_map()); break;
+        case 0: return (void *)(&pp->getFrom()); break;
+        case 1: return (void *)(&pp->getBuffer_map()); break;
         default: return nullptr;
     }
 }

@@ -40,11 +40,15 @@ simple Node extends BaseOverlay
    	 	
    	 	int playout_interval; // duration between blocks
     	int buffer_size; // stored blocks in buffer. probably just 120
-    	int start_threshold; // percentage filled before we start playback
+    	double start_threshold; // percentage filled before we start playback
    	 	
+   	 	int bitrate_kbps; // video bitrate in kbps
+   	 	int block_length_s; // segment length in seconds
    	 	int bm_exchange_interval; // delay between buffermap being sent
    	 	
         bool origin; // if this node should act as the origin
+        string origin_ip; // ip to contact to reach the origin. changes regularly depending on seed...
+        bool heterogeneous_upload; // if we should enable heterogenous upload. only works on inet underlay
         string arrow_type; // which arrow type to display
 }
 

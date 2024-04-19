@@ -30,20 +30,21 @@ class Node;
 class Scheduler {
 public:
     Node* parent; // asdsdadgjfi0gi
-    int block_size; // block packet size in bytes
+    int block_size_bits; // block packet size in bits
     int bm_exchange_interval; // time between each buffermap send
-    int block_length; // block length in seconds
+    int block_length_s; // block length in seconds
     int buffer_size; // max size of the buffermap
 
     cMessage* exchange_timer;
 
     // lifecycle
-    void init(Node* p, int bs, int bmei, int bl, int bsz);
-    void request_buffer_map_blocks(std::unordered_set<int> expected_set, std::vector<PartnerEntry> partners, int playout_index);
+    void init(Node* p, int bsb, int bmei, int bl_s, int bsz);
+    void exchange(std::set<TransportAddress> partners, std::unordered_set<int> bm);
+    void request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerEntry> partners, int playout_index);
 
     // BUFFER_MAP // UDP
     // exchanging buffermap information to gain partial view of block availability
-    void send_buffer_map_message_to_all_partners(std::vector<TransportAddress> partners, std::unordered_set<int> bm);
+    void send_buffer_map_message_to_all_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm);
     // receive_buffer_map_message(BufferMap* buffer_map) => PartnershipManager.h
 
     // BLOCK // TCP

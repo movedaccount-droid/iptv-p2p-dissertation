@@ -18,6 +18,7 @@
 
 #include <unordered_set>
 #include "common/TransportAddress.h"
+#include "Coolstreaming_m.h"
 
 class Node;
 class Buffer {
@@ -27,22 +28,31 @@ public:
     int playout_interval; // duration between blocks
     int playout_index; // next block index to be played out. also the lowest block that should be in the buffer
     int buffer_size; // stored blocks in buffer. probably just 120
-    int start_threshold; // percentage filled before we start playback
+    int block_size_bits; // size of transferred block in bits
+    double start_threshold; // percentage filled before we start playback
     bool started; // if running
 
     cMessage* playout_timer;
 
     // lifecycle
-    void init(Node* p, int pint, int bs, double st);
+    void init(Node* p, int pint, int bs, double st, int bsb);
     void set_playout_index(int pind);
     void start();
     double percent_filled();
+    std::unordered_set<int> get_buffer_map();
     std::unordered_set<int> get_expected_set(); // return the "inverse" of our buffer
+    int get_playout_index();
     void receive(int block); // receive a block
     void playout(); // playout a block
 
-    Buffer() {};
-    virtual ~Buffer() { playout_timer = NULL; };
+    // BLOCK // TCP
+    // requesting blocks from partners to play
+    // extended from main functions in Scheduler.h
+    void receive_block_message_and_respond(BlockCall* block_call);
+    void receive_block_response(BlockResponse* block_response);
+
+    Buffer() { playout_timer = NULL; };
+    virtual ~Buffer();
 };
 
 #endif /* OVERLAY_COOLSTREAMING_BUFFER_H_ */

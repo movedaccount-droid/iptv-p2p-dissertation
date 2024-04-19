@@ -20,21 +20,21 @@
 
 cplusplus {{
 #include <chrono>
-#include <vector>
+#include <set>
 #include <unordered_set>
 #include "common/NodeHandle.h"
 #include "common/OverlayKey.h"
 #include "common/CommonMessages_m.h"
 #include "common/TransportAddress.h"
 typedef std::chrono::duration<int,std::milli> duration_ms;
-typedef std::vector<TransportAddress> TadVec;
+typedef std::set<TransportAddress> TadSet;
 typedef std::unordered_set<int> BM;
 }}
 class noncobject NodeHandle;
 class noncobject OverlayKey;
 class noncobject TransportAddress;
 class noncobject duration_ms;
-class noncobject TadVec;
+class noncobject TadSet;
 class noncobject BM;
 
 class BaseOverlayMessage;
@@ -94,7 +94,7 @@ packet GetCandidatePartnersCall extends BaseCallMessage {
 }
 
 packet GetCandidatePartnersResponse extends BaseResponseMessage {
- 	TadVec candidates;   
+ 	TadSet candidates;   
 }
 
 // coolstreaming partnership initiation/ending
@@ -108,6 +108,7 @@ packet PartnershipEnd extends BaseOverlayMessage {
 
 // coolstreaming buffermap exchange
 packet BufferMap extends BaseOverlayMessage {
+    TransportAddress from;
  	BM buffer_map;
 }
 

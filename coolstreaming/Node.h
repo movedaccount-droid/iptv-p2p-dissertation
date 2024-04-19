@@ -59,7 +59,9 @@ class Node : public BaseOverlay {
 
 public:
     bool origin; // if we are the origin node
+    bool heterogeneous_upload; // if we should enable heterogeneous upload channels
     std::string arrow_type; // type of arrow to draw
+    TransportAddress origin_tad; // tad to use when contacting the origin
     bool leaving; // if we are leaving the network
 
     // arrow drawing/handling
@@ -69,7 +71,7 @@ public:
     void send_rpc(TransportAddress tad, BaseCallMessage* msg);
     void send_rpc_response(BaseCallMessage* call, BaseResponseMessage* response);
 
-    Node(): partnership_manager(), membership_manager(), buffer() {};
+    Node(): partnership_manager(), membership_manager(), buffer(), scheduler() {};
     virtual ~Node();
 };
 

@@ -26,7 +26,7 @@ class Node;
 class PartnershipManager {
 public:
     Node* parent; // object structure ....
-    std::vector<PartnerEntry> partners; // currently active partners
+    std::map<TransportAddress, PartnerEntry> partners; // currently active partners
     int switch_interval; // between trying out a new partner from mcache
     int M; // target number of partners
 
@@ -38,20 +38,21 @@ public:
     void take_new_partner(TransportAddress tad);
     void replace_partner_with_new(TransportAddress from, TransportAddress with);
     void score_and_switch(TransportAddress with);
+    void reset_switch_timer();
 
     // utils
-    bool is_partner(TransportAddress tad);
     void insert_partner(TransportAddress partner);
     void insert_new_partner(TransportAddress partner);
     void insert_new_partner_if_needed(TransportAddress partner);
-    void remove_partner(TransportAddress partner);
+    void erase_partner(TransportAddress partner);
     void remove_worst_scoring_partner();
-    std::vector<TransportAddress> get_partner_tads();
+    std::set<TransportAddress> get_partner_tads();
+    std::map<TransportAddress, PartnerEntry> get_partners();
 
     // GET CANDIDATE PARTNERS MESSAGES // TCP
     // get list of possible starting partners from the deputy
     void send_get_candidate_partners_message(TransportAddress tad);
-    void receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::vector<TransportAddress> from_mCache);
+    void receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::set<TransportAddress> from_mCache);
     void timeout_get_candidate_partners_response(GetCandidatePartnersCall* get_candidate_partners_call);
     void receive_get_candidate_partners_response(GetCandidatePartnersResponse* get_candidate_partners_response);
 
@@ -64,6 +65,11 @@ public:
     // cuts a partnership with a node cleanly
     void send_partnership_end_message(TransportAddress tad);
     void receive_partnership_end_message(PartnershipEnd* partnership_end, TransportAddress with);
+
+    // BUFFER_MAP // UDP
+    // exchanging buffermap information to gain partial view of block availability
+    // extended from main function in Scheduler.h
+    void receive_buffer_map_message(BufferMap* buffer_map);
 
     PartnershipManager() { switch_timer = NULL; };
     virtual ~PartnershipManager();
