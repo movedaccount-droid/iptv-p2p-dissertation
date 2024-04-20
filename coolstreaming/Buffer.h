@@ -46,10 +46,10 @@ public:
     void playout(); // playout a block
 
     // BLOCK // TCP
-    // requesting blocks from partners to play
-    // extended from main functions in Scheduler.h
-    void receive_block_message_and_respond(BlockCall* block_call);
-    void receive_block_response(BlockResponse* block_response);
+    // requesting and receiving blocks from partners to play
+    // continuing from head function in Scheduler.h
+    void receive_block_request_message_and_respond(BlockRequest* block_request);
+    void receive_block_message(Block* block);
 
     Buffer() { playout_timer = NULL; };
     virtual ~Buffer();

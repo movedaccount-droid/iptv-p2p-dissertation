@@ -27,14 +27,14 @@ cplusplus {{
 #include "common/CommonMessages_m.h"
 #include "common/TransportAddress.h"
 typedef std::chrono::duration<int,std::milli> duration_ms;
-typedef std::set<TransportAddress> TadSet;
+typedef std::map<TransportAddress, double> BandwidthMap;
 typedef std::unordered_set<int> BM;
 }}
 class noncobject NodeHandle;
 class noncobject OverlayKey;
 class noncobject TransportAddress;
 class noncobject duration_ms;
-class noncobject TadSet;
+class noncobject BandwidthMap;
 class noncobject BM;
 
 class BaseOverlayMessage;
@@ -48,6 +48,7 @@ packet Membership extends BaseOverlayMessage {
     TransportAddress tad;
     int num_partner;
     simtime_t ttl;
+    double bandwidth; // we need this later for scheduler calculations
     bool forwarded; // if this was forwarded or is the entry message for the node
     bool entry; // if this is the entry message for the node
 }
@@ -94,12 +95,13 @@ packet GetCandidatePartnersCall extends BaseCallMessage {
 }
 
 packet GetCandidatePartnersResponse extends BaseResponseMessage {
- 	TadSet candidates;   
+ 	BandwidthMap candidates;   
 }
 
 // coolstreaming partnership initiation/ending
 packet Partnership extends BaseOverlayMessage {
 	TransportAddress from;
+	double bandwidth;
 }
 
 packet PartnershipEnd extends BaseOverlayMessage {
@@ -113,10 +115,16 @@ packet BufferMap extends BaseOverlayMessage {
 }
 
 // coolstreaming block request
-packet BlockCall extends BaseCallMessage {
- 	BM blocks;   
+packet BlockRequest extends BaseOverlayMessage {
+    TransportAddress from;
+ 	BM blocks;
 }
 
-packet BlockResponse extends BaseResponseMessage {
+packet Block extends BaseOverlayMessage {
  	int index;   
+}
+
+// active_node finished downloading self-message/timer
+message ExchangeAfterDownload {
+	TransportAddress finished;   
 }

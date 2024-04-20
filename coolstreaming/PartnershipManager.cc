@@ -29,21 +29,21 @@
 } \
 parent->scheduleAt(simTime() + offset, timer)
 
-void PartnershipManager::insert_partner(TransportAddress partner) {
+void PartnershipManager::insert_partner(TransportAddress partner, double bandwidth) {
     if (partners.find(partner) != partners.end()) return;
-    partners.insert({partner, PartnerEntry(100)});
+    partners.insert({partner, PartnerEntry(bandwidth)});
     parent->set_arrow(partner, "PARTNER", true);
 }
 
-void PartnershipManager::insert_new_partner(TransportAddress partner) {
+void PartnershipManager::insert_new_partner(TransportAddress partner, double bandwidth) {
     if (partners.find(partner) != partners.end()) return;
     send_partnership_message(partner);
-    partners.insert({partner, PartnerEntry(100)});
+    partners.insert({partner, PartnerEntry(bandwidth)});
     parent->set_arrow(partner, "PARTNER", true);
 }
 
-void PartnershipManager::insert_new_partner_if_needed(TransportAddress tad) {
-    if (partners.size() < M) insert_new_partner(tad);
+void PartnershipManager::insert_new_partner_if_needed(TransportAddress tad, double bandwidth) {
+    if (partners.size() < M) insert_new_partner(tad, bandwidth);
 }
 
 void PartnershipManager::erase_partner(TransportAddress tad) {
@@ -73,8 +73,9 @@ std::map<TransportAddress, PartnerEntry> PartnershipManager::get_partners() {
 }
 
 // lifecycle
-void PartnershipManager::init(Node* p, int si, int m) {
+void PartnershipManager::init(Node* p, double b, int si, int m) {
     parent = p;
+    bandwidth = b;
     switch_interval = si;
     M = m;
 }
@@ -84,23 +85,23 @@ void PartnershipManager::get_candidate_partners_from_deputy(TransportAddress dep
     parent->getParentModule()->getParentModule()->bubble("getting candidate partners...");
 }
 
-void PartnershipManager::take_new_partner(TransportAddress tad) {
+void PartnershipManager::take_new_partner(TransportAddress tad, double bandwidth) {
     if (partners.find(tad) != partners.end()) return;
     while (partners.size() >= M) {
         // is this an optimization over the original? should it be random? Good Fuciing Luck finding Out!!
         remove_worst_scoring_partner();
     }
-    insert_partner(tad);
+    insert_partner(tad, bandwidth);
 }
 
-void PartnershipManager::replace_partner_with_new(TransportAddress from, TransportAddress with) {
+void PartnershipManager::replace_partner_with_new(TransportAddress from, TransportAddress with, double with_bandwidth) {
     erase_partner(from);
-    insert_new_partner(with);
+    insert_new_partner(with, with_bandwidth);
 }
 
-void PartnershipManager::score_and_switch(TransportAddress with) {
+void PartnershipManager::score_and_switch(TransportAddress with, double with_bandwidth) {
     remove_worst_scoring_partner();
-    insert_new_partner(with);
+    insert_new_partner(with, with_bandwidth);
     setOrReplace(switch_timer, "switch_timer", switch_interval);
 }
 
@@ -116,7 +117,7 @@ void PartnershipManager::send_get_candidate_partners_message(TransportAddress ta
     parent->send_rpc(tad, get_candidate_partners_call);
 }
 
-void PartnershipManager::receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::set<TransportAddress> from_mCache) {
+void PartnershipManager::receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::map<TransportAddress, double> from_mCache) {
     GetCandidatePartnersResponse* get_candidate_partners_response = new GetCandidatePartnersResponse();
     get_candidate_partners_response->setCandidates(from_mCache);
     parent->send_rpc_response(get_candidate_partners_call, get_candidate_partners_response);
@@ -127,10 +128,10 @@ void PartnershipManager::timeout_get_candidate_partners_response(GetCandidatePar
 }
 
 void PartnershipManager::receive_get_candidate_partners_response(GetCandidatePartnersResponse* get_candidate_partners_response) {
-    for (TransportAddress candidate : get_candidate_partners_response->getCandidates()) {
+    for (auto candidate : get_candidate_partners_response->getCandidates()) {
         // because of mcache gossiping and our addition of insert_new_partner_if_needed, we might already have partners by now
         if (partners.size() >= M) break;
-        insert_new_partner(candidate);
+        insert_new_partner(candidate.first, candidate.second);
     }
     setOrReplace(switch_timer, "switch_timer", switch_interval);
     parent->getParentModule()->getParentModule()->bubble(std::string("received ").append(std::to_string(partners.size())).append(" candidates...").c_str());
@@ -141,13 +142,14 @@ void PartnershipManager::receive_get_candidate_partners_response(GetCandidatePar
 void PartnershipManager::send_partnership_message(TransportAddress tad) {
     Partnership* partnership = new Partnership();
     partnership->setFrom(parent->getThisNode());
+    partnership->setBandwidth(bandwidth);
     parent->sendMessageToUDP(tad, partnership);
 }
 
 // we decide to always accept new partnerships, starting a chain of users being pushed from a single partnership
 // until the system converges on stability, which happens at certain node intervals depending on M.
 void PartnershipManager::receive_partnership_message(Partnership* partnership) {
-    take_new_partner(partnership->getFrom());
+    take_new_partner(partnership->getFrom(), partnership->getBandwidth());
 }
 
 // PARTNERSHIP ENDING MESSAGES // UDP
@@ -158,8 +160,8 @@ void PartnershipManager::send_partnership_end_message(TransportAddress tad) {
     parent->sendMessageToUDP(tad, partnership_end);
 }
 
-void PartnershipManager::receive_partnership_end_message(PartnershipEnd* partnership_end, TransportAddress with) {
-    replace_partner_with_new(partnership_end->getFrom(), with);
+void PartnershipManager::receive_partnership_end_message(PartnershipEnd* partnership_end, TransportAddress with, double with_bandwidth) {
+    replace_partner_with_new(partnership_end->getFrom(), with, with_bandwidth);
 }
 
 void PartnershipManager::receive_buffer_map_message(BufferMap* buffer_map) {

@@ -34,6 +34,7 @@ private:
     std::unordered_map<int, int> uuidCounts; // message uuid counting
     TransportAddress origin_tad; // tad to contact to reach the origin
     int seq_num; // sequence number for next message
+    double bandwidth; // bandwidth for this node
     int c; // SCAMP constant determining proportion of tolerated failures
     int scamp_resubscription_interval; // delay before resubscriptions, sub ttl
     int scamp_heartbeat_interval; // delay between heartbeats being sent
@@ -48,7 +49,7 @@ public:
     cMessage *no_heartbeat_timer;
 
     // lifecycle functions
-    void init(Node* p, TransportAddress ot, int cin, int scr, int sch, int schf, int m);
+    void init(Node* p, TransportAddress ot, double b, int cin, int scr, int sch, int schf, int m);
     void join_overlay();
     void contact_deputy_and_enter_network(TransportAddress deputy);
     void resubscribe();
@@ -61,8 +62,8 @@ public:
     // utility functions
     std::pair<const TransportAddress, mCacheEntry> random_mcache_entry(TransportAddress exclude = TransportAddress());
     std::pair<const TransportAddress, mCacheEntry> random_mcache_entry(std::set<TransportAddress> exclude);
-    std::set<TransportAddress> get_partner_candidates(TransportAddress requester, int this_node_partner_count);
-    void insert_mcache_entry(TransportAddress tad, int seq_num, int num_partner, simtime_t ttl);
+    std::map<TransportAddress, double> get_partner_candidates(TransportAddress exclude, int this_node_partner_count);
+    void insert_mcache_entry(TransportAddress tad, int seq_num, int num_partner, simtime_t ttl, double bandwidth);
     void remove_mcache_entry(TransportAddress tad);
 
     // GET DEPUTY MESSAGES // TCP

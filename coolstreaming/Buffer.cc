@@ -99,19 +99,19 @@ void Buffer::playout() {
 // BLOCK // TCP
 // requesting blocks from partners to play
 // extended from main functions in Scheduler.h
-void Buffer::receive_block_message_and_respond(BlockCall* block_call) {
-    for (int block : block_call->getBlocks()) {
-        if (buffer.find(block) != buffer.end()) {
-            BlockResponse* block_response = new BlockResponse();
-            block_response->setIndex(block);
-            block_response->setBitLength(block_size_bits);
-            parent->send_rpc_response(block_call, block_response);
+void Buffer::receive_block_request_message_and_respond(BlockRequest* block_request) {
+    for (int requested_block : block_request->getBlocks()) {
+        if (buffer.find(requested_block) != buffer.end()) {
+            Block* block = new Block();
+            block->setIndex(requested_block);
+            block->setBitLength(block_size_bits);
+            parent->sendMessageToUDP(block_request->getFrom(), block);
         }
     }
 }
 
-void Buffer::receive_block_response(BlockResponse* block_response) {
-    buffer.insert(block_response->getIndex());
+void Buffer::receive_block_message(Block* block) {
+    buffer.insert(block->getIndex());
 }
 
 Buffer::~Buffer() {

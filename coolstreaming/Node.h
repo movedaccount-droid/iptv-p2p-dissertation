@@ -60,6 +60,7 @@ class Node : public BaseOverlay {
 public:
     bool origin; // if we are the origin node
     bool heterogeneous_upload; // if we should enable heterogeneous upload channels
+    double bandwidth; // bandwidth for this node
     std::string arrow_type; // type of arrow to draw
     TransportAddress origin_tad; // tad to use when contacting the origin
     bool leaving; // if we are leaving the network

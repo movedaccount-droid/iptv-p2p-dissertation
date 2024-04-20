@@ -26,18 +26,21 @@ public:
     int num_partner;
     simtime_t ttl;
     simtime_t last_update_time;
+    int bandwidth;
 
     bool expired();
 
     mCacheEntry(
             int s,
             int np,
-            simtime_t ttl):
+            simtime_t ttl,
+            int b):
 
             seq_num(s),
             num_partner(np),
             ttl(ttl),
-            last_update_time(simTime())
+            last_update_time(simTime()),
+            bandwidth(b)
     {};
 
     ~mCacheEntry() {};

@@ -37,20 +37,26 @@ void Scheduler::init(Node* p, int bsb, int bmei, int bl_s, int bsz) {
     setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
 }
 
-void Scheduler::exchange(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
-    send_buffer_map_message_to_all_partners(partners, bm);
+void Scheduler::exchange_on_timer(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
+    send_buffer_map_message_to_all_idle_partners(partners, bm);
     setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
 }
 
 void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerEntry> partners, int playout_index) {
     // scheduling algorithm, fig 3.
-    std::map<TransportAddress, std::unordered_map<int, int>> T; // maps block i to remaining transmission time
+    std::map<TransportAddress, std::unordered_map<int, double>> T; // maps block i to remaining transmission time
     std::map<TransportAddress, std::unordered_set<int>> supplier; // supplier of each block, though we switch this to a mapping of buffermaps to each partner for easy sending
     std::map<int, std::unordered_set<int>> dup_set; // set of blocks with more than one supplier, mapped to each supplier count
 
-    // we modify this to make it bearable. fill T with base deadlines
+    // we modify this to make it bearable. we first remove any partners
+    // we are already receiving blocks from
+    for (TransportAddress active : active_nodes) {
+        partners.erase(active);
+    }
+
+    // then fill T with base deadlines
     // and supplier with empty maps now instead of mid-process
-    std::unordered_map<int, int> base_remaining_times;
+    std::unordered_map<int, double> base_remaining_times;
     std::unordered_set<int> base_supplier;
     for (int segment : expected_set) {
         // this is approximate, but by all means should be good enough
@@ -111,33 +117,52 @@ void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, 
             }
         }
     }
-    // send messages
+    // calculate download times and send messages
     for (auto entry : supplier) {
-        if (!entry.second.empty()) send_block_message(entry.first, entry.second);
+        if (!entry.second.empty()) {
+            send_block_request_message(entry.first, entry.second);
+            active_nodes.insert(entry.first);
+            double total_download_time = entry.second.size() * block_size_bits /
+                    partners.at(entry.first).bandwidth;
+            ExchangeAfterDownload* exchange_after_download = new ExchangeAfterDownload();
+            exchange_after_download->setFinished(entry.first);
+            exchange_after_download_timers.insert(exchange_after_download);
+            parent->scheduleAt(simTime() + total_download_time, exchange_after_download);
+        }
     }
+}
+
+void Scheduler::exchange_after_download(ExchangeAfterDownload* exchange_after_download, std::unordered_set<int> buffer_map) {
+    send_buffer_map_message(exchange_after_download->getFinished(), buffer_map);
+    active_nodes.erase(exchange_after_download->getFinished());
+    parent->cancelAndDelete(exchange_after_download);
+    exchange_after_download_timers.erase(exchange_after_download);
 }
 
 // BUFFER_MAP // UDP
 // exchanging buffermap information to gain partial view of block availability
-void Scheduler::send_buffer_map_message_to_all_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
+void Scheduler::send_buffer_map_message(TransportAddress partner, std::unordered_set<int> bm) {
+    BufferMap* buffer_map = new BufferMap();
+    buffer_map->setFrom(parent->getThisNode());
+    buffer_map->setBuffer_map(bm);
+    parent->sendMessageToUDP(partner, buffer_map);
+}
+
+void Scheduler::send_buffer_map_message_to_all_idle_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
     for (TransportAddress partner : partners) {
-        BufferMap* buffer_map = new BufferMap();
-        buffer_map->setFrom(parent->getThisNode());
-        buffer_map->setBuffer_map(bm);
-        parent->sendMessageToUDP(partner, buffer_map);
+        if (active_nodes.find(partner) == active_nodes.end()) {
+            send_buffer_map_message(partner, bm);
+        }
     }
 }
 
 // BLOCK // TCP
 // requesting blocks from partners to play
-void Scheduler::send_block_message(TransportAddress tad, std::unordered_set<int> bm) {
-    BlockCall* block_call = new BlockCall();
-    block_call->setBlocks(bm);
-    parent->send_rpc(tad, block_call);
-}
-
-void Scheduler::timeout_block_response(BlockCall* block_call) {
-    // worrying sign... but we ignore for now
+void Scheduler::send_block_request_message(TransportAddress tad, std::unordered_set<int> bm) {
+    BlockRequest* block_request = new BlockRequest();
+    block_request->setFrom(parent->getThisNode());
+    block_request->setBlocks(bm);
+    parent->sendMessageToUDP(tad, block_request);
 }
 
 Scheduler::~Scheduler() {

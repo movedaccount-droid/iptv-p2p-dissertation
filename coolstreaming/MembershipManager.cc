@@ -78,13 +78,13 @@ std::pair<const TransportAddress, mCacheEntry> MembershipManager::random_mcache_
 
 }
 
-std::set<TransportAddress> MembershipManager::get_partner_candidates(TransportAddress exclude, int this_node_partner_count) {
+std::map<TransportAddress, double> MembershipManager::get_partner_candidates(TransportAddress exclude, int this_node_partner_count) {
 
     std::random_device ran;
     std::mt19937 rng(ran());
 
     const int EMPTY_SIZE = 1;
-    std::set<TransportAddress> candidates;
+    std::map<TransportAddress, double> candidates;
 
     // we do this the Kind of Nasty way. build vec shuffle and pull values
     std::vector<TransportAddress> all;
@@ -101,20 +101,20 @@ std::set<TransportAddress> MembershipManager::get_partner_candidates(TransportAd
             parent->getParentModule()->getParentModule()->bubble(std::string("expired random ip ").append(it->getIp().str()).append("...").c_str());
             mCache.erase(*it);
         } else if (*it != exclude) {
-            candidates.insert(*it);
+            candidates.insert({*it, mCache.at(*it).bandwidth});
         }
         all.erase(it);
     }
 
-    if (candidates.size() < M && this_node_partner_count < M) candidates.insert(parent->getThisNode());
+    if (candidates.size() < M && this_node_partner_count < M) candidates.insert({parent->getThisNode(), bandwidth});
 
     return candidates;
 
 }
 
-void MembershipManager::insert_mcache_entry(TransportAddress tad, int seq_num, int num_partner, simtime_t ttl) {
+void MembershipManager::insert_mcache_entry(TransportAddress tad, int seq_num, int num_partner, simtime_t ttl, double bandwidth) {
     if (mCache.find(tad) != mCache.end()) return;
-    mCacheEntry insert(seq_num, num_partner, ttl);
+    mCacheEntry insert(seq_num, num_partner, ttl, bandwidth);
     if (!insert.expired()) {
         mCache.insert({tad, insert});
         parent->set_arrow(tad, "MCACHE", true);
@@ -130,9 +130,10 @@ void MembershipManager::remove_mcache_entry(TransportAddress tad) {
 }
 
 // init
-void MembershipManager::init(Node* p, TransportAddress ot, int cin, int scr, int sch, int schf, int m) {
+void MembershipManager::init(Node* p, TransportAddress ot, double b, int cin, int scr, int sch, int schf, int m) {
     parent = p;
     origin_tad = ot;
+    bandwidth = b;
     c = cin;
     scamp_resubscription_interval = scr;
     scamp_heartbeat_interval = sch;
@@ -247,7 +248,7 @@ void MembershipManager::timeout_get_deputy_response(GetDeputyCall* get_deputy_ca
        << "    timed out when contacting origin node for deputy, retrying..."
        << endl;
     parent->getParentModule()->getParentModule()->bubble("timed out on GetDeputy, retrying...");
-    send_get_deputy_message(get_deputy_call->getDest());
+    send_get_deputy_message(origin_tad);
 }
 
 void MembershipManager::receive_get_deputy_response(GetDeputyResponse* get_deputy_response) {
@@ -266,6 +267,7 @@ void MembershipManager::generate_membership_message(TransportAddress dest,
     membership->setTad(tad);
     membership->setNum_partner(num_partner);
     membership->setTtl(ttl);
+    membership->setBandwidth(bandwidth);
     membership->setForwarded(forwarded);
     membership->setEntry(entry);
     parent->sendMessageToUDP(dest, membership);
@@ -325,7 +327,8 @@ void MembershipManager::absorb_membership_message(Membership* membership) {
     insert_mcache_entry(membership->getTad(),
             membership->getSeq_num(),
             membership->getNum_partner(),
-            membership->getTtl());
+            membership->getTtl(),
+            membership->getBandwidth());
     generate_inview_message(membership->getTad());
 }
 

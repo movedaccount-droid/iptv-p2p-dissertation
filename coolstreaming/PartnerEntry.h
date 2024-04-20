@@ -24,7 +24,7 @@ public:
     int sent;
     int retrieved;
     simtime_t start;
-    int bandwidth;
+    double bandwidth;
     std::unordered_set<int> buffer_map;
 
     double score() const {
@@ -38,7 +38,7 @@ public:
 
     friend bool operator<(const PartnerEntry& l, const PartnerEntry& r);
 
-    PartnerEntry(int b):
+    PartnerEntry(double b):
         sent(0),
         retrieved(0),
         start(simTime()),
