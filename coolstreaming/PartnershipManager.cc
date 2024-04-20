@@ -32,7 +32,7 @@ parent->scheduleAt(simTime() + offset, timer)
 
 void PartnershipManager::insert_partner(TransportAddress partner, double bandwidth) {
     if (partners.find(partner) != partners.end()) return;
-    partners.insert({partner, PartnerEntry(bandwidth)});
+    partners.insert({partner, PartnerEntry(bandwidth, substream_count)});
     if (parent->origin) partner_k.push_back(partner);
     parent->set_arrow(partner, "PARTNER", true);
 }
@@ -89,8 +89,9 @@ std::vector<TransportAddress> PartnershipManager::get_partner_k() {
 }
 
 // lifecycle
-void PartnershipManager::init(Node* p, double b, int si, int m) {
+void PartnershipManager::init(Node* p, int sc, double b, int si, int m) {
     parent = p;
+    substream_count = sc,
     bandwidth = b;
     switch_interval = si;
     M = m;
@@ -180,11 +181,12 @@ void PartnershipManager::receive_partnership_end_message(PartnershipEnd* partner
     replace_partner_with_new(partnership_end->getFrom(), with, with_bandwidth);
 }
 
-void PartnershipManager::receive_buffer_map_message(BufferMap* buffer_map) {
+void PartnershipManager::receive_buffer_map_latest_blocks(BufferMapMsg* buffer_map) {
     auto partner = partners.find(buffer_map->getFrom());
     if (partner != partners.end()) {
-        partner->second.buffer_map = buffer_map->getBuffer_map();
+        partner->second.latest_blocks = buffer_map->getBuffer_map().second;
     }
+    return partner != partners.end();
 }
 
 PartnershipManager::~PartnershipManager() {

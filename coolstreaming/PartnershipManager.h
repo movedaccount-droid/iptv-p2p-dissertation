@@ -28,14 +28,17 @@ public:
     Node* parent; // object structure ....
     std::map<TransportAddress, PartnerEntry> partners; // currently active partners
     std::vector<TransportAddress> partner_k; // vector so we can get k value of partner for origin load balancing. only used on origin
+    int substream_count; // num of substreams
     double bandwidth; // bandwidth of this node
-    int switch_interval; // between trying out a new partner from mcache
+    int switch_interval; // delay between trying out a new partner from mcache
     int M; // target number of partners
 
     cMessage* switch_timer;
 
     // lifecycle
-    void init(Node* p, double b, int bmei, int m);
+    void init(Node* p, int sc, double b, int bmei, int m);
+
+    // partners
     void get_candidate_partners_from_deputy(TransportAddress deputy);
     void take_new_partner(TransportAddress tad, double bandwidth);
     void replace_partner_with_new(TransportAddress from, TransportAddress with, double with_bandwidth);
@@ -70,9 +73,9 @@ public:
     void receive_partnership_end_message(PartnershipEnd* partnership_end, TransportAddress with, double with_bandwidth);
 
     // BUFFER_MAP // UDP
-    // exchanging buffermap information to gain partial view of block availability
-    // extended from main function in Scheduler.h
-    void receive_buffer_map_message(BufferMap* buffer_map);
+    // exchanging latest block information to gain partial view of block availability
+    // extended from main function in StreamManager.h, returns false if this was not from a partner
+    bool receive_buffer_map_latest_blocks(BufferMapMsg* buffer_map_msg);
 
     PartnershipManager() { switch_timer = NULL; };
     virtual ~PartnershipManager();

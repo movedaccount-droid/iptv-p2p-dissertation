@@ -28,14 +28,14 @@ cplusplus {{
 #include "common/TransportAddress.h"
 typedef std::chrono::duration<int,std::milli> duration_ms;
 typedef std::map<TransportAddress, double> BandwidthMap;
-typedef std::unordered_set<int> BM;
+typedef std::pair<std::vector<int>, std::map<int, int>> BufferMap;
 }}
 class noncobject NodeHandle;
 class noncobject OverlayKey;
 class noncobject TransportAddress;
 class noncobject duration_ms;
 class noncobject BandwidthMap;
-class noncobject BM;
+class noncobject BufferMap;
 
 class BaseOverlayMessage;
 class BaseCallMessage;
@@ -69,24 +69,16 @@ packet Unsubscription extends BaseOverlayMessage {
 	bool inview;
 }
 
-// coolstreaming-extended scamp gossiped unsubscription message .
-// i feel the need to again mentino that this is a Very Fucking Bad Idea
-packet GossipedUnsubscription extends BaseOverlayMessage {
-    TransportAddress from;
-    TransportAddress failing;
-}
-
 // scamp/mcache heartbeat message
 packet Heartbeat extends BaseOverlayMessage {}
 
-// coolstreaming origin deputy list request message. also contains the starting block index
+// coolstreaming origin deputy list request message. no longer contains the starting block index as of new coolstreaming
 packet GetDeputyCall extends BaseCallMessage {
 	TransportAddress dest;
 }
 
 packet GetDeputyResponse extends BaseResponseMessage {
  	TransportAddress deputy;
- 	int block_index;
 }
 
 // coolstreaming deputy partner list request message
@@ -108,23 +100,16 @@ packet PartnershipEnd extends BaseOverlayMessage {
     TransportAddress from;
 }
 
-// coolstreaming buffermap exchange
-packet BufferMap extends BaseOverlayMessage {
+// new coolstreaming buffermap exchange
+packet BufferMapMsg extends BaseOverlayMessage {
     TransportAddress from;
- 	BM buffer_map;
+ 	BufferMap buffer_map;
 }
 
-// coolstreaming block request
-packet BlockRequest extends BaseOverlayMessage {
-    TransportAddress from;
- 	BM blocks;
-}
-
+// new coolstreaming block push
+// when we send two blocks to catch up a node, that block would send four blocks in turn, eight, sixteen etc.
+// to avoid this we only allow the second block to trigger forwarding; the following node thus only sends two blocks
 packet Block extends BaseOverlayMessage {
- 	int index;   
-}
-
-// active_node finished downloading self-message/timer
-message ExchangeAfterDownload {
-	TransportAddress finished;   
+ 	int index;
+ 	bool triggers_send;
 }

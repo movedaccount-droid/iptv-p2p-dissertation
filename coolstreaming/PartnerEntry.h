@@ -25,7 +25,7 @@ public:
     int retrieved;
     simtime_t start;
     double bandwidth;
-    std::unordered_set<int> buffer_map;
+    std::vector<int> latest_blocks;
 
     double score() const {
         double time_units = (simTime() - start).dbl();
@@ -33,17 +33,19 @@ public:
         double sij = retrieved / time_units;
         return std::max(sji, sij);
     };
+
+    // TODO: this
     void add_sent();
     void add_retrieved();
 
     friend bool operator<(const PartnerEntry& l, const PartnerEntry& r);
 
-    PartnerEntry(double b):
+    PartnerEntry(double b, int substream_count):
         sent(0),
         retrieved(0),
         start(simTime()),
         bandwidth(b),
-        buffer_map()
+        latest_blocks(substream_count, 0)
     {};
 
     virtual ~PartnerEntry() {};
