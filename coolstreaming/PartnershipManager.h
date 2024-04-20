@@ -27,6 +27,7 @@ class PartnershipManager {
 public:
     Node* parent; // object structure ....
     std::map<TransportAddress, PartnerEntry> partners; // currently active partners
+    std::vector<TransportAddress> partner_k; // vector so we can get k value of partner for origin load balancing. only used on origin
     double bandwidth; // bandwidth of this node
     int switch_interval; // between trying out a new partner from mcache
     int M; // target number of partners
@@ -49,6 +50,7 @@ public:
     void remove_worst_scoring_partner();
     std::set<TransportAddress> get_partner_tads();
     std::map<TransportAddress, PartnerEntry> get_partners();
+    std::vector<TransportAddress> get_partner_k();
 
     // GET CANDIDATE PARTNERS MESSAGES // TCP
     // get list of possible starting partners from the deputy

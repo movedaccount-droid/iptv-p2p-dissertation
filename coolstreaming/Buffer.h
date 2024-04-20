@@ -36,10 +36,11 @@ public:
 
     // lifecycle
     void init(Node* p, int pint, int bs, double st, int bsb);
-    void set_playout_index(int pind);
     void start();
+    void set_playout_index(int pind);
     double percent_filled();
     std::unordered_set<int> get_buffer_map();
+    std::map<TransportAddress, std::unordered_set<int>> get_origin_buffer_maps(std::vector<TransportAddress> partner_k); // incorporating load control
     std::unordered_set<int> get_expected_set(); // return the "inverse" of our buffer
     int get_playout_index();
     void receive(int block); // receive a block

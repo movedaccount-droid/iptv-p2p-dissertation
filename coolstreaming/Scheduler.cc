@@ -37,9 +37,18 @@ void Scheduler::init(Node* p, int bsb, int bmei, int bl_s, int bsz) {
     setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
 }
 
-void Scheduler::exchange_on_timer(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
-    send_buffer_map_message_to_all_idle_partners(partners, bm);
+void Scheduler::exchange_all_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
     setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
+    for (TransportAddress partner : partners) {
+        send_buffer_map_message(partner, bm);
+    }
+}
+
+void Scheduler::exchange_origin_partners(std::map<TransportAddress, std::unordered_set<int>> buffer_maps) {
+    setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
+    for (auto entry : buffer_maps) {
+        send_buffer_map_message(entry.first, entry.second);
+    }
 }
 
 void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerEntry> partners, int playout_index) {
@@ -48,13 +57,7 @@ void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, 
     std::map<TransportAddress, std::unordered_set<int>> supplier; // supplier of each block, though we switch this to a mapping of buffermaps to each partner for easy sending
     std::map<int, std::unordered_set<int>> dup_set; // set of blocks with more than one supplier, mapped to each supplier count
 
-    // we modify this to make it bearable. we first remove any partners
-    // we are already receiving blocks from
-    for (TransportAddress active : active_nodes) {
-        partners.erase(active);
-    }
-
-    // then fill T with base deadlines
+    // we modify this to make it bearable. we first fill T with base deadlines
     // and supplier with empty maps now instead of mid-process
     std::unordered_map<int, double> base_remaining_times;
     std::unordered_set<int> base_supplier;
@@ -117,26 +120,10 @@ void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, 
             }
         }
     }
-    // calculate download times and send messages
+    // send messages
     for (auto entry : supplier) {
-        if (!entry.second.empty()) {
-            send_block_request_message(entry.first, entry.second);
-            active_nodes.insert(entry.first);
-            double total_download_time = entry.second.size() * block_size_bits /
-                    partners.at(entry.first).bandwidth;
-            ExchangeAfterDownload* exchange_after_download = new ExchangeAfterDownload();
-            exchange_after_download->setFinished(entry.first);
-            exchange_after_download_timers.insert(exchange_after_download);
-            parent->scheduleAt(simTime() + total_download_time, exchange_after_download);
-        }
+        if (!entry.second.empty()) send_block_request_message(entry.first, entry.second);
     }
-}
-
-void Scheduler::exchange_after_download(ExchangeAfterDownload* exchange_after_download, std::unordered_set<int> buffer_map) {
-    send_buffer_map_message(exchange_after_download->getFinished(), buffer_map);
-    active_nodes.erase(exchange_after_download->getFinished());
-    parent->cancelAndDelete(exchange_after_download);
-    exchange_after_download_timers.erase(exchange_after_download);
 }
 
 // BUFFER_MAP // UDP
@@ -146,14 +133,6 @@ void Scheduler::send_buffer_map_message(TransportAddress partner, std::unordered
     buffer_map->setFrom(parent->getThisNode());
     buffer_map->setBuffer_map(bm);
     parent->sendMessageToUDP(partner, buffer_map);
-}
-
-void Scheduler::send_buffer_map_message_to_all_idle_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
-    for (TransportAddress partner : partners) {
-        if (active_nodes.find(partner) == active_nodes.end()) {
-            send_buffer_map_message(partner, bm);
-        }
-    }
 }
 
 // BLOCK // TCP

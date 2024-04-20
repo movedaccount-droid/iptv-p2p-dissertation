@@ -16,6 +16,7 @@
 #include "../coolstreaming/PartnershipManager.h"
 
 #include <algorithm>
+#include <iterator>
 
 #include "../coolstreaming/Node.h"
 #include "../coolstreaming/PartnerEntry.h"
@@ -32,14 +33,14 @@ parent->scheduleAt(simTime() + offset, timer)
 void PartnershipManager::insert_partner(TransportAddress partner, double bandwidth) {
     if (partners.find(partner) != partners.end()) return;
     partners.insert({partner, PartnerEntry(bandwidth)});
+    if (parent->origin) partner_k.push_back(partner);
     parent->set_arrow(partner, "PARTNER", true);
 }
 
 void PartnershipManager::insert_new_partner(TransportAddress partner, double bandwidth) {
     if (partners.find(partner) != partners.end()) return;
     send_partnership_message(partner);
-    partners.insert({partner, PartnerEntry(bandwidth)});
-    parent->set_arrow(partner, "PARTNER", true);
+    insert_partner(partner, bandwidth);
 }
 
 void PartnershipManager::insert_new_partner_if_needed(TransportAddress tad, double bandwidth) {
@@ -48,6 +49,11 @@ void PartnershipManager::insert_new_partner_if_needed(TransportAddress tad, doub
 
 void PartnershipManager::erase_partner(TransportAddress tad) {
     partners.erase(tad);
+    if (parent->origin) {
+        for (auto it = partner_k.begin(); it != partner_k.end(); ++it) {
+            if (*it == tad) partner_k.erase(it); break;
+        }
+    }
     parent->set_arrow(tad, "PARTNER", false);
 }
 
@@ -57,6 +63,12 @@ void PartnershipManager::remove_worst_scoring_partner() {
             [](Comp l, Comp r) -> bool { return l.second < r.second;});
     parent->set_arrow(erased->first, "PARTNER", false);
     send_partnership_end_message(erased->first);
+    // everything involving this thing is gross actually
+    if (parent->origin) {
+        for (auto it = partner_k.begin(); it != partner_k.end(); ++it) {
+            if (*it == erased->first) partner_k.erase(it); break;
+        }
+    }
     partners.erase(erased);
 }
 
@@ -70,6 +82,10 @@ std::set<TransportAddress> PartnershipManager::get_partner_tads() {
 
 std::map<TransportAddress, PartnerEntry> PartnershipManager::get_partners() {
     return partners;
+}
+
+std::vector<TransportAddress> PartnershipManager::get_partner_k() {
+    return partner_k;
 }
 
 // lifecycle

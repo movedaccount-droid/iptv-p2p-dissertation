@@ -130,7 +130,7 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
             }
         } else if (BufferMap* buffer_map = dynamic_cast<BufferMap*>(msg)) {
             partnership_manager.receive_buffer_map_message(buffer_map);
-            // TODO: trying here for now. but this might be too spammy
+            // request from all buffer maps after each buffer map reception
             auto partners = partnership_manager.get_partners();
             auto expected_set = buffer.get_expected_set();
             auto playout_index = buffer.get_playout_index();
@@ -239,10 +239,14 @@ void Node::handleTimerEvent(cMessage *msg) {
         buffer.playout();
     } else if (msg == scheduler.exchange_timer) {
         std::set<TransportAddress> partners = partnership_manager.get_partner_tads();
-        std::unordered_set<int> buffer_map = buffer.get_buffer_map();
-        scheduler.exchange_on_timer(partners, buffer_map);
-    } else if (scheduler.exchange_after_download_timers.find(msg) != scheduler.exchange_after_download_timers.end()) {
-        scheduler.exchange_after_download(dynamic_cast<ExchangeAfterDownload*>(msg), buffer.get_buffer_map());
+        if (origin) {
+            std::vector<TransportAddress> partner_k = partnership_manager.get_partner_k();
+            std::map<TransportAddress, std::unordered_set<int>> buffer_maps = buffer.get_origin_buffer_maps(partner_k);
+            scheduler.exchange_origin_partners(buffer_maps);
+        } else {
+            std::unordered_set<int> buffer_map = buffer.get_buffer_map();
+            scheduler.exchange_all_partners(partners, buffer_map);
+        }
     }
 }
 

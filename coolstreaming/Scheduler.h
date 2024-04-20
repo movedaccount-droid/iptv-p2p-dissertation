@@ -35,24 +35,18 @@ public:
     int block_length_s; // block length in seconds
     int buffer_size; // max size of the buffermap
 
-    // we regularly exchange with all idle nodes to start download chains.
-    // blocks are requested, and we set a timer to wait for how long
-    // those blocks should take to receive, then exchange again.
-    // nodes undergoing this chaining process are stored in active_nodes
     cMessage* exchange_timer;
-    std::set<cMessage*> exchange_after_download_timers;
-    std::set<TransportAddress> active_nodes;
 
     // lifecycle
     void init(Node* p, int bsb, int bmei, int bl_s, int bsz);
-    void exchange_on_timer(std::set<TransportAddress> partners, std::unordered_set<int> bm);
+    bool get_should_request_next_and_flip();
+    void exchange_all_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm);
+    void exchange_origin_partners(std::map<TransportAddress, std::unordered_set<int>> buffer_maps);
     void request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerEntry> partners, int playout_index);
-    void exchange_after_download(ExchangeAfterDownload* exchange_after_download, std::unordered_set<int> buffer_map);
 
     // BUFFER_MAP // UDP
     // exchanging buffermap information to gain partial view of block availability
     void send_buffer_map_message(TransportAddress partner, std::unordered_set<int> bm);
-    void send_buffer_map_message_to_all_idle_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm);
     // receive_buffer_map_message(BufferMap* buffer_map) => PartnershipManager.h
 
     // BLOCK_REQUEST // UDP

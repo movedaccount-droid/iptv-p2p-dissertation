@@ -39,14 +39,14 @@ void Buffer::init(Node* p, int pint, int bs, double st, int bsb) {
     }
 }
 
+void Buffer::start() {
+    started = true;
+    setOrReplace(playout_timer, "playout_timer", playout_interval);
+}
+
 void Buffer::set_playout_index(int pind) {
     if (parent->origin) return;
     playout_index = pind;
-}
-
-void Buffer::start() {
-    started = true;
-    playout();
 }
 
 double Buffer::percent_filled() {
@@ -55,6 +55,23 @@ double Buffer::percent_filled() {
 
 std::unordered_set<int> Buffer::get_buffer_map() {
     return buffer;
+}
+
+std::map<TransportAddress, std::unordered_set<int>> Buffer::get_origin_buffer_maps(std::vector<TransportAddress> partner_k) {
+    std::map<TransportAddress, std::unordered_set<int>> buffer_maps;
+    int partner_count = partner_k.size();
+    for (int k = 0; k < partner_count; ++k) {
+        std::unordered_set<int> origin_buffer = buffer;
+        std::unordered_set<int> to_erase;
+        for (auto block = origin_buffer.begin(); block != origin_buffer.end(); ++block) {
+            if (*block % partner_count != k) {
+                to_erase.insert(*block);
+            }
+        }
+        for (int block : to_erase) origin_buffer.erase(block);
+        buffer_maps.insert({partner_k[k], origin_buffer});
+    }
+    return buffer_maps;
 }
 
 std::unordered_set<int> Buffer::get_expected_set() {
@@ -82,18 +99,19 @@ void Buffer::receive(int block) {
 }
 
 void Buffer::playout() {
+    setOrReplace(playout_timer, "playout_timer", playout_interval);
     if (!parent->origin) {
         if (buffer.find(playout_index) != buffer.end()) {
             // TODO: block was not present. stats
         } else {
             // TODO: block was present. stats
         }
+    } else {
+        // origin always has full buffer
+        buffer.insert(playout_index + buffer_size);
     }
     buffer.erase(playout_index);
     playout_index++;
-    // origin always has full buffer
-    if (parent->origin) buffer.insert(playout_index + buffer_size - 1);
-    setOrReplace(playout_timer, "playout_timer", playout_interval);
 }
 
 // BLOCK // TCP
