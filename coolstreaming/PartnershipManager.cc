@@ -80,12 +80,12 @@ std::set<TransportAddress> PartnershipManager::get_partner_tads() {
     return tads;
 }
 
-std::map<TransportAddress, PartnerEntry> PartnershipManager::get_partners() {
-    return partners;
-}
-
-std::vector<TransportAddress> PartnershipManager::get_partner_k() {
-    return partner_k;
+std::map<TransportAddress, std::vector<int>> PartnershipManager::get_partner_latest_blocks() {
+    std::map<TransportAddress, std::vector<int>> latest_blocks;
+    for (auto entry : partners) {
+        latest_blocks.insert({entry.first, entry.second.latest_blocks});
+    }
+    return latest_blocks;
 }
 
 // lifecycle
@@ -181,10 +181,10 @@ void PartnershipManager::receive_partnership_end_message(PartnershipEnd* partner
     replace_partner_with_new(partnership_end->getFrom(), with, with_bandwidth);
 }
 
-void PartnershipManager::receive_buffer_map_latest_blocks(BufferMapMsg* buffer_map) {
+bool PartnershipManager::receive_buffer_map_latest_blocks(BufferMapMsg* buffer_map) {
     auto partner = partners.find(buffer_map->getFrom());
     if (partner != partners.end()) {
-        partner->second.latest_blocks = buffer_map->getBuffer_map().second;
+        partner->second.latest_blocks = buffer_map->getBuffer_map().first;
     }
     return partner != partners.end();
 }

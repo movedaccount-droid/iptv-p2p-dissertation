@@ -309,6 +309,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetDeputyCall& obj) {obj.
  * packet GetDeputyResponse extends BaseResponseMessage
  * {
  *     TransportAddress deputy;
+ *     int block_index; // to synchronize playout index
  * }
  * </pre>
  */
@@ -316,6 +317,7 @@ class GetDeputyResponse : public ::BaseResponseMessage
 {
   protected:
     TransportAddress deputy;
+    int block_index;
 
   private:
     void copy(const GetDeputyResponse& other);
@@ -337,13 +339,15 @@ class GetDeputyResponse : public ::BaseResponseMessage
     virtual TransportAddress& getDeputy();
     virtual const TransportAddress& getDeputy() const {return const_cast<GetDeputyResponse*>(this)->getDeputy();}
     virtual void setDeputy(const TransportAddress& deputy);
+    virtual int getBlock_index() const;
+    virtual void setBlock_index(int block_index);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetDeputyResponse& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetDeputyResponse& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:85</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:86</tt> by nedtool.
  * <pre>
  * // coolstreaming deputy partner list request message
  * packet GetCandidatePartnersCall extends BaseCallMessage
@@ -383,7 +387,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetCandidatePartnersC
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetCandidatePartnersCall& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:89</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:90</tt> by nedtool.
  * <pre>
  * packet GetCandidatePartnersResponse extends BaseResponseMessage
  * {
@@ -422,7 +426,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const GetCandidatePartnersR
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, GetCandidatePartnersResponse& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:94</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:95</tt> by nedtool.
  * <pre>
  * // coolstreaming partnership initiation/ending
  * packet Partnership extends BaseOverlayMessage
@@ -466,7 +470,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Partnership& obj) {ob
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Partnership& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:99</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:100</tt> by nedtool.
  * <pre>
  * packet PartnershipEnd extends BaseOverlayMessage
  * {
@@ -505,7 +509,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const PartnershipEnd& obj) 
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PartnershipEnd& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:104</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:105</tt> by nedtool.
  * <pre>
  * // new coolstreaming buffermap exchange
  * packet BufferMapMsg extends BaseOverlayMessage
@@ -550,7 +554,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BufferMapMsg& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BufferMapMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:112</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:113</tt> by nedtool.
  * <pre>
  * // new coolstreaming block push
  * // when we send two blocks to catch up a node, that block would send four blocks in turn, eight, sixteen etc.
@@ -558,7 +562,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BufferMapMsg& obj) {obj.p
  * packet Block extends BaseOverlayMessage
  * {
  *     int index;
- *     bool triggers_send;
+ *     bool should_trigger_send;
  * }
  * </pre>
  */
@@ -566,7 +570,7 @@ class Block : public ::BaseOverlayMessage
 {
   protected:
     int index;
-    bool triggers_send;
+    bool should_trigger_send;
 
   private:
     void copy(const Block& other);
@@ -587,8 +591,8 @@ class Block : public ::BaseOverlayMessage
     // field getter/setter methods
     virtual int getIndex() const;
     virtual void setIndex(int index);
-    virtual bool getTriggers_send() const;
-    virtual void setTriggers_send(bool triggers_send);
+    virtual bool getShould_trigger_send() const;
+    virtual void setShould_trigger_send(bool should_trigger_send);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const Block& obj) {obj.parsimPack(b);}

@@ -30,12 +30,14 @@ class StreamManager {
 public:
     Node* parent;
     std::vector<std::deque<int>> buffers; // one queue for each buffer. we don't need to sim the cache buffer
-    std::vector<std::map<TransportAddress, int>> children; // currently active children in each substream, and their current catch-up position
-    std::map<int, TransportAddress> parents; // map of substream to partner
+    std::vector<std::map<TransportAddress, int>> substream_children; // currently active children in each substream, and their current catch-up position
+    std::vector<TransportAddress> substream_parents; // map of substream to partner
 
     int substream_count; // number of substreams
     int block_length_s; // block length in seconds
     int block_size_bits; // block size in bits
+    int ts; // constant for maximum gap within a node's substreams
+    int tp; // constant for maximum gap between a node's partners
 
     bool playing; // if the stream is playing
     int playout_index; // next block to be played by playout
@@ -44,13 +46,19 @@ public:
     cMessage* playout_timer;
 
     // lifecycle
-    void init(Node* p, int sc, int bls);
+    void init(Node* p, int sc, int bls, int bsb, int ts_in, int tp_in);
     void start(int start_index);
+    void reselect_partners_and_exchange(std::map<TransportAddress, std::vector<int>> partner_latest_blocks);
     void playout();
     void end();
 
     // utility
+    int get_next_needed_block(int substream);
+    int get_playout_index();
+    BufferMap get_buffer_map(TransportAddress partner);
     std::vector<int> get_latest_blocks(); // returns first vector for buffer map
+    std::map<int, int> get_subscription_map(TransportAddress partner); // second vector for buffer map
+    bool is_partner_failing(TransportAddress partner, int j, std::map<TransportAddress, std::vector<int>> partner_latest_blocks);
 
     // BUFFER_MAP // UDP
     // exchange buffer_maps with peers to update local view of blocks
@@ -63,7 +71,7 @@ public:
     // BLOCK // UDP
     // sending a block to a child partner, who then forwards it to their children
     void send_block_message(TransportAddress child, int index, bool triggers_send);
-    std::map<TransportAddress, int> receive_block_message(Block* block);
+    void receive_block_message(Block* block);
 
     StreamManager() { exchange_timer = NULL; playout_timer = NULL; };
     virtual ~StreamManager();

@@ -79,6 +79,7 @@ packet GetDeputyCall extends BaseCallMessage {
 
 packet GetDeputyResponse extends BaseResponseMessage {
  	TransportAddress deputy;
+ 	int block_index; // to synchronize playout index
 }
 
 // coolstreaming deputy partner list request message
@@ -111,5 +112,5 @@ packet BufferMapMsg extends BaseOverlayMessage {
 // to avoid this we only allow the second block to trigger forwarding; the following node thus only sends two blocks
 packet Block extends BaseOverlayMessage {
  	int index;
- 	bool triggers_send;
+ 	bool should_trigger_send;
 }

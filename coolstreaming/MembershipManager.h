@@ -54,7 +54,6 @@ public:
     void contact_deputy_and_enter_network(TransportAddress deputy);
     void resubscribe();
     void unsubscribe();
-    void gossip_and_unsubscribe_failed_partner(TransportAddress failing);
     void send_heartbeats();
     void no_heartbeat();
     void leave_overlay();
@@ -100,12 +99,6 @@ public:
     // make a best effort
     void send_unsubscribe_message(TransportAddress tad, bool inview, TransportAddress replacement = TransportAddress());
     void receive_unsubscribe_message(Unsubscription* unsubscription);
-
-    // GOSSIPED UNSUBSCRIBE MESSAGES // UDP
-    // . okay. . Sent on Behalf of Failing Nodes when there has been no BM or Packet Transfer ???? in the . partner manager?? and no the fucking.  the fucking mcache???/
-    // and Gossiped Similarly to SCAMP ?????????? What the fuck are you talking about
-    void send_gossiped_unsubscribe_message(TransportAddress tad, TransportAddress failing);
-    void receive_gossiped_unsubscribe_message(GossipedUnsubscription* gossiped_unsubscription);
 
     // HEARTBEAT MESSAGES // UDP
     // sent to nodes to inform that their neighbours are still alive.

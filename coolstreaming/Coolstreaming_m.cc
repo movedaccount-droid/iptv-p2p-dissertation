@@ -2003,6 +2003,7 @@ Register_Class(GetDeputyResponse)
 
 GetDeputyResponse::GetDeputyResponse(const char *name, short kind) : ::BaseResponseMessage(name,kind)
 {
+    this->block_index = 0;
 }
 
 GetDeputyResponse::GetDeputyResponse(const GetDeputyResponse& other) : ::BaseResponseMessage(other)
@@ -2025,18 +2026,21 @@ GetDeputyResponse& GetDeputyResponse::operator=(const GetDeputyResponse& other)
 void GetDeputyResponse::copy(const GetDeputyResponse& other)
 {
     this->deputy = other.deputy;
+    this->block_index = other.block_index;
 }
 
 void GetDeputyResponse::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseResponseMessage::parsimPack(b);
     doParsimPacking(b,this->deputy);
+    doParsimPacking(b,this->block_index);
 }
 
 void GetDeputyResponse::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseResponseMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->deputy);
+    doParsimUnpacking(b,this->block_index);
 }
 
 TransportAddress& GetDeputyResponse::getDeputy()
@@ -2047,6 +2051,16 @@ TransportAddress& GetDeputyResponse::getDeputy()
 void GetDeputyResponse::setDeputy(const TransportAddress& deputy)
 {
     this->deputy = deputy;
+}
+
+int GetDeputyResponse::getBlock_index() const
+{
+    return this->block_index;
+}
+
+void GetDeputyResponse::setBlock_index(int block_index)
+{
+    this->block_index = block_index;
 }
 
 class GetDeputyResponseDescriptor : public omnetpp::cClassDescriptor
@@ -2114,7 +2128,7 @@ const char *GetDeputyResponseDescriptor::getProperty(const char *propertyname) c
 int GetDeputyResponseDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
 unsigned int GetDeputyResponseDescriptor::getFieldTypeFlags(int field) const
@@ -2127,8 +2141,9 @@ unsigned int GetDeputyResponseDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISCOMPOUND,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
 const char *GetDeputyResponseDescriptor::getFieldName(int field) const
@@ -2141,8 +2156,9 @@ const char *GetDeputyResponseDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "deputy",
+        "block_index",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
 int GetDeputyResponseDescriptor::findField(const char *fieldName) const
@@ -2150,6 +2166,7 @@ int GetDeputyResponseDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='d' && strcmp(fieldName, "deputy")==0) return base+0;
+    if (fieldName[0]=='b' && strcmp(fieldName, "block_index")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -2163,8 +2180,9 @@ const char *GetDeputyResponseDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "TransportAddress",
+        "int",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **GetDeputyResponseDescriptor::getFieldPropertyNames(int field) const
@@ -2232,6 +2250,7 @@ std::string GetDeputyResponseDescriptor::getFieldValueAsString(void *object, int
     GetDeputyResponse *pp = (GetDeputyResponse *)object; (void)pp;
     switch (field) {
         case 0: {std::stringstream out; out << pp->getDeputy(); return out.str();}
+        case 1: return long2string(pp->getBlock_index());
         default: return "";
     }
 }
@@ -2246,6 +2265,7 @@ bool GetDeputyResponseDescriptor::setFieldValueAsString(void *object, int field,
     }
     GetDeputyResponse *pp = (GetDeputyResponse *)object; (void)pp;
     switch (field) {
+        case 1: pp->setBlock_index(string2long(value)); return true;
         default: return false;
     }
 }
@@ -3724,7 +3744,7 @@ Register_Class(Block)
 Block::Block(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
 {
     this->index = 0;
-    this->triggers_send = false;
+    this->should_trigger_send = false;
 }
 
 Block::Block(const Block& other) : ::BaseOverlayMessage(other)
@@ -3747,21 +3767,21 @@ Block& Block::operator=(const Block& other)
 void Block::copy(const Block& other)
 {
     this->index = other.index;
-    this->triggers_send = other.triggers_send;
+    this->should_trigger_send = other.should_trigger_send;
 }
 
 void Block::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
     doParsimPacking(b,this->index);
-    doParsimPacking(b,this->triggers_send);
+    doParsimPacking(b,this->should_trigger_send);
 }
 
 void Block::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->index);
-    doParsimUnpacking(b,this->triggers_send);
+    doParsimUnpacking(b,this->should_trigger_send);
 }
 
 int Block::getIndex() const
@@ -3774,14 +3794,14 @@ void Block::setIndex(int index)
     this->index = index;
 }
 
-bool Block::getTriggers_send() const
+bool Block::getShould_trigger_send() const
 {
-    return this->triggers_send;
+    return this->should_trigger_send;
 }
 
-void Block::setTriggers_send(bool triggers_send)
+void Block::setShould_trigger_send(bool should_trigger_send)
 {
-    this->triggers_send = triggers_send;
+    this->should_trigger_send = should_trigger_send;
 }
 
 class BlockDescriptor : public omnetpp::cClassDescriptor
@@ -3877,7 +3897,7 @@ const char *BlockDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "index",
-        "triggers_send",
+        "should_trigger_send",
     };
     return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
@@ -3887,7 +3907,7 @@ int BlockDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='i' && strcmp(fieldName, "index")==0) return base+0;
-    if (fieldName[0]=='t' && strcmp(fieldName, "triggers_send")==0) return base+1;
+    if (fieldName[0]=='s' && strcmp(fieldName, "should_trigger_send")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -3971,7 +3991,7 @@ std::string BlockDescriptor::getFieldValueAsString(void *object, int field, int 
     Block *pp = (Block *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getIndex());
-        case 1: return bool2string(pp->getTriggers_send());
+        case 1: return bool2string(pp->getShould_trigger_send());
         default: return "";
     }
 }
@@ -3987,7 +4007,7 @@ bool BlockDescriptor::setFieldValueAsString(void *object, int field, int i, cons
     Block *pp = (Block *)object; (void)pp;
     switch (field) {
         case 0: pp->setIndex(string2long(value)); return true;
-        case 1: pp->setTriggers_send(string2bool(value)); return true;
+        case 1: pp->setShould_trigger_send(string2bool(value)); return true;
         default: return false;
     }
 }

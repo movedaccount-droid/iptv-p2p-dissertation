@@ -52,8 +52,7 @@ public:
     void erase_partner(TransportAddress partner);
     void remove_worst_scoring_partner();
     std::set<TransportAddress> get_partner_tads();
-    std::map<TransportAddress, PartnerEntry> get_partners();
-    std::vector<TransportAddress> get_partner_k();
+    std::map<TransportAddress, std::vector<int>> get_partner_latest_blocks();
 
     // GET CANDIDATE PARTNERS MESSAGES // TCP
     // get list of possible starting partners from the deputy

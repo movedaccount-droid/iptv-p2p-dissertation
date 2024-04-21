@@ -188,12 +188,6 @@ void MembershipManager::unsubscribe() {
     }
 }
 
-void MembershipManager::gossip_and_unsubscribe_failed_partner(TransportAddress failing) {
-    for (auto entry : mCache) {
-        send_gossiped_unsubscribe_message(entry.first, failing);
-    }
-}
-
 void MembershipManager::send_heartbeats() {
     for (auto entry : mCache) {
         send_heartbeat_message(entry.first);
@@ -466,35 +460,6 @@ void MembershipManager::receive_unsubscribe_message(Unsubscription* unsubscripti
             parent->getParentModule()->getParentModule()->bubble(std::string("replaced leaving ip ").append(leaving.getIp().str())
                     .append(" with ").append(replacement.getIp().str()).append("...").c_str());
             remove_mcache_entry(leaving);
-        }
-    }
-}
-
-// GOSSIPED UNSUBSCRIBE MESSAGES // UDP
-// . okay. . Sent on Behalf of Failing Nodes when there has been no BM or Packet Transfer ???? in the . partner manager?? and no the fucking.  the fucking mcache???/
-// and Gossiped Similarly to SCAMP ?????????? What the fuck are you talking about
-void MembershipManager::send_gossiped_unsubscribe_message(TransportAddress tad, TransportAddress failing) {
-    GossipedUnsubscription* gossiped_unsubscription = new GossipedUnsubscription();
-    gossiped_unsubscription->setFailing(failing);
-    gossiped_unsubscription->setFrom(parent->getThisNode());
-    parent->sendMessageToUDP(tad, gossiped_unsubscription);
-}
-
-void MembershipManager::receive_gossiped_unsubscribe_message(GossipedUnsubscription* gossiped_unsubscription) {
-    // algorithm 2: add to cache or further forward. Simila r To. Similar To. Similar To.
-    double p = 1 - 1/(1 + mCache.size());
-    bool success = rand() / RAND_MAX <= p;
-    if (success) {
-        remove_mcache_entry(gossiped_unsubscription->getFailing());
-        parent->getParentModule()->getParentModule()->bubble("dropped gossiped failing node...");
-    } else {
-        try {
-            send_gossiped_unsubscribe_message(random_mcache_entry(gossiped_unsubscription->getFrom()).first, gossiped_unsubscription->getFailing());
-            parent->getParentModule()->getParentModule()->bubble("forwarded gossiped failure message...");
-        } catch (const char* c) {
-            EV << "[MembershipManager::receive_gossiped_unsubscribe_message() @ " << parent->getThisNode().getIp() << "]\n"
-               << "    attempted to forward gossiped failure message but had nobody to forward to, dropping..."
-               << endl;
         }
     }
 }

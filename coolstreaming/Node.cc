@@ -67,7 +67,11 @@ void Node::initializeOverlay(int stage) {
         bandwidth = block_size_bits * par("block_length_s").intValue() * 3;
     }
 
-    partnership_manager.init(this, bandwidth, par("switch_interval"), par("M"));
+    partnership_manager.init(this,
+            par("substream_count"),
+            bandwidth,
+            par("switch_interval"),
+            par("M"));
     membership_manager.init(this,
             origin_tad,
             bandwidth,
@@ -76,16 +80,12 @@ void Node::initializeOverlay(int stage) {
             par("scamp_heartbeat_interval"),
             par("scamp_heartbeat_failure_interval"),
             par("M"));
-    buffer.init(this,
-            par("playout_interval"),
-            par("buffer_size"),
-            par("start_threshold"),
-            block_size_bits);
-    scheduler.init(this,
-            block_size_bits,
-            par("bm_exchange_interval"),
+    stream_manager.init(this,
+            par("substream_count"),
             par("block_length_s"),
-            par("buffer_size"));
+            block_size_bits,
+            par("ts"),
+            par("tp"));
 }
 
 // called at overlay join time. configures timers
@@ -107,11 +107,9 @@ void Node::finishOverlay() {
 
 // rpc handling
 void Node::handleUDPMessage(BaseOverlayMessage* msg) {
-    // we have these at the top for optimization
+    // we have this at the top for optimization
     if (Block* block = dynamic_cast<Block*>(msg)) {
-        buffer.receive_block_message(block);
-    } else if (BlockRequest* block_request = dynamic_cast<BlockRequest*>(msg)) {
-        buffer.receive_block_request_message_and_respond(block_request);
+        stream_manager.receive_block_message(block);
     }
     if (!leaving) {
         if (Membership* membership = dynamic_cast<Membership*>(msg)) {
@@ -121,27 +119,23 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
             membership_manager.receive_heartbeat_message(heartbeat);
         } else if (Partnership* partnership = dynamic_cast<Partnership*>(msg)) {
             partnership_manager.receive_partnership_message(partnership);
-        } else if (PartnershipEnd* partnership_end = dynamic_cast<PartnershipEnd*>(msg)) {
-            try {
-                auto replacement = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads());
-                partnership_manager.receive_partnership_end_message(partnership_end, replacement.first, replacement.second.bandwidth);
-            } catch (const char* c) {
-                partnership_manager.erase_partner(partnership_end->getFrom());
-            }
-        } else if (BufferMap* buffer_map = dynamic_cast<BufferMap*>(msg)) {
-            partnership_manager.receive_buffer_map_message(buffer_map);
-            // request from all buffer maps after each buffer map reception
-            auto partners = partnership_manager.get_partners();
-            auto expected_set = buffer.get_expected_set();
-            auto playout_index = buffer.get_playout_index();
-            scheduler.request_buffer_map_blocks(expected_set, partners, playout_index);
+        } else if (BufferMapMsg* buffer_map_msg = dynamic_cast<BufferMapMsg*>(msg)) {
+            // TODO: we need to reexchange on a timer in new coolstreaming
+            bool was_from_partner = partnership_manager.receive_buffer_map_latest_blocks(buffer_map_msg);
+            if (was_from_partner) stream_manager.receive_buffer_map_subscriptions(buffer_map_msg);
         }
     }
     if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
         membership_manager.receive_unsubscribe_message(unsubscription);
-    } else if (GossipedUnsubscription* gossiped_unsubscription = dynamic_cast<GossipedUnsubscription*>(msg)) {
-        membership_manager.receive_gossiped_unsubscribe_message(gossiped_unsubscription);
+    } else if (PartnershipEnd* partnership_end = dynamic_cast<PartnershipEnd*>(msg)) {
+        try {
+            auto replacement = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads());
+            partnership_manager.receive_partnership_end_message(partnership_end, replacement.first, replacement.second.bandwidth);
+        } catch (const char* c) {
+            partnership_manager.erase_partner(partnership_end->getFrom());
+        }
     }
+
     delete msg;
 }
 
@@ -154,7 +148,7 @@ bool Node::handleRpcCall(BaseCallMessage* msg) {
         break;
     }
     RPC_ON_CALL(GetDeputy) {
-        membership_manager.receive_get_deputy_message_and_respond(_GetDeputyCall, buffer.playout_index);
+        membership_manager.receive_get_deputy_message_and_respond(_GetDeputyCall, stream_manager.get_playout_index());
         RPC_HANDLED = true;
         break;
     }
@@ -180,7 +174,7 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
         break;
     }
     RPC_ON_RESPONSE(GetDeputy) {
-        buffer.set_playout_index(_GetDeputyResponse->getBlock_index());
+        stream_manager.start(_GetDeputyResponse->getBlock_index());
         partnership_manager.get_candidate_partners_from_deputy(_GetDeputyResponse->getDeputy());
         membership_manager.receive_get_deputy_response(_GetDeputyResponse);
         RPC_HANDLED = true;
@@ -235,18 +229,13 @@ void Node::handleTimerEvent(cMessage *msg) {
         } catch (const char* c) {
             partnership_manager.reset_switch_timer();
         }
-    } else if (msg == buffer.playout_timer) {
-        buffer.playout();
-    } else if (msg == scheduler.exchange_timer) {
-        std::set<TransportAddress> partners = partnership_manager.get_partner_tads();
-        if (origin) {
-            std::vector<TransportAddress> partner_k = partnership_manager.get_partner_k();
-            std::map<TransportAddress, std::unordered_set<int>> buffer_maps = buffer.get_origin_buffer_maps(partner_k);
-            scheduler.exchange_origin_partners(buffer_maps);
-        } else {
-            std::unordered_set<int> buffer_map = buffer.get_buffer_map();
-            scheduler.exchange_all_partners(partners, buffer_map);
-        }
+    } else if (msg == stream_manager.playout_timer) {
+        stream_manager.playout();
+    } else if (msg == stream_manager.exchange_timer) {
+        std::map<TransportAddress, std::vector<int>> latest_blocks = partnership_manager.get_partner_latest_blocks();
+        // TODO: possibly include k-order balancing for origin node
+        // TODO: acutally handle origin node having all blocks all the time
+        stream_manager.reselect_partners_and_exchange(latest_blocks);
     }
 }
 

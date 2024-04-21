@@ -18,10 +18,9 @@
 
 #include <unordered_set>
 
-#include "../coolstreaming/Buffer.h"
 #include "../coolstreaming/MembershipManager.h"
 #include "../coolstreaming/PartnershipManager.h"
-#include "../coolstreaming/Scheduler.h"
+#include "../coolstreaming/StreamManager.h"
 #include "common/BaseOverlay.h"
 
 class Node : public BaseOverlay {
@@ -29,8 +28,7 @@ class Node : public BaseOverlay {
     // node components - see paper fig. 1
     PartnershipManager partnership_manager;
     MembershipManager membership_manager;
-    Buffer buffer;
-    Scheduler scheduler;
+    StreamManager stream_manager;
 
     // overlay routines
     void initializeOverlay(int stage); // called at overlay construction
@@ -72,7 +70,7 @@ public:
     void send_rpc(TransportAddress tad, BaseCallMessage* msg);
     void send_rpc_response(BaseCallMessage* call, BaseResponseMessage* response);
 
-    Node(): partnership_manager(), membership_manager(), buffer(), scheduler() {};
+    Node(): partnership_manager(), membership_manager(), stream_manager() {};
     virtual ~Node();
 };
 
