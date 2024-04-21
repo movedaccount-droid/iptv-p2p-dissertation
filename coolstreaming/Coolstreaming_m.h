@@ -719,6 +719,8 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Leave& obj) {obj.parsimUn
  * packet Panic extends BaseOverlayMessage
  * {
  *     TransportAddress panicking;
+ *     TransportAddress last_hop;
+ *     simtime_t send_time;
  * }
  * </pre>
  */
@@ -726,6 +728,8 @@ class Panic : public ::BaseOverlayMessage
 {
   protected:
     TransportAddress panicking;
+    TransportAddress last_hop;
+    ::omnetpp::simtime_t send_time;
 
   private:
     void copy(const Panic& other);
@@ -747,13 +751,18 @@ class Panic : public ::BaseOverlayMessage
     virtual TransportAddress& getPanicking();
     virtual const TransportAddress& getPanicking() const {return const_cast<Panic*>(this)->getPanicking();}
     virtual void setPanicking(const TransportAddress& panicking);
+    virtual TransportAddress& getLast_hop();
+    virtual const TransportAddress& getLast_hop() const {return const_cast<Panic*>(this)->getLast_hop();}
+    virtual void setLast_hop(const TransportAddress& last_hop);
+    virtual ::omnetpp::simtime_t getSend_time() const;
+    virtual void setSend_time(::omnetpp::simtime_t send_time);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const Panic& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Panic& obj) {obj.parsimUnpack(b);}
 
 /**
- * Enum generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:138</tt> by nedtool.
+ * Enum generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:140</tt> by nedtool.
  * <pre>
  * enum PanicSplitState
  * {
@@ -768,13 +777,14 @@ enum PanicSplitState {
 };
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:143</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:145</tt> by nedtool.
  * <pre>
  * packet PanicSplit extends BaseOverlayMessage
  * {
  *     int state \@enum(PanicSplitState);
  *     TransportAddress into;
  *     TransportAddress from;
+ *     simtime_t send_time;
  * }
  * </pre>
  */
@@ -784,6 +794,7 @@ class PanicSplit : public ::BaseOverlayMessage
     int state;
     TransportAddress into;
     TransportAddress from;
+    ::omnetpp::simtime_t send_time;
 
   private:
     void copy(const PanicSplit& other);
@@ -810,13 +821,15 @@ class PanicSplit : public ::BaseOverlayMessage
     virtual TransportAddress& getFrom();
     virtual const TransportAddress& getFrom() const {return const_cast<PanicSplit*>(this)->getFrom();}
     virtual void setFrom(const TransportAddress& from);
+    virtual ::omnetpp::simtime_t getSend_time() const;
+    virtual void setSend_time(::omnetpp::simtime_t send_time);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const PanicSplit& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PanicSplit& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:149</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:152</tt> by nedtool.
  * <pre>
  * packet PanicSplitFound extends BaseOverlayMessage
  * {
@@ -860,7 +873,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const PanicSplitFound& obj)
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PanicSplitFound& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:154</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:157</tt> by nedtool.
  * <pre>
  * packet Recover extends BaseOverlayMessage
  * {
@@ -899,7 +912,47 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Recover& obj) {obj.pa
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Recover& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:159</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:162</tt> by nedtool.
+ * <pre>
+ * // self-message to track when to fail a partner connection after not receiving buffermaps for some period
+ * message Failure
+ * {
+ *     TransportAddress failed;
+ * }
+ * </pre>
+ */
+class Failure : public ::omnetpp::cMessage
+{
+  protected:
+    TransportAddress failed;
+
+  private:
+    void copy(const Failure& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const Failure&);
+
+  public:
+    Failure(const char *name=nullptr, short kind=0);
+    Failure(const Failure& other);
+    virtual ~Failure();
+    Failure& operator=(const Failure& other);
+    virtual Failure *dup() const override {return new Failure(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getFailed();
+    virtual const TransportAddress& getFailed() const {return const_cast<Failure*>(this)->getFailed();}
+    virtual void setFailed(const TransportAddress& failed);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const Failure& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Failure& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:167</tt> by nedtool.
  * <pre>
  * // coolstreaming buffermap exchange
  * packet BufferMap extends BaseOverlayMessage
@@ -949,7 +1002,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BufferMap& obj) {obj.
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BufferMap& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:166</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:174</tt> by nedtool.
  * <pre>
  * // coolstreaming block request
  * packet BlockRequest extends BaseOverlayMessage
@@ -994,7 +1047,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BlockRequest& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BlockRequest& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:171</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:179</tt> by nedtool.
  * <pre>
  * packet Block extends BaseOverlayMessage
  * {
@@ -1032,7 +1085,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Block& obj) {obj.pars
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Block& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:176</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:184</tt> by nedtool.
  * <pre>
  * // active_node finished downloading self-message/timer
  * message ExchangeAfterDownload
@@ -1070,6 +1123,89 @@ class ExchangeAfterDownload : public ::omnetpp::cMessage
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const ExchangeAfterDownload& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ExchangeAfterDownload& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:189</tt> by nedtool.
+ * <pre>
+ * // TODO: remove these
+ * packet Partnership extends BaseOverlayMessage
+ * {
+ *     TransportAddress from;
+ *     int bandwidth;
+ * }
+ * </pre>
+ */
+class Partnership : public ::BaseOverlayMessage
+{
+  protected:
+    TransportAddress from;
+    int bandwidth;
+
+  private:
+    void copy(const Partnership& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const Partnership&);
+
+  public:
+    Partnership(const char *name=nullptr, short kind=0);
+    Partnership(const Partnership& other);
+    virtual ~Partnership();
+    Partnership& operator=(const Partnership& other);
+    virtual Partnership *dup() const override {return new Partnership(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<Partnership*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
+    virtual int getBandwidth() const;
+    virtual void setBandwidth(int bandwidth);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const Partnership& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Partnership& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:194</tt> by nedtool.
+ * <pre>
+ * packet PartnershipEnd extends BaseOverlayMessage
+ * {
+ *     TransportAddress from;
+ * }
+ * </pre>
+ */
+class PartnershipEnd : public ::BaseOverlayMessage
+{
+  protected:
+    TransportAddress from;
+
+  private:
+    void copy(const PartnershipEnd& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const PartnershipEnd&);
+
+  public:
+    PartnershipEnd(const char *name=nullptr, short kind=0);
+    PartnershipEnd(const PartnershipEnd& other);
+    virtual ~PartnershipEnd();
+    PartnershipEnd& operator=(const PartnershipEnd& other);
+    virtual PartnershipEnd *dup() const override {return new PartnershipEnd(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<PartnershipEnd*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const PartnershipEnd& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PartnershipEnd& obj) {obj.parsimUnpack(b);}
 
 
 #endif // ifndef __COOLSTREAMING_M_H

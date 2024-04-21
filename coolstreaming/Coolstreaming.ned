@@ -36,7 +36,9 @@ simple Node extends BaseOverlay
    	 	int scamp_heartbeat_failure_interval; // delay between received heartbeats before resubbing
    	 	
    	 	int switch_interval; // delay between scoring and trying out new partners from mcache
+   	 	
    	 	int M; // target number of partners held by a node
+    	double partnership_timeout_s; // duration without receiving buffermaps before a partner connection is failed
    	 	
    	 	int playout_interval; // duration between blocks
     	int buffer_size; // stored blocks in buffer. probably just 120

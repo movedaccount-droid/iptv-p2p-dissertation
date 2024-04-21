@@ -4715,6 +4715,7 @@ Register_Class(Panic)
 
 Panic::Panic(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
 {
+    this->send_time = 0;
 }
 
 Panic::Panic(const Panic& other) : ::BaseOverlayMessage(other)
@@ -4737,18 +4738,24 @@ Panic& Panic::operator=(const Panic& other)
 void Panic::copy(const Panic& other)
 {
     this->panicking = other.panicking;
+    this->last_hop = other.last_hop;
+    this->send_time = other.send_time;
 }
 
 void Panic::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
     doParsimPacking(b,this->panicking);
+    doParsimPacking(b,this->last_hop);
+    doParsimPacking(b,this->send_time);
 }
 
 void Panic::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->panicking);
+    doParsimUnpacking(b,this->last_hop);
+    doParsimUnpacking(b,this->send_time);
 }
 
 TransportAddress& Panic::getPanicking()
@@ -4759,6 +4766,26 @@ TransportAddress& Panic::getPanicking()
 void Panic::setPanicking(const TransportAddress& panicking)
 {
     this->panicking = panicking;
+}
+
+TransportAddress& Panic::getLast_hop()
+{
+    return this->last_hop;
+}
+
+void Panic::setLast_hop(const TransportAddress& last_hop)
+{
+    this->last_hop = last_hop;
+}
+
+::omnetpp::simtime_t Panic::getSend_time() const
+{
+    return this->send_time;
+}
+
+void Panic::setSend_time(::omnetpp::simtime_t send_time)
+{
+    this->send_time = send_time;
 }
 
 class PanicDescriptor : public omnetpp::cClassDescriptor
@@ -4826,7 +4853,7 @@ const char *PanicDescriptor::getProperty(const char *propertyname) const
 int PanicDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 1+basedesc->getFieldCount() : 1;
+    return basedesc ? 3+basedesc->getFieldCount() : 3;
 }
 
 unsigned int PanicDescriptor::getFieldTypeFlags(int field) const
@@ -4839,8 +4866,10 @@ unsigned int PanicDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
 }
 
 const char *PanicDescriptor::getFieldName(int field) const
@@ -4853,8 +4882,10 @@ const char *PanicDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "panicking",
+        "last_hop",
+        "send_time",
     };
-    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
 }
 
 int PanicDescriptor::findField(const char *fieldName) const
@@ -4862,6 +4893,8 @@ int PanicDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='p' && strcmp(fieldName, "panicking")==0) return base+0;
+    if (fieldName[0]=='l' && strcmp(fieldName, "last_hop")==0) return base+1;
+    if (fieldName[0]=='s' && strcmp(fieldName, "send_time")==0) return base+2;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -4875,8 +4908,10 @@ const char *PanicDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "TransportAddress",
+        "TransportAddress",
+        "simtime_t",
     };
-    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **PanicDescriptor::getFieldPropertyNames(int field) const
@@ -4944,6 +4979,8 @@ std::string PanicDescriptor::getFieldValueAsString(void *object, int field, int 
     Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
         case 0: {std::stringstream out; out << pp->getPanicking(); return out.str();}
+        case 1: {std::stringstream out; out << pp->getLast_hop(); return out.str();}
+        case 2: return simtime2string(pp->getSend_time());
         default: return "";
     }
 }
@@ -4958,6 +4995,7 @@ bool PanicDescriptor::setFieldValueAsString(void *object, int field, int i, cons
     }
     Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
+        case 2: pp->setSend_time(string2simtime(value)); return true;
         default: return false;
     }
 }
@@ -4972,6 +5010,7 @@ const char *PanicDescriptor::getFieldStructName(int field) const
     }
     switch (field) {
         case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
         default: return nullptr;
     };
 }
@@ -4987,6 +5026,7 @@ void *PanicDescriptor::getFieldStructValuePointer(void *object, int field, int i
     Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
         case 0: return (void *)(&pp->getPanicking()); break;
+        case 1: return (void *)(&pp->getLast_hop()); break;
         default: return nullptr;
     }
 }
@@ -5003,6 +5043,7 @@ Register_Class(PanicSplit)
 PanicSplit::PanicSplit(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
 {
     this->state = 0;
+    this->send_time = 0;
 }
 
 PanicSplit::PanicSplit(const PanicSplit& other) : ::BaseOverlayMessage(other)
@@ -5027,6 +5068,7 @@ void PanicSplit::copy(const PanicSplit& other)
     this->state = other.state;
     this->into = other.into;
     this->from = other.from;
+    this->send_time = other.send_time;
 }
 
 void PanicSplit::parsimPack(omnetpp::cCommBuffer *b) const
@@ -5035,6 +5077,7 @@ void PanicSplit::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->state);
     doParsimPacking(b,this->into);
     doParsimPacking(b,this->from);
+    doParsimPacking(b,this->send_time);
 }
 
 void PanicSplit::parsimUnpack(omnetpp::cCommBuffer *b)
@@ -5043,6 +5086,7 @@ void PanicSplit::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->state);
     doParsimUnpacking(b,this->into);
     doParsimUnpacking(b,this->from);
+    doParsimUnpacking(b,this->send_time);
 }
 
 int PanicSplit::getState() const
@@ -5073,6 +5117,16 @@ TransportAddress& PanicSplit::getFrom()
 void PanicSplit::setFrom(const TransportAddress& from)
 {
     this->from = from;
+}
+
+::omnetpp::simtime_t PanicSplit::getSend_time() const
+{
+    return this->send_time;
+}
+
+void PanicSplit::setSend_time(::omnetpp::simtime_t send_time)
+{
+    this->send_time = send_time;
 }
 
 class PanicSplitDescriptor : public omnetpp::cClassDescriptor
@@ -5140,7 +5194,7 @@ const char *PanicSplitDescriptor::getProperty(const char *propertyname) const
 int PanicSplitDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 3+basedesc->getFieldCount() : 3;
+    return basedesc ? 4+basedesc->getFieldCount() : 4;
 }
 
 unsigned int PanicSplitDescriptor::getFieldTypeFlags(int field) const
@@ -5155,8 +5209,9 @@ unsigned int PanicSplitDescriptor::getFieldTypeFlags(int field) const
         FD_ISEDITABLE,
         FD_ISCOMPOUND,
         FD_ISCOMPOUND,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
 }
 
 const char *PanicSplitDescriptor::getFieldName(int field) const
@@ -5171,8 +5226,9 @@ const char *PanicSplitDescriptor::getFieldName(int field) const
         "state",
         "into",
         "from",
+        "send_time",
     };
-    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
 }
 
 int PanicSplitDescriptor::findField(const char *fieldName) const
@@ -5182,6 +5238,7 @@ int PanicSplitDescriptor::findField(const char *fieldName) const
     if (fieldName[0]=='s' && strcmp(fieldName, "state")==0) return base+0;
     if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+1;
     if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+2;
+    if (fieldName[0]=='s' && strcmp(fieldName, "send_time")==0) return base+3;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -5197,8 +5254,9 @@ const char *PanicSplitDescriptor::getFieldTypeString(int field) const
         "int",
         "TransportAddress",
         "TransportAddress",
+        "simtime_t",
     };
-    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **PanicSplitDescriptor::getFieldPropertyNames(int field) const
@@ -5275,6 +5333,7 @@ std::string PanicSplitDescriptor::getFieldValueAsString(void *object, int field,
         case 0: return enum2string(pp->getState(), "PanicSplitState");
         case 1: {std::stringstream out; out << pp->getInto(); return out.str();}
         case 2: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        case 3: return simtime2string(pp->getSend_time());
         default: return "";
     }
 }
@@ -5290,6 +5349,7 @@ bool PanicSplitDescriptor::setFieldValueAsString(void *object, int field, int i,
     PanicSplit *pp = (PanicSplit *)object; (void)pp;
     switch (field) {
         case 0: pp->setState((PanicSplitState)string2enum(value, "PanicSplitState")); return true;
+        case 3: pp->setSend_time(string2simtime(value)); return true;
         default: return false;
     }
 }
@@ -5901,6 +5961,286 @@ void *RecoverDescriptor::getFieldStructValuePointer(void *object, int field, int
     Recover *pp = (Recover *)object; (void)pp;
     switch (field) {
         case 0: return (void *)(&pp->getHelper()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(Failure)
+
+Failure::Failure(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
+{
+}
+
+Failure::Failure(const Failure& other) : ::omnetpp::cMessage(other)
+{
+    copy(other);
+}
+
+Failure::~Failure()
+{
+}
+
+Failure& Failure::operator=(const Failure& other)
+{
+    if (this==&other) return *this;
+    ::omnetpp::cMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void Failure::copy(const Failure& other)
+{
+    this->failed = other.failed;
+}
+
+void Failure::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::omnetpp::cMessage::parsimPack(b);
+    doParsimPacking(b,this->failed);
+}
+
+void Failure::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::omnetpp::cMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->failed);
+}
+
+TransportAddress& Failure::getFailed()
+{
+    return this->failed;
+}
+
+void Failure::setFailed(const TransportAddress& failed)
+{
+    this->failed = failed;
+}
+
+class FailureDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    FailureDescriptor();
+    virtual ~FailureDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(FailureDescriptor)
+
+FailureDescriptor::FailureDescriptor() : omnetpp::cClassDescriptor("Failure", "omnetpp::cMessage")
+{
+    propertynames = nullptr;
+}
+
+FailureDescriptor::~FailureDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool FailureDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<Failure *>(obj)!=nullptr;
+}
+
+const char **FailureDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *FailureDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int FailureDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
+}
+
+unsigned int FailureDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+}
+
+const char *FailureDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "failed",
+    };
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+}
+
+int FailureDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "failed")==0) return base+0;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *FailureDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+    };
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **FailureDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *FailureDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int FailureDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    Failure *pp = (Failure *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *FailureDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Failure *pp = (Failure *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string FailureDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Failure *pp = (Failure *)object; (void)pp;
+    switch (field) {
+        case 0: {std::stringstream out; out << pp->getFailed(); return out.str();}
+        default: return "";
+    }
+}
+
+bool FailureDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    Failure *pp = (Failure *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *FailureDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *FailureDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    Failure *pp = (Failure *)object; (void)pp;
+    switch (field) {
+        case 0: return (void *)(&pp->getFailed()); break;
         default: return nullptr;
     }
 }
@@ -7081,6 +7421,586 @@ void *ExchangeAfterDownloadDescriptor::getFieldStructValuePointer(void *object, 
     ExchangeAfterDownload *pp = (ExchangeAfterDownload *)object; (void)pp;
     switch (field) {
         case 0: return (void *)(&pp->getFinished()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(Partnership)
+
+Partnership::Partnership(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+    this->bandwidth = 0;
+}
+
+Partnership::Partnership(const Partnership& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+Partnership::~Partnership()
+{
+}
+
+Partnership& Partnership::operator=(const Partnership& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void Partnership::copy(const Partnership& other)
+{
+    this->from = other.from;
+    this->bandwidth = other.bandwidth;
+}
+
+void Partnership::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->from);
+    doParsimPacking(b,this->bandwidth);
+}
+
+void Partnership::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->from);
+    doParsimUnpacking(b,this->bandwidth);
+}
+
+TransportAddress& Partnership::getFrom()
+{
+    return this->from;
+}
+
+void Partnership::setFrom(const TransportAddress& from)
+{
+    this->from = from;
+}
+
+int Partnership::getBandwidth() const
+{
+    return this->bandwidth;
+}
+
+void Partnership::setBandwidth(int bandwidth)
+{
+    this->bandwidth = bandwidth;
+}
+
+class PartnershipDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    PartnershipDescriptor();
+    virtual ~PartnershipDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(PartnershipDescriptor)
+
+PartnershipDescriptor::PartnershipDescriptor() : omnetpp::cClassDescriptor("Partnership", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+PartnershipDescriptor::~PartnershipDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool PartnershipDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<Partnership *>(obj)!=nullptr;
+}
+
+const char **PartnershipDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *PartnershipDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int PartnershipDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
+}
+
+unsigned int PartnershipDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+        FD_ISEDITABLE,
+    };
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+}
+
+const char *PartnershipDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "from",
+        "bandwidth",
+    };
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
+}
+
+int PartnershipDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
+    if (fieldName[0]=='b' && strcmp(fieldName, "bandwidth")==0) return base+1;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *PartnershipDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+        "int",
+    };
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **PartnershipDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *PartnershipDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int PartnershipDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    Partnership *pp = (Partnership *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *PartnershipDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Partnership *pp = (Partnership *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string PartnershipDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Partnership *pp = (Partnership *)object; (void)pp;
+    switch (field) {
+        case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        case 1: return long2string(pp->getBandwidth());
+        default: return "";
+    }
+}
+
+bool PartnershipDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    Partnership *pp = (Partnership *)object; (void)pp;
+    switch (field) {
+        case 1: pp->setBandwidth(string2long(value)); return true;
+        default: return false;
+    }
+}
+
+const char *PartnershipDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *PartnershipDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    Partnership *pp = (Partnership *)object; (void)pp;
+    switch (field) {
+        case 0: return (void *)(&pp->getFrom()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(PartnershipEnd)
+
+PartnershipEnd::PartnershipEnd(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+}
+
+PartnershipEnd::PartnershipEnd(const PartnershipEnd& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+PartnershipEnd::~PartnershipEnd()
+{
+}
+
+PartnershipEnd& PartnershipEnd::operator=(const PartnershipEnd& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void PartnershipEnd::copy(const PartnershipEnd& other)
+{
+    this->from = other.from;
+}
+
+void PartnershipEnd::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->from);
+}
+
+void PartnershipEnd::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->from);
+}
+
+TransportAddress& PartnershipEnd::getFrom()
+{
+    return this->from;
+}
+
+void PartnershipEnd::setFrom(const TransportAddress& from)
+{
+    this->from = from;
+}
+
+class PartnershipEndDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    PartnershipEndDescriptor();
+    virtual ~PartnershipEndDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(PartnershipEndDescriptor)
+
+PartnershipEndDescriptor::PartnershipEndDescriptor() : omnetpp::cClassDescriptor("PartnershipEnd", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+PartnershipEndDescriptor::~PartnershipEndDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool PartnershipEndDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<PartnershipEnd *>(obj)!=nullptr;
+}
+
+const char **PartnershipEndDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *PartnershipEndDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int PartnershipEndDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
+}
+
+unsigned int PartnershipEndDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+}
+
+const char *PartnershipEndDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "from",
+    };
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+}
+
+int PartnershipEndDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *PartnershipEndDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+    };
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **PartnershipEndDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *PartnershipEndDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int PartnershipEndDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *PartnershipEndDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string PartnershipEndDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        default: return "";
+    }
+}
+
+bool PartnershipEndDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *PartnershipEndDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *PartnershipEndDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    switch (field) {
+        case 0: return (void *)(&pp->getFrom()); break;
         default: return nullptr;
     }
 }

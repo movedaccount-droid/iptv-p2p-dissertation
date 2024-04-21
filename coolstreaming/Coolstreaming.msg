@@ -132,7 +132,9 @@ packet TrySplitResponse extends BaseResponseMessage {
 packet Leave extends BaseOverlayMessage {}
 
 packet Panic extends BaseOverlayMessage {
- 	TransportAddress panicking;   
+ 	TransportAddress panicking;
+ 	TransportAddress last_hop;
+    simtime_t send_time;
 }
 
 enum PanicSplitState {
@@ -144,6 +146,7 @@ packet PanicSplit extends BaseOverlayMessage {
     int state enum (PanicSplitState);
     TransportAddress into;
     TransportAddress from;
+    simtime_t send_time;
 }
 
 packet PanicSplitFound extends BaseOverlayMessage {
@@ -153,6 +156,11 @@ packet PanicSplitFound extends BaseOverlayMessage {
 
 packet Recover extends BaseOverlayMessage {
  	TransportAddress helper;   
+}
+
+// self-message to track when to fail a partner connection after not receiving buffermaps for some period
+message Failure {
+	TransportAddress failed;   
 }
 
 // coolstreaming buffermap exchange
@@ -169,10 +177,20 @@ packet BlockRequest extends BaseOverlayMessage {
 }
 
 packet Block extends BaseOverlayMessage {
- 	int index;   
+ 	int index;
 }
 
 // active_node finished downloading self-message/timer
 message ExchangeAfterDownload {
 	TransportAddress finished;   
+}
+
+// TODO: remove these
+packet Partnership extends BaseOverlayMessage {
+    TransportAddress from;
+    int bandwidth;
+}
+
+packet PartnershipEnd extends BaseOverlayMessage {
+    TransportAddress from;
 }
