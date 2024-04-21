@@ -273,6 +273,7 @@ void MembershipManager::send_entry_membership_message(TransportAddress tad) {
             seq_num++,
             parent->getThisNode(),
             // TODO: get thi svalue from PartnerManager
+            // TODO: unrelated bute we need cooldown timer Ta
             1,
             SimTime(scamp_resubscription_interval, SIMTIME_S),
             false,

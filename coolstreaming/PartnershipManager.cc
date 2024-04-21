@@ -50,9 +50,8 @@ void PartnershipManager::insert_new_partner_if_needed(TransportAddress tad, doub
 void PartnershipManager::erase_partner(TransportAddress tad) {
     partners.erase(tad);
     if (parent->origin) {
-        for (auto it = partner_k.begin(); it != partner_k.end(); ++it) {
-            if (*it == tad) partner_k.erase(it); break;
-        }
+        auto it = std::find(partner_k.begin(), partner_k.end(), tad);
+        if (it != partner_k.end()) partner_k.erase(it);
     }
     parent->set_arrow(tad, "PARTNER", false);
 }
@@ -61,15 +60,8 @@ void PartnershipManager::remove_worst_scoring_partner() {
     typedef typename decltype(partners)::value_type& Comp;
     auto erased = min_element(partners.begin(), partners.end(),
             [](Comp l, Comp r) -> bool { return l.second < r.second;});
-    parent->set_arrow(erased->first, "PARTNER", false);
     send_partnership_end_message(erased->first);
-    // everything involving this thing is gross actually
-    if (parent->origin) {
-        for (auto it = partner_k.begin(); it != partner_k.end(); ++it) {
-            if (*it == erased->first) partner_k.erase(it); break;
-        }
-    }
-    partners.erase(erased);
+    erase_partner(erased->first);
 }
 
 std::set<TransportAddress> PartnershipManager::get_partner_tads() {
