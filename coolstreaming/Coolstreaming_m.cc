@@ -3159,77 +3159,84 @@ void *GetCandidatePartnersResponseDescriptor::getFieldStructValuePointer(void *o
     }
 }
 
-Register_Class(Partnership)
+EXECUTE_ON_STARTUP(
+    omnetpp::cEnum *e = omnetpp::cEnum::find("SplitResult");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("SplitResult"));
+    e->insert(SUCCESS, "SUCCESS");
+    e->insert(FAILED, "FAILED");
+)
 
-Partnership::Partnership(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+Register_Class(SplitCall)
+
+SplitCall::SplitCall(const char *name, short kind) : ::BaseCallMessage(name,kind)
 {
-    this->bandwidth = 0;
+    this->uuid = 0;
 }
 
-Partnership::Partnership(const Partnership& other) : ::BaseOverlayMessage(other)
+SplitCall::SplitCall(const SplitCall& other) : ::BaseCallMessage(other)
 {
     copy(other);
 }
 
-Partnership::~Partnership()
+SplitCall::~SplitCall()
 {
 }
 
-Partnership& Partnership::operator=(const Partnership& other)
+SplitCall& SplitCall::operator=(const SplitCall& other)
 {
     if (this==&other) return *this;
-    ::BaseOverlayMessage::operator=(other);
+    ::BaseCallMessage::operator=(other);
     copy(other);
     return *this;
 }
 
-void Partnership::copy(const Partnership& other)
+void SplitCall::copy(const SplitCall& other)
 {
-    this->from = other.from;
-    this->bandwidth = other.bandwidth;
+    this->uuid = other.uuid;
+    this->into = other.into;
 }
 
-void Partnership::parsimPack(omnetpp::cCommBuffer *b) const
+void SplitCall::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::BaseOverlayMessage::parsimPack(b);
-    doParsimPacking(b,this->from);
-    doParsimPacking(b,this->bandwidth);
+    ::BaseCallMessage::parsimPack(b);
+    doParsimPacking(b,this->uuid);
+    doParsimPacking(b,this->into);
 }
 
-void Partnership::parsimUnpack(omnetpp::cCommBuffer *b)
+void SplitCall::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::BaseOverlayMessage::parsimUnpack(b);
-    doParsimUnpacking(b,this->from);
-    doParsimUnpacking(b,this->bandwidth);
+    ::BaseCallMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->uuid);
+    doParsimUnpacking(b,this->into);
 }
 
-TransportAddress& Partnership::getFrom()
+int SplitCall::getUuid() const
 {
-    return this->from;
+    return this->uuid;
 }
 
-void Partnership::setFrom(const TransportAddress& from)
+void SplitCall::setUuid(int uuid)
 {
-    this->from = from;
+    this->uuid = uuid;
 }
 
-double Partnership::getBandwidth() const
+TransportAddress& SplitCall::getInto()
 {
-    return this->bandwidth;
+    return this->into;
 }
 
-void Partnership::setBandwidth(double bandwidth)
+void SplitCall::setInto(const TransportAddress& into)
 {
-    this->bandwidth = bandwidth;
+    this->into = into;
 }
 
-class PartnershipDescriptor : public omnetpp::cClassDescriptor
+class SplitCallDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    PartnershipDescriptor();
-    virtual ~PartnershipDescriptor();
+    SplitCallDescriptor();
+    virtual ~SplitCallDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -3251,24 +3258,24 @@ class PartnershipDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(PartnershipDescriptor)
+Register_ClassDescriptor(SplitCallDescriptor)
 
-PartnershipDescriptor::PartnershipDescriptor() : omnetpp::cClassDescriptor("Partnership", "BaseOverlayMessage")
+SplitCallDescriptor::SplitCallDescriptor() : omnetpp::cClassDescriptor("SplitCall", "BaseCallMessage")
 {
     propertynames = nullptr;
 }
 
-PartnershipDescriptor::~PartnershipDescriptor()
+SplitCallDescriptor::~SplitCallDescriptor()
 {
     delete[] propertynames;
 }
 
-bool PartnershipDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool SplitCallDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<Partnership *>(obj)!=nullptr;
+    return dynamic_cast<SplitCall *>(obj)!=nullptr;
 }
 
-const char **PartnershipDescriptor::getPropertyNames() const
+const char **SplitCallDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -3279,19 +3286,19 @@ const char **PartnershipDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *PartnershipDescriptor::getProperty(const char *propertyname) const
+const char *SplitCallDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int PartnershipDescriptor::getFieldCount() const
+int SplitCallDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
-unsigned int PartnershipDescriptor::getFieldTypeFlags(int field) const
+unsigned int SplitCallDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3300,13 +3307,13 @@ unsigned int PartnershipDescriptor::getFieldTypeFlags(int field) const
         field -= basedesc->getFieldCount();
     }
     static unsigned int fieldTypeFlags[] = {
-        FD_ISCOMPOUND,
         FD_ISEDITABLE,
+        FD_ISCOMPOUND,
     };
     return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
-const char *PartnershipDescriptor::getFieldName(int field) const
+const char *SplitCallDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3315,22 +3322,22 @@ const char *PartnershipDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
-        "from",
-        "bandwidth",
+        "uuid",
+        "into",
     };
     return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
-int PartnershipDescriptor::findField(const char *fieldName) const
+int SplitCallDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
-    if (fieldName[0]=='b' && strcmp(fieldName, "bandwidth")==0) return base+1;
+    if (fieldName[0]=='u' && strcmp(fieldName, "uuid")==0) return base+0;
+    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *PartnershipDescriptor::getFieldTypeString(int field) const
+const char *SplitCallDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3339,13 +3346,13 @@ const char *PartnershipDescriptor::getFieldTypeString(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldTypeStrings[] = {
+        "int",
         "TransportAddress",
-        "double",
     };
     return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **PartnershipDescriptor::getFieldPropertyNames(int field) const
+const char **SplitCallDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3358,7 +3365,7 @@ const char **PartnershipDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *PartnershipDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *SplitCallDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3371,7 +3378,7 @@ const char *PartnershipDescriptor::getFieldProperty(int field, const char *prope
     }
 }
 
-int PartnershipDescriptor::getFieldArraySize(void *object, int field) const
+int SplitCallDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3379,13 +3386,13 @@ int PartnershipDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    Partnership *pp = (Partnership *)object; (void)pp;
+    SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *PartnershipDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *SplitCallDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3393,13 +3400,13 @@ const char *PartnershipDescriptor::getFieldDynamicTypeString(void *object, int f
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    Partnership *pp = (Partnership *)object; (void)pp;
+    SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string PartnershipDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string SplitCallDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3407,15 +3414,15 @@ std::string PartnershipDescriptor::getFieldValueAsString(void *object, int field
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    Partnership *pp = (Partnership *)object; (void)pp;
+    SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
-        case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
-        case 1: return double2string(pp->getBandwidth());
+        case 0: return long2string(pp->getUuid());
+        case 1: {std::stringstream out; out << pp->getInto(); return out.str();}
         default: return "";
     }
 }
 
-bool PartnershipDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool SplitCallDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3423,14 +3430,14 @@ bool PartnershipDescriptor::setFieldValueAsString(void *object, int field, int i
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    Partnership *pp = (Partnership *)object; (void)pp;
+    SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
-        case 1: pp->setBandwidth(string2double(value)); return true;
+        case 0: pp->setUuid(string2long(value)); return true;
         default: return false;
     }
 }
 
-const char *PartnershipDescriptor::getFieldStructName(int field) const
+const char *SplitCallDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3439,12 +3446,12 @@ const char *PartnershipDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
         default: return nullptr;
     };
 }
 
-void *PartnershipDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *SplitCallDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3452,70 +3459,97 @@ void *PartnershipDescriptor::getFieldStructValuePointer(void *object, int field,
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    Partnership *pp = (Partnership *)object; (void)pp;
+    SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
-        case 0: return (void *)(&pp->getFrom()); break;
+        case 1: return (void *)(&pp->getInto()); break;
         default: return nullptr;
     }
 }
 
-Register_Class(PartnershipEnd)
+Register_Class(SplitResponse)
 
-PartnershipEnd::PartnershipEnd(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+SplitResponse::SplitResponse(const char *name, short kind) : ::BaseResponseMessage(name,kind)
 {
+    this->result = 0;
 }
 
-PartnershipEnd::PartnershipEnd(const PartnershipEnd& other) : ::BaseOverlayMessage(other)
+SplitResponse::SplitResponse(const SplitResponse& other) : ::BaseResponseMessage(other)
 {
     copy(other);
 }
 
-PartnershipEnd::~PartnershipEnd()
+SplitResponse::~SplitResponse()
 {
 }
 
-PartnershipEnd& PartnershipEnd::operator=(const PartnershipEnd& other)
+SplitResponse& SplitResponse::operator=(const SplitResponse& other)
 {
     if (this==&other) return *this;
-    ::BaseOverlayMessage::operator=(other);
+    ::BaseResponseMessage::operator=(other);
     copy(other);
     return *this;
 }
 
-void PartnershipEnd::copy(const PartnershipEnd& other)
+void SplitResponse::copy(const SplitResponse& other)
 {
-    this->from = other.from;
+    this->result = other.result;
+    this->first_node = other.first_node;
+    this->second_node = other.second_node;
 }
 
-void PartnershipEnd::parsimPack(omnetpp::cCommBuffer *b) const
+void SplitResponse::parsimPack(omnetpp::cCommBuffer *b) const
 {
-    ::BaseOverlayMessage::parsimPack(b);
-    doParsimPacking(b,this->from);
+    ::BaseResponseMessage::parsimPack(b);
+    doParsimPacking(b,this->result);
+    doParsimPacking(b,this->first_node);
+    doParsimPacking(b,this->second_node);
 }
 
-void PartnershipEnd::parsimUnpack(omnetpp::cCommBuffer *b)
+void SplitResponse::parsimUnpack(omnetpp::cCommBuffer *b)
 {
-    ::BaseOverlayMessage::parsimUnpack(b);
-    doParsimUnpacking(b,this->from);
+    ::BaseResponseMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->result);
+    doParsimUnpacking(b,this->first_node);
+    doParsimUnpacking(b,this->second_node);
 }
 
-TransportAddress& PartnershipEnd::getFrom()
+int SplitResponse::getResult() const
 {
-    return this->from;
+    return this->result;
 }
 
-void PartnershipEnd::setFrom(const TransportAddress& from)
+void SplitResponse::setResult(int result)
 {
-    this->from = from;
+    this->result = result;
 }
 
-class PartnershipEndDescriptor : public omnetpp::cClassDescriptor
+TransportAddress& SplitResponse::getFirst_node()
+{
+    return this->first_node;
+}
+
+void SplitResponse::setFirst_node(const TransportAddress& first_node)
+{
+    this->first_node = first_node;
+}
+
+TransportAddress& SplitResponse::getSecond_node()
+{
+    return this->second_node;
+}
+
+void SplitResponse::setSecond_node(const TransportAddress& second_node)
+{
+    this->second_node = second_node;
+}
+
+class SplitResponseDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    PartnershipEndDescriptor();
-    virtual ~PartnershipEndDescriptor();
+    SplitResponseDescriptor();
+    virtual ~SplitResponseDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -3537,24 +3571,24 @@ class PartnershipEndDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(PartnershipEndDescriptor)
+Register_ClassDescriptor(SplitResponseDescriptor)
 
-PartnershipEndDescriptor::PartnershipEndDescriptor() : omnetpp::cClassDescriptor("PartnershipEnd", "BaseOverlayMessage")
+SplitResponseDescriptor::SplitResponseDescriptor() : omnetpp::cClassDescriptor("SplitResponse", "BaseResponseMessage")
 {
     propertynames = nullptr;
 }
 
-PartnershipEndDescriptor::~PartnershipEndDescriptor()
+SplitResponseDescriptor::~SplitResponseDescriptor()
 {
     delete[] propertynames;
 }
 
-bool PartnershipEndDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool SplitResponseDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<PartnershipEnd *>(obj)!=nullptr;
+    return dynamic_cast<SplitResponse *>(obj)!=nullptr;
 }
 
-const char **PartnershipEndDescriptor::getPropertyNames() const
+const char **SplitResponseDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -3565,19 +3599,1237 @@ const char **PartnershipEndDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *PartnershipEndDescriptor::getProperty(const char *propertyname) const
+const char *SplitResponseDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int PartnershipEndDescriptor::getFieldCount() const
+int SplitResponseDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 3+basedesc->getFieldCount() : 3;
+}
+
+unsigned int SplitResponseDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISEDITABLE,
+        FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+}
+
+const char *SplitResponseDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "result",
+        "first_node",
+        "second_node",
+    };
+    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+}
+
+int SplitResponseDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='r' && strcmp(fieldName, "result")==0) return base+0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "first_node")==0) return base+1;
+    if (fieldName[0]=='s' && strcmp(fieldName, "second_node")==0) return base+2;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *SplitResponseDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "int",
+        "TransportAddress",
+        "TransportAddress",
+    };
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **SplitResponseDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: {
+            static const char *names[] = { "enum",  nullptr };
+            return names;
+        }
+        default: return nullptr;
+    }
+}
+
+const char *SplitResponseDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0:
+            if (!strcmp(propertyname,"enum")) return "SplitResult";
+            return nullptr;
+        default: return nullptr;
+    }
+}
+
+int SplitResponseDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    SplitResponse *pp = (SplitResponse *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *SplitResponseDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    SplitResponse *pp = (SplitResponse *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string SplitResponseDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    SplitResponse *pp = (SplitResponse *)object; (void)pp;
+    switch (field) {
+        case 0: return enum2string(pp->getResult(), "SplitResult");
+        case 1: {std::stringstream out; out << pp->getFirst_node(); return out.str();}
+        case 2: {std::stringstream out; out << pp->getSecond_node(); return out.str();}
+        default: return "";
+    }
+}
+
+bool SplitResponseDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    SplitResponse *pp = (SplitResponse *)object; (void)pp;
+    switch (field) {
+        case 0: pp->setResult((SplitResult)string2enum(value, "SplitResult")); return true;
+        default: return false;
+    }
+}
+
+const char *SplitResponseDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 2: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *SplitResponseDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    SplitResponse *pp = (SplitResponse *)object; (void)pp;
+    switch (field) {
+        case 1: return (void *)(&pp->getFirst_node()); break;
+        case 2: return (void *)(&pp->getSecond_node()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(TrySplitCall)
+
+TrySplitCall::TrySplitCall(const char *name, short kind) : ::BaseCallMessage(name,kind)
+{
+    this->uuid = 0;
+}
+
+TrySplitCall::TrySplitCall(const TrySplitCall& other) : ::BaseCallMessage(other)
+{
+    copy(other);
+}
+
+TrySplitCall::~TrySplitCall()
+{
+}
+
+TrySplitCall& TrySplitCall::operator=(const TrySplitCall& other)
+{
+    if (this==&other) return *this;
+    ::BaseCallMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void TrySplitCall::copy(const TrySplitCall& other)
+{
+    this->uuid = other.uuid;
+    this->into = other.into;
+    this->from = other.from;
+}
+
+void TrySplitCall::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseCallMessage::parsimPack(b);
+    doParsimPacking(b,this->uuid);
+    doParsimPacking(b,this->into);
+    doParsimPacking(b,this->from);
+}
+
+void TrySplitCall::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseCallMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->uuid);
+    doParsimUnpacking(b,this->into);
+    doParsimUnpacking(b,this->from);
+}
+
+int TrySplitCall::getUuid() const
+{
+    return this->uuid;
+}
+
+void TrySplitCall::setUuid(int uuid)
+{
+    this->uuid = uuid;
+}
+
+TransportAddress& TrySplitCall::getInto()
+{
+    return this->into;
+}
+
+void TrySplitCall::setInto(const TransportAddress& into)
+{
+    this->into = into;
+}
+
+TransportAddress& TrySplitCall::getFrom()
+{
+    return this->from;
+}
+
+void TrySplitCall::setFrom(const TransportAddress& from)
+{
+    this->from = from;
+}
+
+class TrySplitCallDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    TrySplitCallDescriptor();
+    virtual ~TrySplitCallDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(TrySplitCallDescriptor)
+
+TrySplitCallDescriptor::TrySplitCallDescriptor() : omnetpp::cClassDescriptor("TrySplitCall", "BaseCallMessage")
+{
+    propertynames = nullptr;
+}
+
+TrySplitCallDescriptor::~TrySplitCallDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool TrySplitCallDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<TrySplitCall *>(obj)!=nullptr;
+}
+
+const char **TrySplitCallDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *TrySplitCallDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int TrySplitCallDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 3+basedesc->getFieldCount() : 3;
+}
+
+unsigned int TrySplitCallDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISEDITABLE,
+        FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+}
+
+const char *TrySplitCallDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "uuid",
+        "into",
+        "from",
+    };
+    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+}
+
+int TrySplitCallDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='u' && strcmp(fieldName, "uuid")==0) return base+0;
+    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+1;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+2;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *TrySplitCallDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "int",
+        "TransportAddress",
+        "TransportAddress",
+    };
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **TrySplitCallDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *TrySplitCallDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int TrySplitCallDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitCall *pp = (TrySplitCall *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *TrySplitCallDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitCall *pp = (TrySplitCall *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string TrySplitCallDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitCall *pp = (TrySplitCall *)object; (void)pp;
+    switch (field) {
+        case 0: return long2string(pp->getUuid());
+        case 1: {std::stringstream out; out << pp->getInto(); return out.str();}
+        case 2: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        default: return "";
+    }
+}
+
+bool TrySplitCallDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitCall *pp = (TrySplitCall *)object; (void)pp;
+    switch (field) {
+        case 0: pp->setUuid(string2long(value)); return true;
+        default: return false;
+    }
+}
+
+const char *TrySplitCallDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 2: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *TrySplitCallDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitCall *pp = (TrySplitCall *)object; (void)pp;
+    switch (field) {
+        case 1: return (void *)(&pp->getInto()); break;
+        case 2: return (void *)(&pp->getFrom()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(TrySplitResponse)
+
+TrySplitResponse::TrySplitResponse(const char *name, short kind) : ::BaseResponseMessage(name,kind)
+{
+    this->uuid = 0;
+    this->result = 0;
+}
+
+TrySplitResponse::TrySplitResponse(const TrySplitResponse& other) : ::BaseResponseMessage(other)
+{
+    copy(other);
+}
+
+TrySplitResponse::~TrySplitResponse()
+{
+}
+
+TrySplitResponse& TrySplitResponse::operator=(const TrySplitResponse& other)
+{
+    if (this==&other) return *this;
+    ::BaseResponseMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void TrySplitResponse::copy(const TrySplitResponse& other)
+{
+    this->uuid = other.uuid;
+    this->result = other.result;
+    this->into = other.into;
+    this->from = other.from;
+}
+
+void TrySplitResponse::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseResponseMessage::parsimPack(b);
+    doParsimPacking(b,this->uuid);
+    doParsimPacking(b,this->result);
+    doParsimPacking(b,this->into);
+    doParsimPacking(b,this->from);
+}
+
+void TrySplitResponse::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseResponseMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->uuid);
+    doParsimUnpacking(b,this->result);
+    doParsimUnpacking(b,this->into);
+    doParsimUnpacking(b,this->from);
+}
+
+int TrySplitResponse::getUuid() const
+{
+    return this->uuid;
+}
+
+void TrySplitResponse::setUuid(int uuid)
+{
+    this->uuid = uuid;
+}
+
+int TrySplitResponse::getResult() const
+{
+    return this->result;
+}
+
+void TrySplitResponse::setResult(int result)
+{
+    this->result = result;
+}
+
+TransportAddress& TrySplitResponse::getInto()
+{
+    return this->into;
+}
+
+void TrySplitResponse::setInto(const TransportAddress& into)
+{
+    this->into = into;
+}
+
+TransportAddress& TrySplitResponse::getFrom()
+{
+    return this->from;
+}
+
+void TrySplitResponse::setFrom(const TransportAddress& from)
+{
+    this->from = from;
+}
+
+class TrySplitResponseDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    TrySplitResponseDescriptor();
+    virtual ~TrySplitResponseDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(TrySplitResponseDescriptor)
+
+TrySplitResponseDescriptor::TrySplitResponseDescriptor() : omnetpp::cClassDescriptor("TrySplitResponse", "BaseResponseMessage")
+{
+    propertynames = nullptr;
+}
+
+TrySplitResponseDescriptor::~TrySplitResponseDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool TrySplitResponseDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<TrySplitResponse *>(obj)!=nullptr;
+}
+
+const char **TrySplitResponseDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *TrySplitResponseDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int TrySplitResponseDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 4+basedesc->getFieldCount() : 4;
+}
+
+unsigned int TrySplitResponseDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISEDITABLE,
+        FD_ISEDITABLE,
+        FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
+}
+
+const char *TrySplitResponseDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "uuid",
+        "result",
+        "into",
+        "from",
+    };
+    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
+}
+
+int TrySplitResponseDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='u' && strcmp(fieldName, "uuid")==0) return base+0;
+    if (fieldName[0]=='r' && strcmp(fieldName, "result")==0) return base+1;
+    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+2;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+3;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *TrySplitResponseDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "int",
+        "int",
+        "TransportAddress",
+        "TransportAddress",
+    };
+    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **TrySplitResponseDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 1: {
+            static const char *names[] = { "enum",  nullptr };
+            return names;
+        }
+        default: return nullptr;
+    }
+}
+
+const char *TrySplitResponseDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 1:
+            if (!strcmp(propertyname,"enum")) return "SplitResult";
+            return nullptr;
+        default: return nullptr;
+    }
+}
+
+int TrySplitResponseDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitResponse *pp = (TrySplitResponse *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *TrySplitResponseDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitResponse *pp = (TrySplitResponse *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string TrySplitResponseDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitResponse *pp = (TrySplitResponse *)object; (void)pp;
+    switch (field) {
+        case 0: return long2string(pp->getUuid());
+        case 1: return enum2string(pp->getResult(), "SplitResult");
+        case 2: {std::stringstream out; out << pp->getInto(); return out.str();}
+        case 3: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        default: return "";
+    }
+}
+
+bool TrySplitResponseDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitResponse *pp = (TrySplitResponse *)object; (void)pp;
+    switch (field) {
+        case 0: pp->setUuid(string2long(value)); return true;
+        case 1: pp->setResult((SplitResult)string2enum(value, "SplitResult")); return true;
+        default: return false;
+    }
+}
+
+const char *TrySplitResponseDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 2: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 3: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *TrySplitResponseDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    TrySplitResponse *pp = (TrySplitResponse *)object; (void)pp;
+    switch (field) {
+        case 2: return (void *)(&pp->getInto()); break;
+        case 3: return (void *)(&pp->getFrom()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(Leave)
+
+Leave::Leave(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+}
+
+Leave::Leave(const Leave& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+Leave::~Leave()
+{
+}
+
+Leave& Leave::operator=(const Leave& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void Leave::copy(const Leave& other)
+{
+}
+
+void Leave::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+}
+
+void Leave::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+}
+
+class LeaveDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    LeaveDescriptor();
+    virtual ~LeaveDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(LeaveDescriptor)
+
+LeaveDescriptor::LeaveDescriptor() : omnetpp::cClassDescriptor("Leave", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+LeaveDescriptor::~LeaveDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool LeaveDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<Leave *>(obj)!=nullptr;
+}
+
+const char **LeaveDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *LeaveDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int LeaveDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 0+basedesc->getFieldCount() : 0;
+}
+
+unsigned int LeaveDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    return 0;
+}
+
+const char *LeaveDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+int LeaveDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *LeaveDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+const char **LeaveDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *LeaveDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int LeaveDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    Leave *pp = (Leave *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *LeaveDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Leave *pp = (Leave *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string LeaveDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Leave *pp = (Leave *)object; (void)pp;
+    switch (field) {
+        default: return "";
+    }
+}
+
+bool LeaveDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    Leave *pp = (Leave *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *LeaveDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+void *LeaveDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    Leave *pp = (Leave *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+Register_Class(Panic)
+
+Panic::Panic(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+}
+
+Panic::Panic(const Panic& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+Panic::~Panic()
+{
+}
+
+Panic& Panic::operator=(const Panic& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void Panic::copy(const Panic& other)
+{
+    this->panicking = other.panicking;
+}
+
+void Panic::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->panicking);
+}
+
+void Panic::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->panicking);
+}
+
+TransportAddress& Panic::getPanicking()
+{
+    return this->panicking;
+}
+
+void Panic::setPanicking(const TransportAddress& panicking)
+{
+    this->panicking = panicking;
+}
+
+class PanicDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    PanicDescriptor();
+    virtual ~PanicDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(PanicDescriptor)
+
+PanicDescriptor::PanicDescriptor() : omnetpp::cClassDescriptor("Panic", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+PanicDescriptor::~PanicDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool PanicDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<Panic *>(obj)!=nullptr;
+}
+
+const char **PanicDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *PanicDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int PanicDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 1+basedesc->getFieldCount() : 1;
 }
 
-unsigned int PartnershipEndDescriptor::getFieldTypeFlags(int field) const
+unsigned int PanicDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3591,7 +4843,7 @@ unsigned int PartnershipEndDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
 }
 
-const char *PartnershipEndDescriptor::getFieldName(int field) const
+const char *PanicDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3600,20 +4852,20 @@ const char *PartnershipEndDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
-        "from",
+        "panicking",
     };
     return (field>=0 && field<1) ? fieldNames[field] : nullptr;
 }
 
-int PartnershipEndDescriptor::findField(const char *fieldName) const
+int PanicDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
+    if (fieldName[0]=='p' && strcmp(fieldName, "panicking")==0) return base+0;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *PartnershipEndDescriptor::getFieldTypeString(int field) const
+const char *PanicDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3627,7 +4879,7 @@ const char *PartnershipEndDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **PartnershipEndDescriptor::getFieldPropertyNames(int field) const
+const char **PanicDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3640,7 +4892,7 @@ const char **PartnershipEndDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *PartnershipEndDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *PanicDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3653,7 +4905,7 @@ const char *PartnershipEndDescriptor::getFieldProperty(int field, const char *pr
     }
 }
 
-int PartnershipEndDescriptor::getFieldArraySize(void *object, int field) const
+int PanicDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3661,13 +4913,13 @@ int PartnershipEndDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *PartnershipEndDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *PanicDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3675,13 +4927,13 @@ const char *PartnershipEndDescriptor::getFieldDynamicTypeString(void *object, in
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string PartnershipEndDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string PanicDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3689,14 +4941,14 @@ std::string PartnershipEndDescriptor::getFieldValueAsString(void *object, int fi
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
-        case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        case 0: {std::stringstream out; out << pp->getPanicking(); return out.str();}
         default: return "";
     }
 }
 
-bool PartnershipEndDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool PanicDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3704,13 +4956,13 @@ bool PartnershipEndDescriptor::setFieldValueAsString(void *object, int field, in
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
         default: return false;
     }
 }
 
-const char *PartnershipEndDescriptor::getFieldStructName(int field) const
+const char *PanicDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3724,7 +4976,7 @@ const char *PartnershipEndDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *PartnershipEndDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *PanicDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -3732,9 +4984,923 @@ void *PartnershipEndDescriptor::getFieldStructValuePointer(void *object, int fie
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    PartnershipEnd *pp = (PartnershipEnd *)object; (void)pp;
+    Panic *pp = (Panic *)object; (void)pp;
     switch (field) {
-        case 0: return (void *)(&pp->getFrom()); break;
+        case 0: return (void *)(&pp->getPanicking()); break;
+        default: return nullptr;
+    }
+}
+
+EXECUTE_ON_STARTUP(
+    omnetpp::cEnum *e = omnetpp::cEnum::find("PanicSplitState");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("PanicSplitState"));
+    e->insert(KNOWN, "KNOWN");
+    e->insert(UNKNOWN, "UNKNOWN");
+)
+
+Register_Class(PanicSplit)
+
+PanicSplit::PanicSplit(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+    this->state = 0;
+}
+
+PanicSplit::PanicSplit(const PanicSplit& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+PanicSplit::~PanicSplit()
+{
+}
+
+PanicSplit& PanicSplit::operator=(const PanicSplit& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void PanicSplit::copy(const PanicSplit& other)
+{
+    this->state = other.state;
+    this->into = other.into;
+    this->from = other.from;
+}
+
+void PanicSplit::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->state);
+    doParsimPacking(b,this->into);
+    doParsimPacking(b,this->from);
+}
+
+void PanicSplit::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->state);
+    doParsimUnpacking(b,this->into);
+    doParsimUnpacking(b,this->from);
+}
+
+int PanicSplit::getState() const
+{
+    return this->state;
+}
+
+void PanicSplit::setState(int state)
+{
+    this->state = state;
+}
+
+TransportAddress& PanicSplit::getInto()
+{
+    return this->into;
+}
+
+void PanicSplit::setInto(const TransportAddress& into)
+{
+    this->into = into;
+}
+
+TransportAddress& PanicSplit::getFrom()
+{
+    return this->from;
+}
+
+void PanicSplit::setFrom(const TransportAddress& from)
+{
+    this->from = from;
+}
+
+class PanicSplitDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    PanicSplitDescriptor();
+    virtual ~PanicSplitDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(PanicSplitDescriptor)
+
+PanicSplitDescriptor::PanicSplitDescriptor() : omnetpp::cClassDescriptor("PanicSplit", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+PanicSplitDescriptor::~PanicSplitDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool PanicSplitDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<PanicSplit *>(obj)!=nullptr;
+}
+
+const char **PanicSplitDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *PanicSplitDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int PanicSplitDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 3+basedesc->getFieldCount() : 3;
+}
+
+unsigned int PanicSplitDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISEDITABLE,
+        FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+}
+
+const char *PanicSplitDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "state",
+        "into",
+        "from",
+    };
+    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+}
+
+int PanicSplitDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='s' && strcmp(fieldName, "state")==0) return base+0;
+    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+1;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+2;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *PanicSplitDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "int",
+        "TransportAddress",
+        "TransportAddress",
+    };
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **PanicSplitDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: {
+            static const char *names[] = { "enum",  nullptr };
+            return names;
+        }
+        default: return nullptr;
+    }
+}
+
+const char *PanicSplitDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0:
+            if (!strcmp(propertyname,"enum")) return "PanicSplitState";
+            return nullptr;
+        default: return nullptr;
+    }
+}
+
+int PanicSplitDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *PanicSplitDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string PanicSplitDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    switch (field) {
+        case 0: return enum2string(pp->getState(), "PanicSplitState");
+        case 1: {std::stringstream out; out << pp->getInto(); return out.str();}
+        case 2: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        default: return "";
+    }
+}
+
+bool PanicSplitDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    switch (field) {
+        case 0: pp->setState((PanicSplitState)string2enum(value, "PanicSplitState")); return true;
+        default: return false;
+    }
+}
+
+const char *PanicSplitDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 2: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *PanicSplitDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    switch (field) {
+        case 1: return (void *)(&pp->getInto()); break;
+        case 2: return (void *)(&pp->getFrom()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(PanicSplitFound)
+
+PanicSplitFound::PanicSplitFound(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+}
+
+PanicSplitFound::PanicSplitFound(const PanicSplitFound& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+PanicSplitFound::~PanicSplitFound()
+{
+}
+
+PanicSplitFound& PanicSplitFound::operator=(const PanicSplitFound& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void PanicSplitFound::copy(const PanicSplitFound& other)
+{
+    this->into = other.into;
+    this->from = other.from;
+}
+
+void PanicSplitFound::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->into);
+    doParsimPacking(b,this->from);
+}
+
+void PanicSplitFound::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->into);
+    doParsimUnpacking(b,this->from);
+}
+
+TransportAddress& PanicSplitFound::getInto()
+{
+    return this->into;
+}
+
+void PanicSplitFound::setInto(const TransportAddress& into)
+{
+    this->into = into;
+}
+
+TransportAddress& PanicSplitFound::getFrom()
+{
+    return this->from;
+}
+
+void PanicSplitFound::setFrom(const TransportAddress& from)
+{
+    this->from = from;
+}
+
+class PanicSplitFoundDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    PanicSplitFoundDescriptor();
+    virtual ~PanicSplitFoundDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(PanicSplitFoundDescriptor)
+
+PanicSplitFoundDescriptor::PanicSplitFoundDescriptor() : omnetpp::cClassDescriptor("PanicSplitFound", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+PanicSplitFoundDescriptor::~PanicSplitFoundDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool PanicSplitFoundDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<PanicSplitFound *>(obj)!=nullptr;
+}
+
+const char **PanicSplitFoundDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *PanicSplitFoundDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int PanicSplitFoundDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
+}
+
+unsigned int PanicSplitFoundDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+}
+
+const char *PanicSplitFoundDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "into",
+        "from",
+    };
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
+}
+
+int PanicSplitFoundDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+1;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *PanicSplitFoundDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+        "TransportAddress",
+    };
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **PanicSplitFoundDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *PanicSplitFoundDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int PanicSplitFoundDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplitFound *pp = (PanicSplitFound *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *PanicSplitFoundDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplitFound *pp = (PanicSplitFound *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string PanicSplitFoundDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplitFound *pp = (PanicSplitFound *)object; (void)pp;
+    switch (field) {
+        case 0: {std::stringstream out; out << pp->getInto(); return out.str();}
+        case 1: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        default: return "";
+    }
+}
+
+bool PanicSplitFoundDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplitFound *pp = (PanicSplitFound *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *PanicSplitFoundDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *PanicSplitFoundDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    PanicSplitFound *pp = (PanicSplitFound *)object; (void)pp;
+    switch (field) {
+        case 0: return (void *)(&pp->getInto()); break;
+        case 1: return (void *)(&pp->getFrom()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(Recover)
+
+Recover::Recover(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+}
+
+Recover::Recover(const Recover& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+Recover::~Recover()
+{
+}
+
+Recover& Recover::operator=(const Recover& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void Recover::copy(const Recover& other)
+{
+    this->helper = other.helper;
+}
+
+void Recover::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->helper);
+}
+
+void Recover::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->helper);
+}
+
+TransportAddress& Recover::getHelper()
+{
+    return this->helper;
+}
+
+void Recover::setHelper(const TransportAddress& helper)
+{
+    this->helper = helper;
+}
+
+class RecoverDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    RecoverDescriptor();
+    virtual ~RecoverDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(RecoverDescriptor)
+
+RecoverDescriptor::RecoverDescriptor() : omnetpp::cClassDescriptor("Recover", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+RecoverDescriptor::~RecoverDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool RecoverDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<Recover *>(obj)!=nullptr;
+}
+
+const char **RecoverDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *RecoverDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int RecoverDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
+}
+
+unsigned int RecoverDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+}
+
+const char *RecoverDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "helper",
+    };
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+}
+
+int RecoverDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='h' && strcmp(fieldName, "helper")==0) return base+0;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *RecoverDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+    };
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **RecoverDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *RecoverDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int RecoverDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    Recover *pp = (Recover *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *RecoverDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Recover *pp = (Recover *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string RecoverDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    Recover *pp = (Recover *)object; (void)pp;
+    switch (field) {
+        case 0: {std::stringstream out; out << pp->getHelper(); return out.str();}
+        default: return "";
+    }
+}
+
+bool RecoverDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    Recover *pp = (Recover *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *RecoverDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *RecoverDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    Recover *pp = (Recover *)object; (void)pp;
+    switch (field) {
+        case 0: return (void *)(&pp->getHelper()); break;
         default: return nullptr;
     }
 }
@@ -3765,6 +5931,7 @@ BufferMap& BufferMap::operator=(const BufferMap& other)
 void BufferMap::copy(const BufferMap& other)
 {
     this->from = other.from;
+    this->associate = other.associate;
     this->buffer_map = other.buffer_map;
 }
 
@@ -3772,6 +5939,7 @@ void BufferMap::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
     doParsimPacking(b,this->from);
+    doParsimPacking(b,this->associate);
     doParsimPacking(b,this->buffer_map);
 }
 
@@ -3779,6 +5947,7 @@ void BufferMap::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->from);
+    doParsimUnpacking(b,this->associate);
     doParsimUnpacking(b,this->buffer_map);
 }
 
@@ -3790,6 +5959,16 @@ TransportAddress& BufferMap::getFrom()
 void BufferMap::setFrom(const TransportAddress& from)
 {
     this->from = from;
+}
+
+TransportAddress& BufferMap::getAssociate()
+{
+    return this->associate;
+}
+
+void BufferMap::setAssociate(const TransportAddress& associate)
+{
+    this->associate = associate;
 }
 
 BM& BufferMap::getBuffer_map()
@@ -3867,7 +6046,7 @@ const char *BufferMapDescriptor::getProperty(const char *propertyname) const
 int BufferMapDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 2+basedesc->getFieldCount() : 2;
+    return basedesc ? 3+basedesc->getFieldCount() : 3;
 }
 
 unsigned int BufferMapDescriptor::getFieldTypeFlags(int field) const
@@ -3881,8 +6060,9 @@ unsigned int BufferMapDescriptor::getFieldTypeFlags(int field) const
     static unsigned int fieldTypeFlags[] = {
         FD_ISCOMPOUND,
         FD_ISCOMPOUND,
+        FD_ISCOMPOUND,
     };
-    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
 }
 
 const char *BufferMapDescriptor::getFieldName(int field) const
@@ -3895,9 +6075,10 @@ const char *BufferMapDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "from",
+        "associate",
         "buffer_map",
     };
-    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
 }
 
 int BufferMapDescriptor::findField(const char *fieldName) const
@@ -3905,7 +6086,8 @@ int BufferMapDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
-    if (fieldName[0]=='b' && strcmp(fieldName, "buffer_map")==0) return base+1;
+    if (fieldName[0]=='a' && strcmp(fieldName, "associate")==0) return base+1;
+    if (fieldName[0]=='b' && strcmp(fieldName, "buffer_map")==0) return base+2;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -3919,9 +6101,10 @@ const char *BufferMapDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "TransportAddress",
+        "TransportAddress",
         "BM",
     };
-    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **BufferMapDescriptor::getFieldPropertyNames(int field) const
@@ -3989,7 +6172,8 @@ std::string BufferMapDescriptor::getFieldValueAsString(void *object, int field, 
     BufferMap *pp = (BufferMap *)object; (void)pp;
     switch (field) {
         case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
-        case 1: {std::stringstream out; out << pp->getBuffer_map(); return out.str();}
+        case 1: {std::stringstream out; out << pp->getAssociate(); return out.str();}
+        case 2: {std::stringstream out; out << pp->getBuffer_map(); return out.str();}
         default: return "";
     }
 }
@@ -4018,7 +6202,8 @@ const char *BufferMapDescriptor::getFieldStructName(int field) const
     }
     switch (field) {
         case 0: return omnetpp::opp_typename(typeid(TransportAddress));
-        case 1: return omnetpp::opp_typename(typeid(BM));
+        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 2: return omnetpp::opp_typename(typeid(BM));
         default: return nullptr;
     };
 }
@@ -4034,7 +6219,8 @@ void *BufferMapDescriptor::getFieldStructValuePointer(void *object, int field, i
     BufferMap *pp = (BufferMap *)object; (void)pp;
     switch (field) {
         case 0: return (void *)(&pp->getFrom()); break;
-        case 1: return (void *)(&pp->getBuffer_map()); break;
+        case 1: return (void *)(&pp->getAssociate()); break;
+        case 2: return (void *)(&pp->getBuffer_map()); break;
         default: return nullptr;
     }
 }

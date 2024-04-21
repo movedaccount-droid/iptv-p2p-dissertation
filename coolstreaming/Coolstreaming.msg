@@ -98,19 +98,67 @@ packet GetCandidatePartnersResponse extends BaseResponseMessage {
  	BandwidthMap candidates;   
 }
 
-// coolstreaming partnership initiation/ending
-packet Partnership extends BaseOverlayMessage {
-	TransportAddress from;
-	double bandwidth;
+// novel "interlink" algorithm partnership split messages
+// this is siome other fucking problem
+enum SplitResult {
+	SUCCESS = 0;
+	FAILED = 1; 
 }
 
-packet PartnershipEnd extends BaseOverlayMessage {
+packet SplitCall extends BaseCallMessage {
+    int uuid; // to associate TrySplit with this SplitCall later
+    TransportAddress into;
+}
+
+packet SplitResponse extends BaseResponseMessage {
+    int result enum (SplitResult);
+    TransportAddress first_node;
+    TransportAddress second_node;
+}
+
+packet TrySplitCall extends BaseCallMessage {
+    int uuid;
+    TransportAddress into;
     TransportAddress from;
+}
+
+packet TrySplitResponse extends BaseResponseMessage {
+    int uuid;
+    int result enum (SplitResult);
+    TransportAddress into;
+    TransportAddress from;
+}
+
+packet Leave extends BaseOverlayMessage {}
+
+packet Panic extends BaseOverlayMessage {
+ 	TransportAddress panicking;   
+}
+
+enum PanicSplitState {
+ 	KNOWN = 0;
+ 	UNKNOWN = 1;   
+}
+
+packet PanicSplit extends BaseOverlayMessage {
+    int state enum (PanicSplitState);
+    TransportAddress into;
+    TransportAddress from;
+}
+
+packet PanicSplitFound extends BaseOverlayMessage {
+    TransportAddress into;
+    TransportAddress from;
+}
+
+packet Recover extends BaseOverlayMessage {
+ 	TransportAddress helper;   
 }
 
 // coolstreaming buffermap exchange
 packet BufferMap extends BaseOverlayMessage {
     TransportAddress from;
+    TransportAddress associate;
  	BM buffer_map;
 }
 
