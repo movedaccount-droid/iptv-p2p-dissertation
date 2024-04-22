@@ -4711,23 +4711,23 @@ void *LeaveDescriptor::getFieldStructValuePointer(void *object, int field, int i
     }
 }
 
-Register_Class(Panic)
+Register_Class(PanicMsg)
 
-Panic::Panic(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+PanicMsg::PanicMsg(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
 {
     this->send_time = 0;
 }
 
-Panic::Panic(const Panic& other) : ::BaseOverlayMessage(other)
+PanicMsg::PanicMsg(const PanicMsg& other) : ::BaseOverlayMessage(other)
 {
     copy(other);
 }
 
-Panic::~Panic()
+PanicMsg::~PanicMsg()
 {
 }
 
-Panic& Panic::operator=(const Panic& other)
+PanicMsg& PanicMsg::operator=(const PanicMsg& other)
 {
     if (this==&other) return *this;
     ::BaseOverlayMessage::operator=(other);
@@ -4735,14 +4735,14 @@ Panic& Panic::operator=(const Panic& other)
     return *this;
 }
 
-void Panic::copy(const Panic& other)
+void PanicMsg::copy(const PanicMsg& other)
 {
     this->panicking = other.panicking;
     this->last_hop = other.last_hop;
     this->send_time = other.send_time;
 }
 
-void Panic::parsimPack(omnetpp::cCommBuffer *b) const
+void PanicMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
     doParsimPacking(b,this->panicking);
@@ -4750,7 +4750,7 @@ void Panic::parsimPack(omnetpp::cCommBuffer *b) const
     doParsimPacking(b,this->send_time);
 }
 
-void Panic::parsimUnpack(omnetpp::cCommBuffer *b)
+void PanicMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->panicking);
@@ -4758,43 +4758,43 @@ void Panic::parsimUnpack(omnetpp::cCommBuffer *b)
     doParsimUnpacking(b,this->send_time);
 }
 
-TransportAddress& Panic::getPanicking()
+TransportAddress& PanicMsg::getPanicking()
 {
     return this->panicking;
 }
 
-void Panic::setPanicking(const TransportAddress& panicking)
+void PanicMsg::setPanicking(const TransportAddress& panicking)
 {
     this->panicking = panicking;
 }
 
-TransportAddress& Panic::getLast_hop()
+TransportAddress& PanicMsg::getLast_hop()
 {
     return this->last_hop;
 }
 
-void Panic::setLast_hop(const TransportAddress& last_hop)
+void PanicMsg::setLast_hop(const TransportAddress& last_hop)
 {
     this->last_hop = last_hop;
 }
 
-::omnetpp::simtime_t Panic::getSend_time() const
+::omnetpp::simtime_t PanicMsg::getSend_time() const
 {
     return this->send_time;
 }
 
-void Panic::setSend_time(::omnetpp::simtime_t send_time)
+void PanicMsg::setSend_time(::omnetpp::simtime_t send_time)
 {
     this->send_time = send_time;
 }
 
-class PanicDescriptor : public omnetpp::cClassDescriptor
+class PanicMsgDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    PanicDescriptor();
-    virtual ~PanicDescriptor();
+    PanicMsgDescriptor();
+    virtual ~PanicMsgDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -4816,24 +4816,24 @@ class PanicDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(PanicDescriptor)
+Register_ClassDescriptor(PanicMsgDescriptor)
 
-PanicDescriptor::PanicDescriptor() : omnetpp::cClassDescriptor("Panic", "BaseOverlayMessage")
+PanicMsgDescriptor::PanicMsgDescriptor() : omnetpp::cClassDescriptor("PanicMsg", "BaseOverlayMessage")
 {
     propertynames = nullptr;
 }
 
-PanicDescriptor::~PanicDescriptor()
+PanicMsgDescriptor::~PanicMsgDescriptor()
 {
     delete[] propertynames;
 }
 
-bool PanicDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool PanicMsgDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<Panic *>(obj)!=nullptr;
+    return dynamic_cast<PanicMsg *>(obj)!=nullptr;
 }
 
-const char **PanicDescriptor::getPropertyNames() const
+const char **PanicMsgDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -4844,19 +4844,19 @@ const char **PanicDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *PanicDescriptor::getProperty(const char *propertyname) const
+const char *PanicMsgDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int PanicDescriptor::getFieldCount() const
+int PanicMsgDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 3+basedesc->getFieldCount() : 3;
 }
 
-unsigned int PanicDescriptor::getFieldTypeFlags(int field) const
+unsigned int PanicMsgDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4872,7 +4872,7 @@ unsigned int PanicDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
 }
 
-const char *PanicDescriptor::getFieldName(int field) const
+const char *PanicMsgDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4888,7 +4888,7 @@ const char *PanicDescriptor::getFieldName(int field) const
     return (field>=0 && field<3) ? fieldNames[field] : nullptr;
 }
 
-int PanicDescriptor::findField(const char *fieldName) const
+int PanicMsgDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
@@ -4898,7 +4898,7 @@ int PanicDescriptor::findField(const char *fieldName) const
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *PanicDescriptor::getFieldTypeString(int field) const
+const char *PanicMsgDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4914,7 +4914,7 @@ const char *PanicDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **PanicDescriptor::getFieldPropertyNames(int field) const
+const char **PanicMsgDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4927,7 +4927,7 @@ const char **PanicDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *PanicDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *PanicMsgDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4940,7 +4940,7 @@ const char *PanicDescriptor::getFieldProperty(int field, const char *propertynam
     }
 }
 
-int PanicDescriptor::getFieldArraySize(void *object, int field) const
+int PanicMsgDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4948,13 +4948,13 @@ int PanicDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    Panic *pp = (Panic *)object; (void)pp;
+    PanicMsg *pp = (PanicMsg *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *PanicDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *PanicMsgDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4962,13 +4962,13 @@ const char *PanicDescriptor::getFieldDynamicTypeString(void *object, int field, 
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    Panic *pp = (Panic *)object; (void)pp;
+    PanicMsg *pp = (PanicMsg *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string PanicDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string PanicMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4976,7 +4976,7 @@ std::string PanicDescriptor::getFieldValueAsString(void *object, int field, int 
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    Panic *pp = (Panic *)object; (void)pp;
+    PanicMsg *pp = (PanicMsg *)object; (void)pp;
     switch (field) {
         case 0: {std::stringstream out; out << pp->getPanicking(); return out.str();}
         case 1: {std::stringstream out; out << pp->getLast_hop(); return out.str();}
@@ -4985,7 +4985,7 @@ std::string PanicDescriptor::getFieldValueAsString(void *object, int field, int 
     }
 }
 
-bool PanicDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool PanicMsgDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -4993,14 +4993,14 @@ bool PanicDescriptor::setFieldValueAsString(void *object, int field, int i, cons
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    Panic *pp = (Panic *)object; (void)pp;
+    PanicMsg *pp = (PanicMsg *)object; (void)pp;
     switch (field) {
         case 2: pp->setSend_time(string2simtime(value)); return true;
         default: return false;
     }
 }
 
-const char *PanicDescriptor::getFieldStructName(int field) const
+const char *PanicMsgDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5015,7 +5015,7 @@ const char *PanicDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *PanicDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *PanicMsgDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5023,7 +5023,7 @@ void *PanicDescriptor::getFieldStructValuePointer(void *object, int field, int i
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    Panic *pp = (Panic *)object; (void)pp;
+    PanicMsg *pp = (PanicMsg *)object; (void)pp;
     switch (field) {
         case 0: return (void *)(&pp->getPanicking()); break;
         case 1: return (void *)(&pp->getLast_hop()); break;
@@ -5032,30 +5032,30 @@ void *PanicDescriptor::getFieldStructValuePointer(void *object, int field, int i
 }
 
 EXECUTE_ON_STARTUP(
-    omnetpp::cEnum *e = omnetpp::cEnum::find("PanicSplitState");
-    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("PanicSplitState"));
-    e->insert(KNOWN, "KNOWN");
-    e->insert(UNKNOWN, "UNKNOWN");
+    omnetpp::cEnum *e = omnetpp::cEnum::find("LastHopOpinion");
+    if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("LastHopOpinion"));
+    e->insert(CAN_HELP, "CAN_HELP");
+    e->insert(CANT_HELP, "CANT_HELP");
 )
 
-Register_Class(PanicSplit)
+Register_Class(PanicSplitMsg)
 
-PanicSplit::PanicSplit(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+PanicSplitMsg::PanicSplitMsg(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
 {
-    this->state = 0;
+    this->last_hop_opinion = 0;
     this->send_time = 0;
 }
 
-PanicSplit::PanicSplit(const PanicSplit& other) : ::BaseOverlayMessage(other)
+PanicSplitMsg::PanicSplitMsg(const PanicSplitMsg& other) : ::BaseOverlayMessage(other)
 {
     copy(other);
 }
 
-PanicSplit::~PanicSplit()
+PanicSplitMsg::~PanicSplitMsg()
 {
 }
 
-PanicSplit& PanicSplit::operator=(const PanicSplit& other)
+PanicSplitMsg& PanicSplitMsg::operator=(const PanicSplitMsg& other)
 {
     if (this==&other) return *this;
     ::BaseOverlayMessage::operator=(other);
@@ -5063,79 +5063,79 @@ PanicSplit& PanicSplit::operator=(const PanicSplit& other)
     return *this;
 }
 
-void PanicSplit::copy(const PanicSplit& other)
+void PanicSplitMsg::copy(const PanicSplitMsg& other)
 {
-    this->state = other.state;
-    this->into = other.into;
-    this->from = other.from;
+    this->last_hop_opinion = other.last_hop_opinion;
+    this->panicking = other.panicking;
+    this->last_hop = other.last_hop;
     this->send_time = other.send_time;
 }
 
-void PanicSplit::parsimPack(omnetpp::cCommBuffer *b) const
+void PanicSplitMsg::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
-    doParsimPacking(b,this->state);
-    doParsimPacking(b,this->into);
-    doParsimPacking(b,this->from);
+    doParsimPacking(b,this->last_hop_opinion);
+    doParsimPacking(b,this->panicking);
+    doParsimPacking(b,this->last_hop);
     doParsimPacking(b,this->send_time);
 }
 
-void PanicSplit::parsimUnpack(omnetpp::cCommBuffer *b)
+void PanicSplitMsg::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
-    doParsimUnpacking(b,this->state);
-    doParsimUnpacking(b,this->into);
-    doParsimUnpacking(b,this->from);
+    doParsimUnpacking(b,this->last_hop_opinion);
+    doParsimUnpacking(b,this->panicking);
+    doParsimUnpacking(b,this->last_hop);
     doParsimUnpacking(b,this->send_time);
 }
 
-int PanicSplit::getState() const
+int PanicSplitMsg::getLast_hop_opinion() const
 {
-    return this->state;
+    return this->last_hop_opinion;
 }
 
-void PanicSplit::setState(int state)
+void PanicSplitMsg::setLast_hop_opinion(int last_hop_opinion)
 {
-    this->state = state;
+    this->last_hop_opinion = last_hop_opinion;
 }
 
-TransportAddress& PanicSplit::getInto()
+TransportAddress& PanicSplitMsg::getPanicking()
 {
-    return this->into;
+    return this->panicking;
 }
 
-void PanicSplit::setInto(const TransportAddress& into)
+void PanicSplitMsg::setPanicking(const TransportAddress& panicking)
 {
-    this->into = into;
+    this->panicking = panicking;
 }
 
-TransportAddress& PanicSplit::getFrom()
+TransportAddress& PanicSplitMsg::getLast_hop()
 {
-    return this->from;
+    return this->last_hop;
 }
 
-void PanicSplit::setFrom(const TransportAddress& from)
+void PanicSplitMsg::setLast_hop(const TransportAddress& last_hop)
 {
-    this->from = from;
+    this->last_hop = last_hop;
 }
 
-::omnetpp::simtime_t PanicSplit::getSend_time() const
+::omnetpp::simtime_t PanicSplitMsg::getSend_time() const
 {
     return this->send_time;
 }
 
-void PanicSplit::setSend_time(::omnetpp::simtime_t send_time)
+void PanicSplitMsg::setSend_time(::omnetpp::simtime_t send_time)
 {
     this->send_time = send_time;
 }
 
-class PanicSplitDescriptor : public omnetpp::cClassDescriptor
+class PanicSplitMsgDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    PanicSplitDescriptor();
-    virtual ~PanicSplitDescriptor();
+    PanicSplitMsgDescriptor();
+    virtual ~PanicSplitMsgDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -5157,24 +5157,24 @@ class PanicSplitDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(PanicSplitDescriptor)
+Register_ClassDescriptor(PanicSplitMsgDescriptor)
 
-PanicSplitDescriptor::PanicSplitDescriptor() : omnetpp::cClassDescriptor("PanicSplit", "BaseOverlayMessage")
+PanicSplitMsgDescriptor::PanicSplitMsgDescriptor() : omnetpp::cClassDescriptor("PanicSplitMsg", "BaseOverlayMessage")
 {
     propertynames = nullptr;
 }
 
-PanicSplitDescriptor::~PanicSplitDescriptor()
+PanicSplitMsgDescriptor::~PanicSplitMsgDescriptor()
 {
     delete[] propertynames;
 }
 
-bool PanicSplitDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool PanicSplitMsgDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<PanicSplit *>(obj)!=nullptr;
+    return dynamic_cast<PanicSplitMsg *>(obj)!=nullptr;
 }
 
-const char **PanicSplitDescriptor::getPropertyNames() const
+const char **PanicSplitMsgDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -5185,19 +5185,19 @@ const char **PanicSplitDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *PanicSplitDescriptor::getProperty(const char *propertyname) const
+const char *PanicSplitMsgDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int PanicSplitDescriptor::getFieldCount() const
+int PanicSplitMsgDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? 4+basedesc->getFieldCount() : 4;
 }
 
-unsigned int PanicSplitDescriptor::getFieldTypeFlags(int field) const
+unsigned int PanicSplitMsgDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5214,7 +5214,7 @@ unsigned int PanicSplitDescriptor::getFieldTypeFlags(int field) const
     return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
 }
 
-const char *PanicSplitDescriptor::getFieldName(int field) const
+const char *PanicSplitMsgDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5223,26 +5223,26 @@ const char *PanicSplitDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
-        "state",
-        "into",
-        "from",
+        "last_hop_opinion",
+        "panicking",
+        "last_hop",
         "send_time",
     };
     return (field>=0 && field<4) ? fieldNames[field] : nullptr;
 }
 
-int PanicSplitDescriptor::findField(const char *fieldName) const
+int PanicSplitMsgDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='s' && strcmp(fieldName, "state")==0) return base+0;
-    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+1;
-    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+2;
+    if (fieldName[0]=='l' && strcmp(fieldName, "last_hop_opinion")==0) return base+0;
+    if (fieldName[0]=='p' && strcmp(fieldName, "panicking")==0) return base+1;
+    if (fieldName[0]=='l' && strcmp(fieldName, "last_hop")==0) return base+2;
     if (fieldName[0]=='s' && strcmp(fieldName, "send_time")==0) return base+3;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *PanicSplitDescriptor::getFieldTypeString(int field) const
+const char *PanicSplitMsgDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5259,7 +5259,7 @@ const char *PanicSplitDescriptor::getFieldTypeString(int field) const
     return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **PanicSplitDescriptor::getFieldPropertyNames(int field) const
+const char **PanicSplitMsgDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5276,7 +5276,7 @@ const char **PanicSplitDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *PanicSplitDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *PanicSplitMsgDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5286,13 +5286,13 @@ const char *PanicSplitDescriptor::getFieldProperty(int field, const char *proper
     }
     switch (field) {
         case 0:
-            if (!strcmp(propertyname,"enum")) return "PanicSplitState";
+            if (!strcmp(propertyname,"enum")) return "LastHopOpinion";
             return nullptr;
         default: return nullptr;
     }
 }
 
-int PanicSplitDescriptor::getFieldArraySize(void *object, int field) const
+int PanicSplitMsgDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5300,13 +5300,13 @@ int PanicSplitDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    PanicSplitMsg *pp = (PanicSplitMsg *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *PanicSplitDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *PanicSplitMsgDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5314,13 +5314,13 @@ const char *PanicSplitDescriptor::getFieldDynamicTypeString(void *object, int fi
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    PanicSplitMsg *pp = (PanicSplitMsg *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string PanicSplitDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string PanicSplitMsgDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5328,17 +5328,17 @@ std::string PanicSplitDescriptor::getFieldValueAsString(void *object, int field,
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    PanicSplitMsg *pp = (PanicSplitMsg *)object; (void)pp;
     switch (field) {
-        case 0: return enum2string(pp->getState(), "PanicSplitState");
-        case 1: {std::stringstream out; out << pp->getInto(); return out.str();}
-        case 2: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        case 0: return enum2string(pp->getLast_hop_opinion(), "LastHopOpinion");
+        case 1: {std::stringstream out; out << pp->getPanicking(); return out.str();}
+        case 2: {std::stringstream out; out << pp->getLast_hop(); return out.str();}
         case 3: return simtime2string(pp->getSend_time());
         default: return "";
     }
 }
 
-bool PanicSplitDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool PanicSplitMsgDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5346,15 +5346,15 @@ bool PanicSplitDescriptor::setFieldValueAsString(void *object, int field, int i,
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    PanicSplitMsg *pp = (PanicSplitMsg *)object; (void)pp;
     switch (field) {
-        case 0: pp->setState((PanicSplitState)string2enum(value, "PanicSplitState")); return true;
+        case 0: pp->setLast_hop_opinion((LastHopOpinion)string2enum(value, "LastHopOpinion")); return true;
         case 3: pp->setSend_time(string2simtime(value)); return true;
         default: return false;
     }
 }
 
-const char *PanicSplitDescriptor::getFieldStructName(int field) const
+const char *PanicSplitMsgDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5369,7 +5369,7 @@ const char *PanicSplitDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *PanicSplitDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *PanicSplitMsgDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -5377,10 +5377,10 @@ void *PanicSplitDescriptor::getFieldStructValuePointer(void *object, int field, 
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    PanicSplit *pp = (PanicSplit *)object; (void)pp;
+    PanicSplitMsg *pp = (PanicSplitMsg *)object; (void)pp;
     switch (field) {
-        case 1: return (void *)(&pp->getInto()); break;
-        case 2: return (void *)(&pp->getFrom()); break;
+        case 1: return (void *)(&pp->getPanicking()); break;
+        case 2: return (void *)(&pp->getLast_hop()); break;
         default: return nullptr;
     }
 }
@@ -5410,42 +5410,42 @@ PanicSplitFound& PanicSplitFound::operator=(const PanicSplitFound& other)
 
 void PanicSplitFound::copy(const PanicSplitFound& other)
 {
-    this->into = other.into;
-    this->from = other.from;
+    this->panicking = other.panicking;
+    this->last_hop = other.last_hop;
 }
 
 void PanicSplitFound::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
-    doParsimPacking(b,this->into);
-    doParsimPacking(b,this->from);
+    doParsimPacking(b,this->panicking);
+    doParsimPacking(b,this->last_hop);
 }
 
 void PanicSplitFound::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
-    doParsimUnpacking(b,this->into);
-    doParsimUnpacking(b,this->from);
+    doParsimUnpacking(b,this->panicking);
+    doParsimUnpacking(b,this->last_hop);
 }
 
-TransportAddress& PanicSplitFound::getInto()
+TransportAddress& PanicSplitFound::getPanicking()
 {
-    return this->into;
+    return this->panicking;
 }
 
-void PanicSplitFound::setInto(const TransportAddress& into)
+void PanicSplitFound::setPanicking(const TransportAddress& panicking)
 {
-    this->into = into;
+    this->panicking = panicking;
 }
 
-TransportAddress& PanicSplitFound::getFrom()
+TransportAddress& PanicSplitFound::getLast_hop()
 {
-    return this->from;
+    return this->last_hop;
 }
 
-void PanicSplitFound::setFrom(const TransportAddress& from)
+void PanicSplitFound::setLast_hop(const TransportAddress& last_hop)
 {
-    this->from = from;
+    this->last_hop = last_hop;
 }
 
 class PanicSplitFoundDescriptor : public omnetpp::cClassDescriptor
@@ -5540,8 +5540,8 @@ const char *PanicSplitFoundDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
-        "into",
-        "from",
+        "panicking",
+        "last_hop",
     };
     return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
@@ -5550,8 +5550,8 @@ int PanicSplitFoundDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+0;
-    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+1;
+    if (fieldName[0]=='p' && strcmp(fieldName, "panicking")==0) return base+0;
+    if (fieldName[0]=='l' && strcmp(fieldName, "last_hop")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -5634,8 +5634,8 @@ std::string PanicSplitFoundDescriptor::getFieldValueAsString(void *object, int f
     }
     PanicSplitFound *pp = (PanicSplitFound *)object; (void)pp;
     switch (field) {
-        case 0: {std::stringstream out; out << pp->getInto(); return out.str();}
-        case 1: {std::stringstream out; out << pp->getFrom(); return out.str();}
+        case 0: {std::stringstream out; out << pp->getPanicking(); return out.str();}
+        case 1: {std::stringstream out; out << pp->getLast_hop(); return out.str();}
         default: return "";
     }
 }
@@ -5679,8 +5679,8 @@ void *PanicSplitFoundDescriptor::getFieldStructValuePointer(void *object, int fi
     }
     PanicSplitFound *pp = (PanicSplitFound *)object; (void)pp;
     switch (field) {
-        case 0: return (void *)(&pp->getInto()); break;
-        case 1: return (void *)(&pp->getFrom()); break;
+        case 0: return (void *)(&pp->getPanicking()); break;
+        case 1: return (void *)(&pp->getLast_hop()); break;
         default: return nullptr;
     }
 }

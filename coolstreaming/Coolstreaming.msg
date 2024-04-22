@@ -131,27 +131,27 @@ packet TrySplitResponse extends BaseResponseMessage {
 
 packet Leave extends BaseOverlayMessage {}
 
-packet Panic extends BaseOverlayMessage {
+packet PanicMsg extends BaseOverlayMessage {
  	TransportAddress panicking;
  	TransportAddress last_hop;
     simtime_t send_time;
 }
 
-enum PanicSplitState {
- 	KNOWN = 0;
- 	UNKNOWN = 1;   
+enum LastHopOpinion {
+ 	CAN_HELP = 0;
+ 	CANT_HELP = 1;   
 }
 
-packet PanicSplit extends BaseOverlayMessage {
-    int state enum (PanicSplitState);
-    TransportAddress into;
-    TransportAddress from;
+packet PanicSplitMsg extends BaseOverlayMessage {
+    int last_hop_opinion enum (LastHopOpinion);
+    TransportAddress panicking;
+    TransportAddress last_hop;
     simtime_t send_time;
 }
 
 packet PanicSplitFound extends BaseOverlayMessage {
-    TransportAddress into;
-    TransportAddress from;
+    TransportAddress panicking;
+    TransportAddress last_hop;
 }
 
 packet Recover extends BaseOverlayMessage {

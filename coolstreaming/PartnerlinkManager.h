@@ -21,6 +21,16 @@
 #include "Coolstreaming_m.h"
 
 class Node;
+
+// status enum
+enum PanicStatus {
+    Nominal,
+    Panic,
+    PanicSplit,
+    PanicBoth,
+    TotalFailure
+};
+
 class PartnerlinkManager {
 public:
     Node* parent;
@@ -62,7 +72,12 @@ public:
     void read_failure_timer_and_fail_connection(Failure* failure);
 
     // panic tracking
-    void check_panicking_status();
+    PanicStatus get_panic_status();
+    void check_panic_status();
+    void setup_panic();
+    void setup_panic_split();
+    void timeout_panic();
+    void timeout_panic_split();
 
     // GET CANDIDATE PARTNERS // TCP
     // get list of possible starting partners from the deputy
@@ -74,6 +89,7 @@ public:
 
     // SPLIT // TCP
     // request a node to split a relationship with a partner, and put this node in the middle
+    void panic_recover(TransportAddress panicking);
     void send_split_message(TransportAddress tad);
     void receive_split_message_and_try_split_with_partner(SplitCall* split_call);
     void send_split_failure_response(SplitCall* split_call);
@@ -83,6 +99,7 @@ public:
     // TRY_SPLIT // TCP
     // get a partner to check if we can split, and ask them to hook up with the new node if so
     // after the response, if successful, we then wind down our side of the partnership and do the same
+    void panic_split_recover(TransportAddress panicking, TransportAddress last_hop);
     void send_try_split_message(TransportAddress tad, TransportAddress into, int uuid);
     void receive_try_split_message_and_try_split(TrySplitCall* try_split_call);
     void receive_try_split_response(TrySplitResponse* try_split_response);
@@ -90,8 +107,15 @@ public:
 
     // PANIC // UDP
     // gossip a message looking for another panicking node we do not know, recovering one link to our node if found
-    void send_panic_message(TransportAddress tad, TransportAddress panicking);
-    void receive_panic_message(Panic* panic);
+    TransportAddress get_best_next_hop_matching_panic_status(bool panic_status, TransportAddress panicking, TransportAddress last_hop);
+    void send_panic_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time = simTime());
+    void receive_panic_message(PanicMsg* panic);
+
+    // PANIC_SPLIT, PANIC_SPLIT_FOUND // UDP
+    // gossip a message looking for two nodes that we do not know, but know each other, to split between, recovering two links to our node if found
+    void send_panic_split_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time = simTime(), LastHopOpinion last_hop_opinion = CANT_HELP);
+    void receive_panic_split_message(PanicSplitMsg* panic_split);
+    void receive_panic_split_found_message(PanicSplitFound* panic_split_found);
 
     // RECOVER // UDP
     // tell a panicking partner we are willing to take up one of its missing partnerships

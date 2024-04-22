@@ -716,7 +716,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Leave& obj) {obj.parsimUn
 /**
  * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:134</tt> by nedtool.
  * <pre>
- * packet Panic extends BaseOverlayMessage
+ * packet PanicMsg extends BaseOverlayMessage
  * {
  *     TransportAddress panicking;
  *     TransportAddress last_hop;
@@ -724,7 +724,7 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Leave& obj) {obj.parsimUn
  * }
  * </pre>
  */
-class Panic : public ::BaseOverlayMessage
+class PanicMsg : public ::BaseOverlayMessage
 {
   protected:
     TransportAddress panicking;
@@ -732,117 +732,117 @@ class Panic : public ::BaseOverlayMessage
     ::omnetpp::simtime_t send_time;
 
   private:
-    void copy(const Panic& other);
+    void copy(const PanicMsg& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const Panic&);
+    bool operator==(const PanicMsg&);
 
   public:
-    Panic(const char *name=nullptr, short kind=0);
-    Panic(const Panic& other);
-    virtual ~Panic();
-    Panic& operator=(const Panic& other);
-    virtual Panic *dup() const override {return new Panic(*this);}
+    PanicMsg(const char *name=nullptr, short kind=0);
+    PanicMsg(const PanicMsg& other);
+    virtual ~PanicMsg();
+    PanicMsg& operator=(const PanicMsg& other);
+    virtual PanicMsg *dup() const override {return new PanicMsg(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
     virtual TransportAddress& getPanicking();
-    virtual const TransportAddress& getPanicking() const {return const_cast<Panic*>(this)->getPanicking();}
+    virtual const TransportAddress& getPanicking() const {return const_cast<PanicMsg*>(this)->getPanicking();}
     virtual void setPanicking(const TransportAddress& panicking);
     virtual TransportAddress& getLast_hop();
-    virtual const TransportAddress& getLast_hop() const {return const_cast<Panic*>(this)->getLast_hop();}
+    virtual const TransportAddress& getLast_hop() const {return const_cast<PanicMsg*>(this)->getLast_hop();}
     virtual void setLast_hop(const TransportAddress& last_hop);
     virtual ::omnetpp::simtime_t getSend_time() const;
     virtual void setSend_time(::omnetpp::simtime_t send_time);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const Panic& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Panic& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const PanicMsg& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PanicMsg& obj) {obj.parsimUnpack(b);}
 
 /**
  * Enum generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:140</tt> by nedtool.
  * <pre>
- * enum PanicSplitState
+ * enum LastHopOpinion
  * {
- *     KNOWN = 0;
- *     UNKNOWN = 1;
+ *     CAN_HELP = 0;
+ *     CANT_HELP = 1;
  * }
  * </pre>
  */
-enum PanicSplitState {
-    KNOWN = 0,
-    UNKNOWN = 1
+enum LastHopOpinion {
+    CAN_HELP = 0,
+    CANT_HELP = 1
 };
 
 /**
  * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:145</tt> by nedtool.
  * <pre>
- * packet PanicSplit extends BaseOverlayMessage
+ * packet PanicSplitMsg extends BaseOverlayMessage
  * {
- *     int state \@enum(PanicSplitState);
- *     TransportAddress into;
- *     TransportAddress from;
+ *     int last_hop_opinion \@enum(LastHopOpinion);
+ *     TransportAddress panicking;
+ *     TransportAddress last_hop;
  *     simtime_t send_time;
  * }
  * </pre>
  */
-class PanicSplit : public ::BaseOverlayMessage
+class PanicSplitMsg : public ::BaseOverlayMessage
 {
   protected:
-    int state;
-    TransportAddress into;
-    TransportAddress from;
+    int last_hop_opinion;
+    TransportAddress panicking;
+    TransportAddress last_hop;
     ::omnetpp::simtime_t send_time;
 
   private:
-    void copy(const PanicSplit& other);
+    void copy(const PanicSplitMsg& other);
 
   protected:
     // protected and unimplemented operator==(), to prevent accidental usage
-    bool operator==(const PanicSplit&);
+    bool operator==(const PanicSplitMsg&);
 
   public:
-    PanicSplit(const char *name=nullptr, short kind=0);
-    PanicSplit(const PanicSplit& other);
-    virtual ~PanicSplit();
-    PanicSplit& operator=(const PanicSplit& other);
-    virtual PanicSplit *dup() const override {return new PanicSplit(*this);}
+    PanicSplitMsg(const char *name=nullptr, short kind=0);
+    PanicSplitMsg(const PanicSplitMsg& other);
+    virtual ~PanicSplitMsg();
+    PanicSplitMsg& operator=(const PanicSplitMsg& other);
+    virtual PanicSplitMsg *dup() const override {return new PanicSplitMsg(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
-    virtual int getState() const;
-    virtual void setState(int state);
-    virtual TransportAddress& getInto();
-    virtual const TransportAddress& getInto() const {return const_cast<PanicSplit*>(this)->getInto();}
-    virtual void setInto(const TransportAddress& into);
-    virtual TransportAddress& getFrom();
-    virtual const TransportAddress& getFrom() const {return const_cast<PanicSplit*>(this)->getFrom();}
-    virtual void setFrom(const TransportAddress& from);
+    virtual int getLast_hop_opinion() const;
+    virtual void setLast_hop_opinion(int last_hop_opinion);
+    virtual TransportAddress& getPanicking();
+    virtual const TransportAddress& getPanicking() const {return const_cast<PanicSplitMsg*>(this)->getPanicking();}
+    virtual void setPanicking(const TransportAddress& panicking);
+    virtual TransportAddress& getLast_hop();
+    virtual const TransportAddress& getLast_hop() const {return const_cast<PanicSplitMsg*>(this)->getLast_hop();}
+    virtual void setLast_hop(const TransportAddress& last_hop);
     virtual ::omnetpp::simtime_t getSend_time() const;
     virtual void setSend_time(::omnetpp::simtime_t send_time);
 };
 
-inline void doParsimPacking(omnetpp::cCommBuffer *b, const PanicSplit& obj) {obj.parsimPack(b);}
-inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PanicSplit& obj) {obj.parsimUnpack(b);}
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const PanicSplitMsg& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, PanicSplitMsg& obj) {obj.parsimUnpack(b);}
 
 /**
  * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:152</tt> by nedtool.
  * <pre>
  * packet PanicSplitFound extends BaseOverlayMessage
  * {
- *     TransportAddress into;
- *     TransportAddress from;
+ *     TransportAddress panicking;
+ *     TransportAddress last_hop;
  * }
  * </pre>
  */
 class PanicSplitFound : public ::BaseOverlayMessage
 {
   protected:
-    TransportAddress into;
-    TransportAddress from;
+    TransportAddress panicking;
+    TransportAddress last_hop;
 
   private:
     void copy(const PanicSplitFound& other);
@@ -861,12 +861,12 @@ class PanicSplitFound : public ::BaseOverlayMessage
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
     // field getter/setter methods
-    virtual TransportAddress& getInto();
-    virtual const TransportAddress& getInto() const {return const_cast<PanicSplitFound*>(this)->getInto();}
-    virtual void setInto(const TransportAddress& into);
-    virtual TransportAddress& getFrom();
-    virtual const TransportAddress& getFrom() const {return const_cast<PanicSplitFound*>(this)->getFrom();}
-    virtual void setFrom(const TransportAddress& from);
+    virtual TransportAddress& getPanicking();
+    virtual const TransportAddress& getPanicking() const {return const_cast<PanicSplitFound*>(this)->getPanicking();}
+    virtual void setPanicking(const TransportAddress& panicking);
+    virtual TransportAddress& getLast_hop();
+    virtual const TransportAddress& getLast_hop() const {return const_cast<PanicSplitFound*>(this)->getLast_hop();}
+    virtual void setLast_hop(const TransportAddress& last_hop);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const PanicSplitFound& obj) {obj.parsimPack(b);}
