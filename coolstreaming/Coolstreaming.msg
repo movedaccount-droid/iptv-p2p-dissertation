@@ -99,10 +99,14 @@ packet GetCandidatePartnersResponse extends BaseResponseMessage {
 }
 
 // novel "interlink" algorithm partnership split messages
-// this is siome other fucking problem
+
+packet LinkOriginNodes extends BaseOverlayMessage {
+ 	TransportAddress origin;
+}
+
 enum SplitResult {
 	SUCCESS = 0;
-	FAILED = 1; 
+	FAILED = 1;
 }
 
 packet SplitCall extends BaseCallMessage {
@@ -162,6 +166,9 @@ packet Recover extends BaseOverlayMessage {
 message Failure {
 	TransportAddress failed;   
 }
+
+// self-message to call when the node's partner network is completely collapsed and we should start over
+message TotalPartnerFailure {}
 
 // coolstreaming buffermap exchange
 packet BufferMap extends BaseOverlayMessage {

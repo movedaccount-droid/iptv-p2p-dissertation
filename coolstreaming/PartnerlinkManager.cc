@@ -27,6 +27,36 @@
 } \
 parent->scheduleAt(simTime() + offset, timer)
 
+void PartnerlinkManager::count(int increment) {
+    count_without_checking(increment);
+    int temp = Mc; // breakpoint here to capture all Mc changes and their call stack
+    check_panic_status();
+}
+
+void PartnerlinkManager::count_without_checking(int increment) {
+    Mc += increment;
+    update_display_string();
+}
+
+void PartnerlinkManager::update_display_string() {
+    display_name = std::string("Mc: ")
+        .append(std::to_string(Mc))
+        .append(", P: ")
+        .append(std::to_string(partners.size()))
+        .append(", IP: ")
+        .append(parent->getThisNode().getIp().str());
+    bool panicking = (get_panic_status() != Nominal);
+    if (panicking) display_name = std::string("[PANIC] ").append(display_name);
+    cDisplayString& ds = parent->getParentModule()->getParentModule()->getDisplayString();
+    ds.setTagArg("t", 0, display_name.c_str());
+    ds.setTagArg("t", 2, panicking ? "red" : "blue");
+}
+
+void PartnerlinkManager::update_and_check() {
+    check_panic_status();
+    update_display_string();
+}
+
 TransportAddress PartnerlinkManager::get_random_in(std::set<TransportAddress> set) {
     std::random_device ran;
     std::mt19937 rng(ran());
@@ -47,7 +77,7 @@ TransportAddress PartnerlinkManager::get_random_partner() {
     return get_random_in(all_partners);
 }
 
-TransportAddress PartnerlinkManager::get_random_partner_matching_predicate(std::function<bool(std::pair<TransportAddress, bool>)> const& predicate) {
+TransportAddress PartnerlinkManager::get_random_partner_matching_predicate(std::function<bool(std::pair<TransportAddress, PartnerlinkEntry>)> const& predicate) {
     std::set<TransportAddress> matching_partners;
     for (auto entry : partners) {
         if (predicate(entry)) {
@@ -57,42 +87,50 @@ TransportAddress PartnerlinkManager::get_random_partner_matching_predicate(std::
     return get_random_in(matching_partners);
 }
 
-TransportAddress PartnerlinkManager::get_random_partner_with_exceptions(std::set<TransportAddress> exceptions) {
-    std::set<TransportAddress> non_excepted_partners;
-    for (auto entry : partners) {
-        if (exceptions.find(entry.first) == exceptions.end()) {
-            non_excepted_partners.insert(entry.first);
-        }
-    }
-    return get_random_in(non_excepted_partners);
+std::map<TransportAddress, PartnerlinkEntry> PartnerlinkManager::get_partners() {
+    return partners;
 }
 
-TransportAddress PartnerlinkManager::get_random_partner_with_panic_status(bool panicking) {
-    std::set<TransportAddress> partners_matching_status;
-    for (auto entry : partners) {
-        if (entry.second == panicking) {
-            partners_matching_status.insert(entry.first);
-        }
+std::set<TransportAddress> PartnerlinkManager::get_partner_tads() {
+    std::set<TransportAddress> partner_tads;
+    for (auto partner : partners) {
+        partner_tads.insert(partner.first);
     }
-    return get_random_in(partners_matching_status);
+    return partner_tads;
+}
+
+// TODO: this is doumb as fuck and needs removing at some point
+std::vector<TransportAddress> PartnerlinkManager::get_partner_k() {
+    std::vector<TransportAddress> partner_k;
+    for (auto partner : partners) {
+        partner_k.push_back(partner.first);
+    }
+    return partner_k;
 }
 
 // we adjust Mc in these following functions.
 // you should manually track whatever your action SHOULD do to Mc,
 // and these functions will automatically adjust if there are duplicate partners etc.
 
-// i.e. failing a connection to timeout should reduce Mc by 1, so we call remove and Mc-- in sequence.
+// i.e. failing a connection to timeout should reduce Mc by 1,
+// so we call remove_partner_from_partners and Mc-- and check_panic_status in sequence.
 // if we somehow timeout a partner that we don't know, however,
-// the reduce function will correct our value for us.
+// the function will correct our value for us.
 
 void PartnerlinkManager::insert_partner_to_partners(TransportAddress partner) {
     assert(Mc < 15);
     auto partner_entry = partners.find(partner);
     if (partner_entry != partners.end()) {
-        Mc--; // we added a connection but already knew it
+        count_without_checking(-1); // we added a connection but already knew it
+        parent->getParentModule()->getParentModule()->bubble(std::string("[!] attempted to insert partner ")
+            .append(partner.getIp().str())
+            .append(" but we already know it!").c_str());
     } else {
         partners.insert({partner, false});
         parent->set_arrow(partner, "PARTNER", true);
+        parent->getParentModule()->getParentModule()->bubble(std::string("partnered with node ")
+            .append(partner.getIp().str())
+            .append("...").c_str());
         set_failure_timer(partner);
     }
 }
@@ -101,23 +139,33 @@ void PartnerlinkManager::remove_partner_from_partners(TransportAddress partner) 
     assert(Mc > 0);
     auto partner_entry = partners.find(partner);
     if (partner_entry == partners.end()) {
-        Mc++; // we removed a connection but didn't know it
+        count_without_checking(1); // we removed a connection but didn't know it
+        parent->getParentModule()->getParentModule()->bubble(std::string("[!] attempted to remove partner ")
+            .append(partner.getIp().str())
+            .append(" but we don't know it!").c_str());
     } else {
         partners.erase(partner);
         parent->set_arrow(partner, "PARTNER", false);
+        parent->getParentModule()->getParentModule()->bubble(std::string("removed partner node ")
+            .append(partner.getIp().str())
+            .append("...").c_str());
         remove_failure_timer(partner);
     }
 }
 
 bool PartnerlinkManager::is_timed_out(simtime_t origin_time, simtime_t timeout) {
-    return simTime() - origin_time - timeout <= 0;
+    return simTime() - origin_time > timeout;
 }
 
 // lifecycle
-void PartnerlinkManager::init(Node* p, int m, double pts) {
+void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, double pansts) {
     parent = p;
     M = m;
+    Mc = mc;
     partnership_timeout = SimTime(pts, SIMTIME_S);
+    panic_timeout = SimTime(pants, SIMTIME_S);
+    panic_split_timeout = SimTime(pansts, SIMTIME_S);
+    needs_deputy = !parent->origin;
 }
 
 // failure timers and buffermap timeout
@@ -141,19 +189,19 @@ void PartnerlinkManager::reset_failure_timer(TransportAddress partner) {
 
 void PartnerlinkManager::read_failure_timer_and_fail_connection(Failure* failure) {
     remove_partner_from_partners(failure->getFailed());
-    Mc--;
+    count(-1);
 }
 
 // panic management
 PanicStatus PartnerlinkManager::get_panic_status() {
     if (Mc == M) {
         return Nominal;
+    } else if (Mc == 0) {
+        return TotalFailure;
     } else if (Mc == M - 1) {
         return Panic;
     } else if (Mc == M - 2) {
         return PanicSplit;
-    } else if (Mc == 0) {
-        return TotalFailure;
     } else {
         return PanicBoth;
     }
@@ -163,47 +211,87 @@ void PartnerlinkManager::check_panic_status() {
     switch (get_panic_status()) {
     case Nominal:
         // awesome. cancel everything because we don't care anymore
-        if (panic_timeout_timer != NULL) parent->cancelAndDelete(panic_timeout_timer);
-        if (panic_split_timeout_timer != NULL) parent->cancelAndDelete(panic_split_timeout_timer);
+        if (panic_timeout_timer != NULL) {
+            parent->cancelAndDelete(panic_timeout_timer);
+            panic_timeout_timer = NULL;
+        }
+        if (panic_split_timeout_timer != NULL) {
+            parent->cancelAndDelete(panic_split_timeout_timer);
+            panic_split_timeout_timer = NULL;
+        }
+        break;
     case Panic:
+
         // assume that we entered this from PanicSplit. there might still be a PanicSplit in the
         // network, and if we hear back from it, accepting one of the links would cause net-zero
         // damage to the network, as opposed to ignoring it in favor of our Panic which would add
         // one panicking node. so we wait until PanicSplit times out to continue
+
         if (panic_timeout_timer == NULL && panic_split_timeout_timer == NULL) setup_panic();
+        break;
     case PanicSplit:
         // same logic
         if (panic_timeout_timer == NULL && panic_split_timeout_timer == NULL) setup_panic_split();
+        break;
     case PanicBoth:
         // here both should be out anyway, so who cares
         if (panic_timeout_timer == NULL) setup_panic();
         if (panic_split_timeout_timer == NULL) setup_panic_split();
+        break;
     case TotalFailure:
-        // that's not good.
-        // TODO: how do we resolve this? zero-delay self-message caught by membership manager??
-        return;
+        // that's not good. reset partner collection from scratch, from within the membership manager
+        cMessage* total_partner_failure = new TotalPartnerFailure();
+        parent->scheduleAt(simTime() + 0.001, total_partner_failure);
+        break;
     }
 }
 
 void PartnerlinkManager::setup_panic() {
-    send_panic_message(get_random_partner(), parent->getThisNode());
-    setOrReplace(panic_timeout_timer, "panic message timed out", panic_timeout);
+
+    // checking partners.size here seems silly, but remember that nodes
+    // receiving less than M / 2 partners at entry will immediately start
+    // panicking; Mc might be M - 2, but partners will still be 0!
+
+    if (partners.size() > 0) {
+        send_panic_message(get_random_partner(), parent->getThisNode());
+        setOrReplace(panic_timeout_timer, "panic message timed out", panic_timeout);
+    }
 }
 
 void PartnerlinkManager::setup_panic_split() {
-    send_panic_split_message(get_random_partner(), parent->getThisNode());
-    setOrReplace(panic_split_timeout_timer, "panic message timed out", panic_split_timeout);
+    if (partners.size() > 0) {
+        send_panic_split_message(get_random_partner(), parent->getThisNode());
+        setOrReplace(panic_split_timeout_timer, "panic message timed out", panic_split_timeout);
+    }
 }
 
 // TODO: actually hook these into the Node functions
 void PartnerlinkManager::timeout_panic() {
     parent->cancelAndDelete(panic_timeout_timer);
+    panic_timeout_timer = NULL;
     check_panic_status();
 }
 
 void PartnerlinkManager::timeout_panic_split() {
     parent->cancelAndDelete(panic_split_timeout_timer);
+    panic_split_timeout_timer = NULL;
     check_panic_status();
+}
+
+// LINK_ORIGIN_NODES // UDP
+// construct the initial link between our two friendly origin nodes
+// that will be used to split between for newly joining nodes
+// in the real world we could secure this by validating the incoming nodeid
+// or through some kind of encryption/key message system.
+void PartnerlinkManager::send_link_origin_nodes_message(TransportAddress origin) {
+    LinkOriginNodes* link_origin_nodes = new LinkOriginNodes();
+    link_origin_nodes->setOrigin(parent->getThisNode());
+    parent->sendMessageToUDP(origin, link_origin_nodes, SimTime(100, SIMTIME_MS));
+}
+
+void PartnerlinkManager::receive_link_origin_nodes_message(LinkOriginNodes* link_origin_nodes) {
+    insert_partner_to_partners(link_origin_nodes->getOrigin());
+    count(1);
 }
 
 // GET CANDIDATE PARTNERS MESSAGES // TCP
@@ -212,22 +300,22 @@ void PartnerlinkManager::send_get_candidate_partners_message(TransportAddress ta
     GetCandidatePartnersCall* get_candidate_partners_call = new GetCandidatePartnersCall();
     get_candidate_partners_call->setFrom(parent->getThisNode());
     parent->send_rpc(tad, get_candidate_partners_call);
-}
-
-void PartnerlinkManager::receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::map<TransportAddress, double> from_mCache) {
-    GetCandidatePartnersResponse* get_candidate_partners_response = new GetCandidatePartnersResponse();
-    get_candidate_partners_response->setCandidates(from_mCache);
-    parent->send_rpc_response(get_candidate_partners_call, get_candidate_partners_response);
+    needs_deputy = false;
 }
 
 // TODO: remove use of bandwidth ??? in here
 void PartnerlinkManager::receive_get_candidate_partners_response(GetCandidatePartnersResponse* get_candidate_partners_response) {
+    // we might not receive M partners, so we need to adjust our prospective partner count accordingly
+    Mc = get_candidate_partners_response->getCandidates().size() * 2;
+    check_panic_status();
     for (auto candidate : get_candidate_partners_response->getCandidates()) {
         send_split_message(candidate.first);
     }
     // TODO: we need to enable this eventually
     // setOrReplace(switch_timer, "switch_timer", switch_interval);
-    parent->getParentModule()->getParentModule()->bubble(std::string("received ").append(std::to_string(partners.size())).append(" candidates...").c_str());
+    parent->getParentModule()->getParentModule()->bubble(std::string("received ")
+        .append(std::to_string(get_candidate_partners_response->getCandidates().size()))
+        .append(" candidates...").c_str());
 }
 
 // SPLIT // TCP
@@ -240,7 +328,14 @@ void PartnerlinkManager::send_split_message(TransportAddress tad) {
 }
 
 void PartnerlinkManager::receive_split_message_and_try_split_with_partner(SplitCall* split_call) {
-    if (partners.find(split_call->getInto()) == partners.end()) {
+
+    // partners could be zero here, or in almost any case for new nodes
+    // in the very unfortunate event they are accepted by a node who sends
+    // a message and then immediately churns. even if you don't think you
+    // need to handle the zero-partners case - you probably do!
+
+    if (partners.size() == 0
+            || partners.find(split_call->getInto()) != partners.end()) {
         SplitResponse* split_response = new SplitResponse();
         split_response->setResult(FAILED);
         parent->send_rpc_response(split_call, split_response);
@@ -264,12 +359,13 @@ void PartnerlinkManager::receive_split_response(SplitResponse* split_response) {
         // if we already know one of these, we start Panicking
         insert_partner_to_partners(split_response->getFirst_node());
         insert_partner_to_partners(split_response->getSecond_node());
+        update_and_check();
     } else {
-        Mc -= 2; // causing the node to start sending PanicSplits
+        count(-2); // causing the node to start sending PanicSplits
     }
 }
 void PartnerlinkManager::timeout_split_response(SplitCall* split_call) {
-    Mc -= 2; // causing the node to start sending PanicSplits
+    count(-2); // causing the node to start sending PanicSplits
 }
 
 // TRY_SPLIT // TCP
@@ -292,6 +388,7 @@ void PartnerlinkManager::receive_try_split_message_and_try_split(TrySplitCall* t
     } else {
         remove_partner_from_partners(try_split_call->getFrom());
         insert_partner_to_partners(try_split_call->getInto());
+        update_and_check();
         try_split_response->setResult(SUCCESS);
         try_split_response->setFrom(parent->getThisNode());
         try_split_response->setInto(try_split_call->getInto());
@@ -309,12 +406,13 @@ void PartnerlinkManager::receive_try_split_response(TrySplitResponse* try_split_
     // two old partnered nodes panic, which is at least consistent and will not introduce any new links to the network.
 
     SplitCall* split_call = currently_splitting[try_split_response->getUuid()];
-    if (partners.find(try_split_response->getFrom()) == partners.end()
-            || try_split_response->getResult() == FAILED) {
+    if (try_split_response->getResult() == FAILED
+            || partners.find(try_split_response->getFrom()) == partners.end()) {
         send_split_failure_response(split_call);
     } else {
         remove_partner_from_partners(try_split_response->getFrom());
         insert_partner_to_partners(try_split_response->getInto());
+        update_and_check();
         SplitResponse* split_response = new SplitResponse();
         split_response->setResult(SUCCESS);
         split_response->setFirst_node(parent->getThisNode());
@@ -329,15 +427,20 @@ void PartnerlinkManager::timeout_try_split_response(TrySplitCall* try_split_call
 
 // PANIC // UDP
 // gossip a message looking for another panicking node we do not know, recovering one link to our node if found
+// TODO: we need to oincorporate panicking in to the buffer map, we waren't riht now and just model everything as if iit is not panicking
 TransportAddress PartnerlinkManager::get_best_next_hop_matching_panic_status(bool panic_status, TransportAddress panicking, TransportAddress last_hop) {
     try {
-        auto partner_with_panic_status = [=](std::pair<const TransportAddress, bool> pair) {
-            return pair.second == panic_status && pair.first != last_hop && pair.first != panicking;
+        auto partner_with_panic_status = [=](std::pair<const TransportAddress, PartnerlinkEntry> pair) {
+            return pair.second.panicking == panic_status && pair.first != last_hop && pair.first != panicking;
         };
         return get_random_partner_matching_predicate(partner_with_panic_status);
     } catch (const char* c) {
         try {
-            auto not_return_path = [=](std::pair<const TransportAddress, bool> pair) {
+            auto not_return_path = [=](std::pair<const TransportAddress, PartnerlinkEntry> pair) {
+                TransportAddress temp = last_hop;
+                if (last_hop.isUnspecified()) {
+                    std::cout << "some" << std::endl;
+                }
                 return pair.first != last_hop && pair.first != panicking;
             };
             return get_random_partner_matching_predicate(not_return_path);
@@ -351,31 +454,36 @@ TransportAddress PartnerlinkManager::get_best_next_hop_matching_panic_status(boo
 void PartnerlinkManager::panic_recover(TransportAddress panicking) {
     insert_partner_to_partners(panicking);
     send_recover_message(panicking);
-    Mc++;
-    check_panic_status();
+    count(1);
 }
 
 void PartnerlinkManager::send_panic_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time) {
     PanicMsg* panic = new PanicMsg();
     panic->setPanicking(panicking);
+    panic->setLast_hop(parent->getThisNode());
     panic->setSend_time(send_time);
     parent->sendMessageToUDP(tad, panic);
+}
+
+bool PartnerlinkManager::can_recover_panic(TransportAddress panicking) {
+    // check that we are panicking and don't know the node
+    return get_panic_status() != Nominal
+            && panicking != parent->getThisNode()
+            && partners.find(panicking) == partners.end();
 }
 
 void PartnerlinkManager::receive_panic_message(PanicMsg* panic) {
     if (is_timed_out(panic->getSend_time(), panic_timeout)) {
         return;
     }
-    if (get_panic_status() == Nominal
-            || parent->getThisNode() == panic->getPanicking()
-            || partners.find(panic->getPanicking()) != partners.end()) {
-        // we aren't panicking or know the node. direct the message towards panicking nodes in our view, resolving the message M times faster
+    if (can_recover_panic(panic->getPanicking())) {
+        panic_recover(panic->getPanicking());
+    } else {
         try {
+            // direct the message towards panicking nodes in our view, resolving the message M times faster [this is probably not true]
             TransportAddress random_partner = get_best_next_hop_matching_panic_status(true, panic->getPanicking(), panic->getLast_hop());
             send_panic_message(random_partner, panic->getPanicking(), panic->getSend_time());
         } catch (const char* c) {} // sucks but we can't do anything
-    } else {
-        panic_recover(panic->getPanicking());
     }
 }
 
@@ -385,7 +493,7 @@ void PartnerlinkManager::panic_split_recover(TransportAddress panicking, Transpo
     remove_partner_from_partners(last_hop);
     insert_partner_to_partners(panicking);
     send_recover_message(panicking);
-    check_panic_status();
+    update_and_check();
 }
 
 void PartnerlinkManager::send_panic_split_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time, LastHopOpinion last_hop_opinion) {
@@ -397,47 +505,42 @@ void PartnerlinkManager::send_panic_split_message(TransportAddress tad, Transpor
     parent->sendMessageToUDP(tad, panic_split_msg);
 }
 
+bool PartnerlinkManager::can_recover_panic_split(TransportAddress panicking, TransportAddress last_hop) {
+    // check that we don't know the node and are partnered with the last hop
+    return panicking != parent->getThisNode()
+            && partners.find(panicking) == partners.end()
+            && partners.find(last_hop) != partners.end();
+}
+
 void PartnerlinkManager::receive_panic_split_message(PanicSplitMsg* panic_split) {
     if (is_timed_out(panic_split->getSend_time(), panic_split_timeout)) {
         return;
     }
-    if (parent->getThisNode() == panic_split->getPanicking()
-            || partners.find(panic_split->getPanicking()) != partners.end()
-            || partners.find(panic_split->getLast_hop()) == partners.end()) {
-        // we know the node or don't know who sent it. direct the message away from panicking nodes,
-        // for maximum visibility and to ensure our new partners are stable
-        try {
-            TransportAddress random_partner = get_best_next_hop_matching_panic_status(false, panic_split->getPanicking(), panic_split->getLast_hop());
-            send_panic_split_message(random_partner, panic_split->getPanicking(), panic_split->getSend_time(), CANT_HELP);
-        } catch (const char* c) {} // nowhere to send...
+    bool can_help = can_recover_panic_split(panic_split->getPanicking(), panic_split->getLast_hop());
+    if (can_help && panic_split->getLast_hop_opinion() == CAN_HELP) {
+        PanicSplitFound* panic_split_found = new PanicSplitFound();
+        panic_split_found->setPanicking(panic_split->getPanicking());
+        panic_split_found->setLast_hop(parent->getThisNode());
+        parent->sendMessageToUDP(panic_split->getLast_hop(), panic_split_found);
+        panic_split_recover(panic_split->getPanicking(), panic_split->getLast_hop());
     } else {
-        if (panic_split->getLast_hop_opinion() == CANT_HELP) {
-            try {
-                TransportAddress random_partner = get_best_next_hop_matching_panic_status(false, panic_split->getPanicking(), panic_split->getLast_hop());
-                send_panic_split_message(random_partner, panic_split->getPanicking(), panic_split->getSend_time(), CANT_HELP);
-            } catch (const char* c) {}
-        } else {
-            PanicSplitFound* panic_split_found = new PanicSplitFound();
-            panic_split_found->setPanicking(panic_split->getPanicking());
-            panic_split_found->setLast_hop(parent->getThisNode());
-            parent->sendMessageToUDP(panic_split->getLast_hop(), panic_split_found);
-            panic_split_recover(panic_split->getPanicking(), panic_split->getLast_hop());
-        }
+        try {
+            // direct the message away from panicking nodes, for maximum visibility and to ensure our new partners are stable
+            TransportAddress random_partner = get_best_next_hop_matching_panic_status(false, panic_split->getPanicking(), panic_split->getLast_hop());
+            send_panic_split_message(random_partner, panic_split->getPanicking(), panic_split->getSend_time(), can_help ? CAN_HELP : CANT_HELP);
+        } catch (const char* c) {} // nowhere to send...
     }
 }
 
 void PartnerlinkManager::receive_panic_split_found_message(PanicSplitFound* panic_split_found) {
-    if (parent->getThisNode() != panic_split_found->getPanicking()
-            && partners.find(panic_split_found->getPanicking()) == partners.end()
-            && partners.find(panic_split_found->getLast_hop()) != partners.end()) {
+    if (can_recover_panic_split(panic_split_found->getPanicking(), panic_split_found->getLast_hop())) {
         panic_split_recover(panic_split_found->getPanicking(), panic_split_found->getLast_hop());
-    }
-    // else something very stupid happened - the other side may or may not end up being successful.
-    // we can therefore treat this like a normal Panic message
-    if (get_panic_status() != Nominal
-            && parent->getThisNode() == panic_split_found->getPanicking()
-            && partners.find(panic_split_found->getPanicking()) != partners.end()) {
-        panic_recover(panic_split_found->getPanicking());
+    } else {
+        // something very stupid has happened - the other side may or may not end up being successful.
+        // we can in the meantime treat this like a normal Panic message
+        if (can_recover_panic(panic_split_found->getPanicking())) {
+            panic_recover(panic_split_found->getPanicking());
+        }
     }
 }
 
@@ -453,10 +556,19 @@ void PartnerlinkManager::receive_recover_message(Recover* recover) {
     // if we have already since recovered, we should ignore the message and let the node fail
     if (get_panic_status() != Nominal) {
         insert_partner_to_partners(recover->getHelper());
-        Mc++;
-        check_panic_status();
+        count(1);
     }
 
+}
+
+// BUFFER_MAP // UDP
+// receiving and caching buffermap-adjacent stats for our partners
+void PartnerlinkManager::receive_buffer_map_message(BufferMap* buffer_map) {
+    auto partner = partners.find(buffer_map->getFrom());
+    if (partner != partners.end()) {
+        partner->second.buffer_map = buffer_map->getBuffer_map();
+        reset_failure_timer(buffer_map->getFrom());
+    }
 }
 
 PartnerlinkManager::PartnerlinkManager() {

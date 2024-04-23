@@ -78,12 +78,11 @@ std::pair<const TransportAddress, mCacheEntry> MembershipManager::random_mcache_
 
 }
 
-std::map<TransportAddress, double> MembershipManager::get_partner_candidates(TransportAddress exclude, int this_node_partner_count) {
+void MembershipManager::receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call) {
 
     std::random_device ran;
     std::mt19937 rng(ran());
 
-    const int EMPTY_SIZE = 1;
     std::map<TransportAddress, double> candidates;
 
     // we do this the Kind of Nasty way. build vec shuffle and pull values
@@ -93,22 +92,24 @@ std::map<TransportAddress, double> MembershipManager::get_partner_candidates(Tra
     }
     std::shuffle(all.begin(), all.end(), rng);
 
-    while (all.size() > EMPTY_SIZE && candidates.size() < M) {
-        std::uniform_int_distribution<std::mt19937::result_type> random_index(0, all.size() - 1);
-        auto it = all.begin();
-        std::advance(it, random_index(rng));
+    auto it = all.begin();
+    while (candidates.size() < M / 2 && it != all.end()) {
         if (mCache.at(*it).expired()) {
             parent->getParentModule()->getParentModule()->bubble(std::string("expired random ip ").append(it->getIp().str()).append("...").c_str());
             mCache.erase(*it);
-        } else if (*it != exclude) {
+        } else if (*it != get_candidate_partners_call->getFrom()) {
             candidates.insert({*it, mCache.at(*it).bandwidth});
         }
-        all.erase(it);
+        it++;
     }
 
-    if (candidates.size() < M && this_node_partner_count < M) candidates.insert({parent->getThisNode(), bandwidth});
+    if (candidates.size() < M / 2) {
+        candidates.insert({parent->getThisNode(), bandwidth});
+    }
 
-    return candidates;
+    GetCandidatePartnersResponse* get_candidate_partners_response = new GetCandidatePartnersResponse();
+    get_candidate_partners_response->setCandidates(candidates);
+    parent->send_rpc_response(get_candidate_partners_call, get_candidate_partners_response);
 
 }
 
@@ -139,18 +140,27 @@ void MembershipManager::init(Node* p, TransportAddress ot, double b, int cin, in
     scamp_heartbeat_interval = sch;
     scamp_heartbeat_failure_interval = schf;
     M = m;
+    needs_deputy = true;
 }
 
 void MembershipManager::join_overlay() {
     setOrReplace(resubscription_timer, "resubscription_timer", scamp_resubscription_interval);
-    setOrReplace(send_heartbeat_timer, "send_heartbeat_timer", scamp_heartbeat_interval);
     setOrReplace(no_heartbeat_timer, "no_heartbeat_timer", scamp_heartbeat_failure_interval);
+
+    // we offset the heartbeat by a random interval, so that heartbeats at the start of the network still distribute evenly
+    std::random_device ran;
+    std::mt19937 rng(ran());
+    std::uniform_int_distribution<std::mt19937::result_type> random_offset(0, scamp_heartbeat_interval);
+    setOrReplace(send_heartbeat_timer, "send_heartbeat_timer", random_offset(rng));
+
     if (!parent->origin) {
         send_get_deputy_message(origin_tad);
     }
     parent->getParentModule()->getParentModule()->bubble("joining...");
 }
 
+// TODO: rejoining the network for an mCache failure leads to huge problems in the partnershipmanager
+// we should entirely separate these processes whenever we can
 void MembershipManager::contact_deputy_and_enter_network(TransportAddress deputy) {
     send_entry_membership_message(deputy);
     parent->getParentModule()->getParentModule()->bubble("contacting deputy...");
@@ -253,6 +263,7 @@ void MembershipManager::timeout_get_deputy_response(GetDeputyCall* get_deputy_ca
 
 void MembershipManager::receive_get_deputy_response(GetDeputyResponse* get_deputy_response) {
     contact_deputy_and_enter_network(get_deputy_response->getDeputy());
+    needs_deputy = false;
 }
 
 // MEMBERSHIP MESSAGES // UDP
@@ -345,16 +356,20 @@ bool MembershipManager::receive_membership_message(Membership* membership) {
         }
         // algorithm 1: forward to all nodes of view
         int c = 0;
+        std::set<TransportAddress> expired;
         for (auto entry : mCache) {
             if (entry.second.expired()) {
-                parent->getParentModule()->getParentModule()->bubble(std::string("expired forwarding ip ").append(entry.first.getIp().str()).append("...").c_str());
-                remove_mcache_entry(entry.first);
+                expired.insert(entry.first);
                 continue;
             }
             if (entry.first == membership->getTad()) continue;
             forward_membership_message(membership, entry.first);
             c++;
         };
+        for (TransportAddress exp : expired) {
+            parent->getParentModule()->getParentModule()->bubble(std::string("expired forwarding ip ").append(exp.getIp().str()).append("...").c_str());
+            remove_mcache_entry(exp);
+        }
         parent->getParentModule()->getParentModule()->bubble(std::string("FF'd to ").append(std::to_string(c)).append(" base nodes...").c_str());
         for (int j = 0; j < c; ++j) {
             try {

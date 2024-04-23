@@ -135,15 +135,8 @@ void PartnershipManager::send_get_candidate_partners_message(TransportAddress ta
     parent->send_rpc(tad, get_candidate_partners_call);
 }
 
-void PartnershipManager::receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::map<TransportAddress, double> from_mCache) {
-    GetCandidatePartnersResponse* get_candidate_partners_response = new GetCandidatePartnersResponse();
-    get_candidate_partners_response->setCandidates(from_mCache);
-    parent->send_rpc_response(get_candidate_partners_call, get_candidate_partners_response);
-}
-
-void PartnershipManager::timeout_get_candidate_partners_response(GetCandidatePartnersCall* get_candidate_partners_call) {
-    // we don't handle this here !! we handle this by getting a new deputy in the MembershipManager
-}
+// std::map<TransportAddress, double> receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call) => MembershipManager.h
+// on timeout we get a new deputy and retry: void send_get_deputy_message(TransportAddress tad) => MembershipManager.h
 
 void PartnershipManager::receive_get_candidate_partners_response(GetCandidatePartnersResponse* get_candidate_partners_response) {
     for (auto candidate : get_candidate_partners_response->getCandidates()) {
@@ -190,5 +183,5 @@ void PartnershipManager::receive_buffer_map_message(BufferMap* buffer_map) {
 }
 
 PartnershipManager::~PartnershipManager() {
-    parent->cancelAndDelete(switch_timer);
+    if (switch_timer != NULL) parent->cancelAndDelete(switch_timer);
 }

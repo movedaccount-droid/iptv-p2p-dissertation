@@ -39,6 +39,8 @@ simple Node extends BaseOverlay
    	 	
    	 	int M; // target number of partners held by a node
     	double partnership_timeout_s; // duration without receiving buffermaps before a partner connection is failed
+   	 	double panic_timeout_s; // duration before gossiped panic is invalidated
+   	 	double panic_split_timeout_s; // duration before gossiped panic_split is invalidated
    	 	
    	 	int playout_interval; // duration between blocks
     	int buffer_size; // stored blocks in buffer. probably just 120
@@ -49,13 +51,15 @@ simple Node extends BaseOverlay
    	 	int bm_exchange_interval; // delay between buffermap being sent
    	 	
         bool origin; // if this node should act as the origin
-        string origin_ip; // ip to contact to reach the origin. changes regularly depending on seed...
+        string first_origin_ip; // ip to contact to reach the first origin. changes regularly depending on seed...
+        string second_origin_ip; // second origin. in a real system this could be a list of any length
         bool heterogeneous_upload; // if we should enable heterogenous upload. only works on inet underlay
         string arrow_type; // which arrow type to display
 }
 
 module NodeModules like IOverlay
 {
+    @display("t=...,top,blue");
     gates:
         input udpIn;   // gate from the UDP layer
         output udpOut;    // gate to the UDP layer

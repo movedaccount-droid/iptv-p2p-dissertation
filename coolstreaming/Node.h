@@ -20,14 +20,14 @@
 
 #include "../coolstreaming/Buffer.h"
 #include "../coolstreaming/MembershipManager.h"
-#include "../coolstreaming/PartnershipManager.h"
+#include "../coolstreaming/PartnerlinkManager.h"
 #include "../coolstreaming/Scheduler.h"
 #include "common/BaseOverlay.h"
 
 class Node : public BaseOverlay {
 
     // node components - see paper fig. 1
-    PartnershipManager partnership_manager;
+    PartnerlinkManager partnerlink_manager;
     MembershipManager membership_manager;
     Buffer buffer;
     Scheduler scheduler;
@@ -36,6 +36,7 @@ class Node : public BaseOverlay {
     void initializeOverlay(int stage); // called at overlay construction
     void joinOverlay(); // called at overlay join time. configures timers
     void finishOverlay(); // called at overlay leave time
+    void init_partnerlink_manager(); // called at construction and in case of total partner failure, to reset
 
     // rpc handling
     void handleUDPMessage(BaseOverlayMessage* msg);
@@ -72,7 +73,7 @@ public:
     void send_rpc(TransportAddress tad, BaseCallMessage* msg);
     void send_rpc_response(BaseCallMessage* call, BaseResponseMessage* response);
 
-    Node(): partnership_manager(), membership_manager(), buffer(), scheduler() {};
+    Node(): partnerlink_manager(), membership_manager(), buffer(), scheduler() {};
     virtual ~Node();
 };
 

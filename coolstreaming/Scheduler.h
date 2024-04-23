@@ -16,10 +16,10 @@
 #ifndef OVERLAY_COOLSTREAMING_SCHEDULER_H_
 #define OVERLAY_COOLSTREAMING_SCHEDULER_H_
 
-#import <unordered_set>
+#include <unordered_set>
 #include "common/TransportAddress.h"
 #include "Coolstreaming_m.h"
-#include "PartnerEntry.h"
+#include "PartnerlinkEntry.h"
 
 // REMEMBER: AN EXCHANGE IS NOT A TRADE!!
 // "regularly exchanges" means that node A regularly sends bm to B,
@@ -42,7 +42,7 @@ public:
     bool get_should_request_next_and_flip();
     void exchange_all_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm);
     void exchange_origin_partners(std::map<TransportAddress, std::unordered_set<int>> buffer_maps);
-    void request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerEntry> partners, int playout_index);
+    void request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerlinkEntry> partners, int playout_index);
 
     // BUFFER_MAP // UDP
     // exchanging buffermap information to gain partial view of block availability

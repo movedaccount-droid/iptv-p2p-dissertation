@@ -15,7 +15,7 @@
 
 #include "../coolstreaming/Scheduler.h"
 #include "Node.h"
-#include "PartnerEntry.h"
+#include "PartnerlinkEntry.h"
 #include <algorithm>
 #include <map>
 
@@ -51,7 +51,7 @@ void Scheduler::exchange_origin_partners(std::map<TransportAddress, std::unorder
     }
 }
 
-void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerEntry> partners, int playout_index) {
+void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, std::map<TransportAddress, PartnerlinkEntry> partners, int playout_index) {
     // scheduling algorithm, fig 3.
     std::map<TransportAddress, std::unordered_map<int, double>> T; // maps block i to remaining transmission time
     std::map<TransportAddress, std::unordered_set<int>> supplier; // supplier of each block, though we switch this to a mapping of buffermaps to each partner for easy sending
@@ -99,7 +99,7 @@ void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, 
         for (int segment_i : dup.second) {
             // get the highest bandwidth node [band(r) > band(r')]
             // amongst those we still have time to download from [t[r, i] > seg_size/band[r], t[r', i] > seg_size/band[r']]
-            std::map<TransportAddress, PartnerEntry> k_candidates;
+            std::map<TransportAddress, PartnerlinkEntry> k_candidates;
             for (auto partner : partners) {
                 // this somehow isn't part of this algorithm but we still do it because we're not stupid
                 if (partner.second.buffer_map.find(segment_i) != partner.second.buffer_map.end()

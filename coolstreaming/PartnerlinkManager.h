@@ -18,6 +18,7 @@
 
 #include <functional>
 #include "TransportAddress.h"
+#include "PartnerlinkEntry.h"
 #include "Coolstreaming_m.h"
 
 class Node;
@@ -40,9 +41,11 @@ public:
     simtime_t partnership_timeout; // duration without receiving buffermaps before a partner connection is failed
     simtime_t panic_timeout; // time-to-live for panic messages traversing the network
     simtime_t panic_split_timeout; // time-to-live for panicsplit messages traversing the network
+    bool needs_deputy; // if we would like to be informed of deputies from any next get_deputies response
 
     // vars
-    std::map<TransportAddress, bool> partners; // map of partners and their panicking status
+    std::string display_name; // used to set display name to Mc
+    std::map<TransportAddress, PartnerlinkEntry> partners; // map of partners and relevant stats
     std::map<int, SplitCall*> currently_splitting; // maps uuids to the message that requested the split, so we can respond via rpc_send_response later
     std::map<TransportAddress, Failure*> fail_connection_timers; // timers to fail a partner if we stop receiving buffermaps
     int Mc; // current number of partners. note that this is not the size of the partners set - ex. when we first join, this will be M, whilst partners.size() is 0.
@@ -53,17 +56,22 @@ public:
     cMessage* panic_split_timeout_timer; // sama panicsplit
 
     // utility functions
+    void count(int increment);
+    void count_without_checking(int increment);
+    void update_display_string();
+    void update_and_check();
     TransportAddress get_random_in(std::set<TransportAddress> set);
     TransportAddress get_random_partner();
-    TransportAddress get_random_partner_matching_predicate(std::function<bool(std::pair<TransportAddress, bool>)> const& lambda);
-    TransportAddress get_random_partner_with_exceptions(std::set<TransportAddress> exceptions);
-    TransportAddress get_random_partner_with_panic_status(bool panicking);
+    TransportAddress get_random_partner_matching_predicate(std::function<bool(std::pair<TransportAddress, PartnerlinkEntry>)> const& lambda);
+    std::map<TransportAddress, PartnerlinkEntry> get_partners();
+    std::set<TransportAddress> get_partner_tads();
+    std::vector<TransportAddress> get_partner_k();
     void insert_partner_to_partners(TransportAddress partner);
     void remove_partner_from_partners(TransportAddress partner);
     bool is_timed_out(simtime_t origin_time, simtime_t timeout);
 
     // lifecycle
-    void init(Node* p, int m, double pts);
+    void init(Node* p, int m, int mc, double pts, double pants, double pansts);
 
     // failure timers and buffermap timeout
     void set_failure_timer(TransportAddress partner);
@@ -79,7 +87,15 @@ public:
     void timeout_panic();
     void timeout_panic_split();
 
-    // GET CANDIDATE PARTNERS // TCP
+    // LINK_ORIGIN_NODES // UDP
+    // construct the initial link between our two friendly origin nodes
+    // that will be used to split between for newly joining nodes
+    // in the real world we could secure this by validating the incoming nodeid
+    // or through some kind of encryption/key message system.
+    void send_link_origin_nodes_message(TransportAddress origin);
+    void receive_link_origin_nodes_message(LinkOriginNodes* link_origin_nodes);
+
+    // GET_CANDIDATE_PARTNERS // TCP
     // get list of possible starting partners from the deputy
     // timeout is handled by getting a new deputy in the MembershipManager
     void send_get_candidate_partners_message(TransportAddress tad);
@@ -109,11 +125,13 @@ public:
     // gossip a message looking for another panicking node we do not know, recovering one link to our node if found
     TransportAddress get_best_next_hop_matching_panic_status(bool panic_status, TransportAddress panicking, TransportAddress last_hop);
     void send_panic_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time = simTime());
+    bool can_recover_panic(TransportAddress panicking);
     void receive_panic_message(PanicMsg* panic);
 
     // PANIC_SPLIT, PANIC_SPLIT_FOUND // UDP
     // gossip a message looking for two nodes that we do not know, but know each other, to split between, recovering two links to our node if found
     void send_panic_split_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time = simTime(), LastHopOpinion last_hop_opinion = CANT_HELP);
+    bool can_recover_panic_split(TransportAddress panicking, TransportAddress last_hop);
     void receive_panic_split_message(PanicSplitMsg* panic_split);
     void receive_panic_split_found_message(PanicSplitFound* panic_split_found);
 
@@ -121,6 +139,10 @@ public:
     // tell a panicking partner we are willing to take up one of its missing partnerships
     void send_recover_message(TransportAddress tad);
     void receive_recover_message(Recover* recover); // make sure in here that if M == Mc, we ignore the message
+
+    // BUFFER_MAP // UDP
+    // receiving and caching buffermap-adjacent stats for our partners
+    void receive_buffer_map_message(BufferMap* buffer_map);
 
     PartnerlinkManager();
     virtual ~PartnerlinkManager();

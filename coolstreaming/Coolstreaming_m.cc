@@ -3159,6 +3159,286 @@ void *GetCandidatePartnersResponseDescriptor::getFieldStructValuePointer(void *o
     }
 }
 
+Register_Class(LinkOriginNodes)
+
+LinkOriginNodes::LinkOriginNodes(const char *name, short kind) : ::BaseOverlayMessage(name,kind)
+{
+}
+
+LinkOriginNodes::LinkOriginNodes(const LinkOriginNodes& other) : ::BaseOverlayMessage(other)
+{
+    copy(other);
+}
+
+LinkOriginNodes::~LinkOriginNodes()
+{
+}
+
+LinkOriginNodes& LinkOriginNodes::operator=(const LinkOriginNodes& other)
+{
+    if (this==&other) return *this;
+    ::BaseOverlayMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void LinkOriginNodes::copy(const LinkOriginNodes& other)
+{
+    this->origin = other.origin;
+}
+
+void LinkOriginNodes::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->origin);
+}
+
+void LinkOriginNodes::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->origin);
+}
+
+TransportAddress& LinkOriginNodes::getOrigin()
+{
+    return this->origin;
+}
+
+void LinkOriginNodes::setOrigin(const TransportAddress& origin)
+{
+    this->origin = origin;
+}
+
+class LinkOriginNodesDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    LinkOriginNodesDescriptor();
+    virtual ~LinkOriginNodesDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(LinkOriginNodesDescriptor)
+
+LinkOriginNodesDescriptor::LinkOriginNodesDescriptor() : omnetpp::cClassDescriptor("LinkOriginNodes", "BaseOverlayMessage")
+{
+    propertynames = nullptr;
+}
+
+LinkOriginNodesDescriptor::~LinkOriginNodesDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool LinkOriginNodesDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<LinkOriginNodes *>(obj)!=nullptr;
+}
+
+const char **LinkOriginNodesDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *LinkOriginNodesDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int LinkOriginNodesDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
+}
+
+unsigned int LinkOriginNodesDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
+}
+
+const char *LinkOriginNodesDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldNames[] = {
+        "origin",
+    };
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
+}
+
+int LinkOriginNodesDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='o' && strcmp(fieldName, "origin")==0) return base+0;
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *LinkOriginNodesDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+    };
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
+}
+
+const char **LinkOriginNodesDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *LinkOriginNodesDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int LinkOriginNodesDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    LinkOriginNodes *pp = (LinkOriginNodes *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *LinkOriginNodesDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    LinkOriginNodes *pp = (LinkOriginNodes *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string LinkOriginNodesDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    LinkOriginNodes *pp = (LinkOriginNodes *)object; (void)pp;
+    switch (field) {
+        case 0: {std::stringstream out; out << pp->getOrigin(); return out.str();}
+        default: return "";
+    }
+}
+
+bool LinkOriginNodesDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    LinkOriginNodes *pp = (LinkOriginNodes *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *LinkOriginNodesDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
+}
+
+void *LinkOriginNodesDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    LinkOriginNodes *pp = (LinkOriginNodes *)object; (void)pp;
+    switch (field) {
+        case 0: return (void *)(&pp->getOrigin()); break;
+        default: return nullptr;
+    }
+}
+
 EXECUTE_ON_STARTUP(
     omnetpp::cEnum *e = omnetpp::cEnum::find("SplitResult");
     if (!e) omnetpp::enums.getInstance()->add(e = new omnetpp::cEnum("SplitResult"));
@@ -6241,6 +6521,257 @@ void *FailureDescriptor::getFieldStructValuePointer(void *object, int field, int
     Failure *pp = (Failure *)object; (void)pp;
     switch (field) {
         case 0: return (void *)(&pp->getFailed()); break;
+        default: return nullptr;
+    }
+}
+
+Register_Class(TotalPartnerFailure)
+
+TotalPartnerFailure::TotalPartnerFailure(const char *name, short kind) : ::omnetpp::cMessage(name,kind)
+{
+}
+
+TotalPartnerFailure::TotalPartnerFailure(const TotalPartnerFailure& other) : ::omnetpp::cMessage(other)
+{
+    copy(other);
+}
+
+TotalPartnerFailure::~TotalPartnerFailure()
+{
+}
+
+TotalPartnerFailure& TotalPartnerFailure::operator=(const TotalPartnerFailure& other)
+{
+    if (this==&other) return *this;
+    ::omnetpp::cMessage::operator=(other);
+    copy(other);
+    return *this;
+}
+
+void TotalPartnerFailure::copy(const TotalPartnerFailure& other)
+{
+}
+
+void TotalPartnerFailure::parsimPack(omnetpp::cCommBuffer *b) const
+{
+    ::omnetpp::cMessage::parsimPack(b);
+}
+
+void TotalPartnerFailure::parsimUnpack(omnetpp::cCommBuffer *b)
+{
+    ::omnetpp::cMessage::parsimUnpack(b);
+}
+
+class TotalPartnerFailureDescriptor : public omnetpp::cClassDescriptor
+{
+  private:
+    mutable const char **propertynames;
+  public:
+    TotalPartnerFailureDescriptor();
+    virtual ~TotalPartnerFailureDescriptor();
+
+    virtual bool doesSupport(omnetpp::cObject *obj) const override;
+    virtual const char **getPropertyNames() const override;
+    virtual const char *getProperty(const char *propertyname) const override;
+    virtual int getFieldCount() const override;
+    virtual const char *getFieldName(int field) const override;
+    virtual int findField(const char *fieldName) const override;
+    virtual unsigned int getFieldTypeFlags(int field) const override;
+    virtual const char *getFieldTypeString(int field) const override;
+    virtual const char **getFieldPropertyNames(int field) const override;
+    virtual const char *getFieldProperty(int field, const char *propertyname) const override;
+    virtual int getFieldArraySize(void *object, int field) const override;
+
+    virtual const char *getFieldDynamicTypeString(void *object, int field, int i) const override;
+    virtual std::string getFieldValueAsString(void *object, int field, int i) const override;
+    virtual bool setFieldValueAsString(void *object, int field, int i, const char *value) const override;
+
+    virtual const char *getFieldStructName(int field) const override;
+    virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
+};
+
+Register_ClassDescriptor(TotalPartnerFailureDescriptor)
+
+TotalPartnerFailureDescriptor::TotalPartnerFailureDescriptor() : omnetpp::cClassDescriptor("TotalPartnerFailure", "omnetpp::cMessage")
+{
+    propertynames = nullptr;
+}
+
+TotalPartnerFailureDescriptor::~TotalPartnerFailureDescriptor()
+{
+    delete[] propertynames;
+}
+
+bool TotalPartnerFailureDescriptor::doesSupport(omnetpp::cObject *obj) const
+{
+    return dynamic_cast<TotalPartnerFailure *>(obj)!=nullptr;
+}
+
+const char **TotalPartnerFailureDescriptor::getPropertyNames() const
+{
+    if (!propertynames) {
+        static const char *names[] = {  nullptr };
+        omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+        const char **basenames = basedesc ? basedesc->getPropertyNames() : nullptr;
+        propertynames = mergeLists(basenames, names);
+    }
+    return propertynames;
+}
+
+const char *TotalPartnerFailureDescriptor::getProperty(const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->getProperty(propertyname) : nullptr;
+}
+
+int TotalPartnerFailureDescriptor::getFieldCount() const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? 0+basedesc->getFieldCount() : 0;
+}
+
+unsigned int TotalPartnerFailureDescriptor::getFieldTypeFlags(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeFlags(field);
+        field -= basedesc->getFieldCount();
+    }
+    return 0;
+}
+
+const char *TotalPartnerFailureDescriptor::getFieldName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldName(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+int TotalPartnerFailureDescriptor::findField(const char *fieldName) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    return basedesc ? basedesc->findField(fieldName) : -1;
+}
+
+const char *TotalPartnerFailureDescriptor::getFieldTypeString(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldTypeString(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+const char **TotalPartnerFailureDescriptor::getFieldPropertyNames(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldPropertyNames(field);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+const char *TotalPartnerFailureDescriptor::getFieldProperty(int field, const char *propertyname) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldProperty(field, propertyname);
+        field -= basedesc->getFieldCount();
+    }
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+int TotalPartnerFailureDescriptor::getFieldArraySize(void *object, int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldArraySize(object, field);
+        field -= basedesc->getFieldCount();
+    }
+    TotalPartnerFailure *pp = (TotalPartnerFailure *)object; (void)pp;
+    switch (field) {
+        default: return 0;
+    }
+}
+
+const char *TotalPartnerFailureDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldDynamicTypeString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    TotalPartnerFailure *pp = (TotalPartnerFailure *)object; (void)pp;
+    switch (field) {
+        default: return nullptr;
+    }
+}
+
+std::string TotalPartnerFailureDescriptor::getFieldValueAsString(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldValueAsString(object,field,i);
+        field -= basedesc->getFieldCount();
+    }
+    TotalPartnerFailure *pp = (TotalPartnerFailure *)object; (void)pp;
+    switch (field) {
+        default: return "";
+    }
+}
+
+bool TotalPartnerFailureDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->setFieldValueAsString(object,field,i,value);
+        field -= basedesc->getFieldCount();
+    }
+    TotalPartnerFailure *pp = (TotalPartnerFailure *)object; (void)pp;
+    switch (field) {
+        default: return false;
+    }
+}
+
+const char *TotalPartnerFailureDescriptor::getFieldStructName(int field) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructName(field);
+        field -= basedesc->getFieldCount();
+    }
+    return nullptr;
+}
+
+void *TotalPartnerFailureDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+{
+    omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    if (basedesc) {
+        if (field < basedesc->getFieldCount())
+            return basedesc->getFieldStructValuePointer(object, field, i);
+        field -= basedesc->getFieldCount();
+    }
+    TotalPartnerFailure *pp = (TotalPartnerFailure *)object; (void)pp;
+    switch (field) {
         default: return nullptr;
     }
 }
