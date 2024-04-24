@@ -115,6 +115,7 @@ packet SplitCall extends BaseCallMessage {
 }
 
 packet SplitResponse extends BaseResponseMessage {
+    int uuid;
     int result enum (SplitResult);
     TransportAddress first_node;
     TransportAddress second_node;
@@ -133,7 +134,9 @@ packet TrySplitResponse extends BaseResponseMessage {
     TransportAddress from;
 }
 
-packet Leave extends BaseOverlayMessage {}
+packet Leave extends BaseOverlayMessage {
+	TransportAddress from;
+}
 
 packet PanicMsg extends BaseOverlayMessage {
  	TransportAddress panicking;

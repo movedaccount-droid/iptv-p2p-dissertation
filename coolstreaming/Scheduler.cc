@@ -37,17 +37,18 @@ void Scheduler::init(Node* p, int bsb, int bmei, int bl_s, int bsz) {
     setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
 }
 
-void Scheduler::exchange_all_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm) {
+void Scheduler::exchange_all_partners(std::set<TransportAddress> partners, std::unordered_set<int> bm, std::map<TransportAddress, TransportAddress> associations) {
     setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
     for (TransportAddress partner : partners) {
-        send_buffer_map_message(partner, bm);
+        send_buffer_map_message(partner, bm, associations[partner]);
     }
 }
 
 void Scheduler::exchange_origin_partners(std::map<TransportAddress, std::unordered_set<int>> buffer_maps) {
     setOrReplace(exchange_timer, "exchange_timer", bm_exchange_interval);
     for (auto entry : buffer_maps) {
-        send_buffer_map_message(entry.first, entry.second);
+        // the origin will never churn, so there's no need for an association
+        send_buffer_map_message(entry.first, entry.second, TransportAddress());
     }
 }
 
@@ -128,10 +129,11 @@ void Scheduler::request_buffer_map_blocks(std::unordered_set<int> expected_set, 
 
 // BUFFER_MAP // UDP
 // exchanging buffermap information to gain partial view of block availability
-void Scheduler::send_buffer_map_message(TransportAddress partner, std::unordered_set<int> bm) {
+void Scheduler::send_buffer_map_message(TransportAddress partner, std::unordered_set<int> bm, TransportAddress associate) {
     BufferMap* buffer_map = new BufferMap();
     buffer_map->setFrom(parent->getThisNode());
     buffer_map->setBuffer_map(bm);
+    buffer_map->setAssociate(associate);
     parent->sendMessageToUDP(partner, buffer_map);
 }
 

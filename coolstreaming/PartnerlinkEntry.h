@@ -27,6 +27,7 @@ public:
     bool panicking;
     double bandwidth;
     std::unordered_set<int> buffer_map;
+    TransportAddress associate;
 
     double score() const {
         double time_units = (simTime() - start).dbl();
@@ -45,7 +46,8 @@ public:
         start(simTime()),
         panicking(panic),
         bandwidth(3000000),
-        buffer_map()
+        buffer_map(),
+        associate()
     {};
 
     virtual ~PartnerlinkEntry() {};

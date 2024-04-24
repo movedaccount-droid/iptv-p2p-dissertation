@@ -3750,6 +3750,7 @@ Register_Class(SplitResponse)
 
 SplitResponse::SplitResponse(const char *name, short kind) : ::BaseResponseMessage(name,kind)
 {
+    this->uuid = 0;
     this->result = 0;
 }
 
@@ -3772,6 +3773,7 @@ SplitResponse& SplitResponse::operator=(const SplitResponse& other)
 
 void SplitResponse::copy(const SplitResponse& other)
 {
+    this->uuid = other.uuid;
     this->result = other.result;
     this->first_node = other.first_node;
     this->second_node = other.second_node;
@@ -3780,6 +3782,7 @@ void SplitResponse::copy(const SplitResponse& other)
 void SplitResponse::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseResponseMessage::parsimPack(b);
+    doParsimPacking(b,this->uuid);
     doParsimPacking(b,this->result);
     doParsimPacking(b,this->first_node);
     doParsimPacking(b,this->second_node);
@@ -3788,9 +3791,20 @@ void SplitResponse::parsimPack(omnetpp::cCommBuffer *b) const
 void SplitResponse::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseResponseMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->uuid);
     doParsimUnpacking(b,this->result);
     doParsimUnpacking(b,this->first_node);
     doParsimUnpacking(b,this->second_node);
+}
+
+int SplitResponse::getUuid() const
+{
+    return this->uuid;
+}
+
+void SplitResponse::setUuid(int uuid)
+{
+    this->uuid = uuid;
 }
 
 int SplitResponse::getResult() const
@@ -3888,7 +3902,7 @@ const char *SplitResponseDescriptor::getProperty(const char *propertyname) const
 int SplitResponseDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 3+basedesc->getFieldCount() : 3;
+    return basedesc ? 4+basedesc->getFieldCount() : 4;
 }
 
 unsigned int SplitResponseDescriptor::getFieldTypeFlags(int field) const
@@ -3901,10 +3915,11 @@ unsigned int SplitResponseDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISCOMPOUND,
         FD_ISCOMPOUND,
     };
-    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
 }
 
 const char *SplitResponseDescriptor::getFieldName(int field) const
@@ -3916,20 +3931,22 @@ const char *SplitResponseDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
+        "uuid",
         "result",
         "first_node",
         "second_node",
     };
-    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
 }
 
 int SplitResponseDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='r' && strcmp(fieldName, "result")==0) return base+0;
-    if (fieldName[0]=='f' && strcmp(fieldName, "first_node")==0) return base+1;
-    if (fieldName[0]=='s' && strcmp(fieldName, "second_node")==0) return base+2;
+    if (fieldName[0]=='u' && strcmp(fieldName, "uuid")==0) return base+0;
+    if (fieldName[0]=='r' && strcmp(fieldName, "result")==0) return base+1;
+    if (fieldName[0]=='f' && strcmp(fieldName, "first_node")==0) return base+2;
+    if (fieldName[0]=='s' && strcmp(fieldName, "second_node")==0) return base+3;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -3943,10 +3960,11 @@ const char *SplitResponseDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "int",
         "TransportAddress",
         "TransportAddress",
     };
-    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **SplitResponseDescriptor::getFieldPropertyNames(int field) const
@@ -3958,7 +3976,7 @@ const char **SplitResponseDescriptor::getFieldPropertyNames(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 0: {
+        case 1: {
             static const char *names[] = { "enum",  nullptr };
             return names;
         }
@@ -3975,7 +3993,7 @@ const char *SplitResponseDescriptor::getFieldProperty(int field, const char *pro
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 0:
+        case 1:
             if (!strcmp(propertyname,"enum")) return "SplitResult";
             return nullptr;
         default: return nullptr;
@@ -4020,9 +4038,10 @@ std::string SplitResponseDescriptor::getFieldValueAsString(void *object, int fie
     }
     SplitResponse *pp = (SplitResponse *)object; (void)pp;
     switch (field) {
-        case 0: return enum2string(pp->getResult(), "SplitResult");
-        case 1: {std::stringstream out; out << pp->getFirst_node(); return out.str();}
-        case 2: {std::stringstream out; out << pp->getSecond_node(); return out.str();}
+        case 0: return long2string(pp->getUuid());
+        case 1: return enum2string(pp->getResult(), "SplitResult");
+        case 2: {std::stringstream out; out << pp->getFirst_node(); return out.str();}
+        case 3: {std::stringstream out; out << pp->getSecond_node(); return out.str();}
         default: return "";
     }
 }
@@ -4037,7 +4056,8 @@ bool SplitResponseDescriptor::setFieldValueAsString(void *object, int field, int
     }
     SplitResponse *pp = (SplitResponse *)object; (void)pp;
     switch (field) {
-        case 0: pp->setResult((SplitResult)string2enum(value, "SplitResult")); return true;
+        case 0: pp->setUuid(string2long(value)); return true;
+        case 1: pp->setResult((SplitResult)string2enum(value, "SplitResult")); return true;
         default: return false;
     }
 }
@@ -4051,8 +4071,8 @@ const char *SplitResponseDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
         case 2: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 3: return omnetpp::opp_typename(typeid(TransportAddress));
         default: return nullptr;
     };
 }
@@ -4067,8 +4087,8 @@ void *SplitResponseDescriptor::getFieldStructValuePointer(void *object, int fiel
     }
     SplitResponse *pp = (SplitResponse *)object; (void)pp;
     switch (field) {
-        case 1: return (void *)(&pp->getFirst_node()); break;
-        case 2: return (void *)(&pp->getSecond_node()); break;
+        case 2: return (void *)(&pp->getFirst_node()); break;
+        case 3: return (void *)(&pp->getSecond_node()); break;
         default: return nullptr;
     }
 }
@@ -4765,16 +4785,29 @@ Leave& Leave::operator=(const Leave& other)
 
 void Leave::copy(const Leave& other)
 {
+    this->from = other.from;
 }
 
 void Leave::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseOverlayMessage::parsimPack(b);
+    doParsimPacking(b,this->from);
 }
 
 void Leave::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseOverlayMessage::parsimUnpack(b);
+    doParsimUnpacking(b,this->from);
+}
+
+TransportAddress& Leave::getFrom()
+{
+    return this->from;
+}
+
+void Leave::setFrom(const TransportAddress& from)
+{
+    this->from = from;
 }
 
 class LeaveDescriptor : public omnetpp::cClassDescriptor
@@ -4842,7 +4875,7 @@ const char *LeaveDescriptor::getProperty(const char *propertyname) const
 int LeaveDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 0+basedesc->getFieldCount() : 0;
+    return basedesc ? 1+basedesc->getFieldCount() : 1;
 }
 
 unsigned int LeaveDescriptor::getFieldTypeFlags(int field) const
@@ -4853,7 +4886,10 @@ unsigned int LeaveDescriptor::getFieldTypeFlags(int field) const
             return basedesc->getFieldTypeFlags(field);
         field -= basedesc->getFieldCount();
     }
-    return 0;
+    static unsigned int fieldTypeFlags[] = {
+        FD_ISCOMPOUND,
+    };
+    return (field>=0 && field<1) ? fieldTypeFlags[field] : 0;
 }
 
 const char *LeaveDescriptor::getFieldName(int field) const
@@ -4864,12 +4900,17 @@ const char *LeaveDescriptor::getFieldName(int field) const
             return basedesc->getFieldName(field);
         field -= basedesc->getFieldCount();
     }
-    return nullptr;
+    static const char *fieldNames[] = {
+        "from",
+    };
+    return (field>=0 && field<1) ? fieldNames[field] : nullptr;
 }
 
 int LeaveDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
+    int base = basedesc ? basedesc->getFieldCount() : 0;
+    if (fieldName[0]=='f' && strcmp(fieldName, "from")==0) return base+0;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -4881,7 +4922,10 @@ const char *LeaveDescriptor::getFieldTypeString(int field) const
             return basedesc->getFieldTypeString(field);
         field -= basedesc->getFieldCount();
     }
-    return nullptr;
+    static const char *fieldTypeStrings[] = {
+        "TransportAddress",
+    };
+    return (field>=0 && field<1) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **LeaveDescriptor::getFieldPropertyNames(int field) const
@@ -4948,6 +4992,7 @@ std::string LeaveDescriptor::getFieldValueAsString(void *object, int field, int 
     }
     Leave *pp = (Leave *)object; (void)pp;
     switch (field) {
+        case 0: {std::stringstream out; out << pp->getFrom(); return out.str();}
         default: return "";
     }
 }
@@ -4974,7 +5019,10 @@ const char *LeaveDescriptor::getFieldStructName(int field) const
             return basedesc->getFieldStructName(field);
         field -= basedesc->getFieldCount();
     }
-    return nullptr;
+    switch (field) {
+        case 0: return omnetpp::opp_typename(typeid(TransportAddress));
+        default: return nullptr;
+    };
 }
 
 void *LeaveDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
@@ -4987,6 +5035,7 @@ void *LeaveDescriptor::getFieldStructValuePointer(void *object, int field, int i
     }
     Leave *pp = (Leave *)object; (void)pp;
     switch (field) {
+        case 0: return (void *)(&pp->getFrom()); break;
         default: return nullptr;
     }
 }

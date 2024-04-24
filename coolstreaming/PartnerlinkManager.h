@@ -41,6 +41,7 @@ public:
     simtime_t partnership_timeout; // duration without receiving buffermaps before a partner connection is failed
     simtime_t panic_timeout; // time-to-live for panic messages traversing the network
     simtime_t panic_split_timeout; // time-to-live for panicsplit messages traversing the network
+    simtime_t switch_interval; // time between switching to a new random peer from our mcache
     bool needs_deputy; // if we would like to be informed of deputies from any next get_deputies response
 
     // vars
@@ -48,12 +49,14 @@ public:
     std::map<TransportAddress, PartnerlinkEntry> partners; // map of partners and relevant stats
     std::map<int, SplitCall*> currently_splitting; // maps uuids to the message that requested the split, so we can respond via rpc_send_response later
     std::map<TransportAddress, Failure*> fail_connection_timers; // timers to fail a partner if we stop receiving buffermaps
+    std::set<int> active_switch_messages; // uuids assocated with any mCache-switching Split messages we have sent, so that we know to handle them differently on return
     int Mc; // current number of partners. note that this is not the size of the partners set - ex. when we first join, this will be M, whilst partners.size() is 0.
             // you could also think of this as the "potential" number of partners, if everything resolves nicely excluding panic messages
 
     // timers
     cMessage* panic_timeout_timer; // the ttl on our panic has passed; send a new panic
     cMessage* panic_split_timeout_timer; // sama panicsplit
+    cMessage* switch_timer; // switch to a new random mcache node
 
     // utility functions
     void count(int increment);
@@ -66,18 +69,20 @@ public:
     std::map<TransportAddress, PartnerlinkEntry> get_partners();
     std::set<TransportAddress> get_partner_tads();
     std::vector<TransportAddress> get_partner_k();
+    std::map<TransportAddress, TransportAddress> get_associations();
     void insert_partner_to_partners(TransportAddress partner);
     void remove_partner_from_partners(TransportAddress partner);
     bool is_timed_out(simtime_t origin_time, simtime_t timeout);
 
     // lifecycle
-    void init(Node* p, int m, int mc, double pts, double pants, double pansts);
+    void init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis);
 
     // failure timers and buffermap timeout
     void set_failure_timer(TransportAddress partner);
     void remove_failure_timer(TransportAddress partner);
     void reset_failure_timer(TransportAddress partner);
     void read_failure_timer_and_fail_connection(Failure* failure);
+    void recover_from_leaving_partner(TransportAddress partner);
 
     // panic tracking
     PanicStatus get_panic_status();
@@ -86,6 +91,11 @@ public:
     void setup_panic_split();
     void timeout_panic();
     void timeout_panic_split();
+
+    // switching nodes from mcache
+    void start_switch_from_mcache(TransportAddress switch_to);
+    void reset_switch_timer();
+    void finalize_mcache_switch(int uuid);
 
     // LINK_ORIGIN_NODES // UDP
     // construct the initial link between our two friendly origin nodes
@@ -105,8 +115,7 @@ public:
 
     // SPLIT // TCP
     // request a node to split a relationship with a partner, and put this node in the middle
-    void panic_recover(TransportAddress panicking);
-    void send_split_message(TransportAddress tad);
+    void send_split_message(TransportAddress tad, bool is_mcache_switch = false);
     void receive_split_message_and_try_split_with_partner(SplitCall* split_call);
     void send_split_failure_response(SplitCall* split_call);
     void receive_split_response(SplitResponse* split_response);
@@ -115,14 +124,20 @@ public:
     // TRY_SPLIT // TCP
     // get a partner to check if we can split, and ask them to hook up with the new node if so
     // after the response, if successful, we then wind down our side of the partnership and do the same
-    void panic_split_recover(TransportAddress panicking, TransportAddress last_hop);
     void send_try_split_message(TransportAddress tad, TransportAddress into, int uuid);
     void receive_try_split_message_and_try_split(TrySplitCall* try_split_call);
     void receive_try_split_response(TrySplitResponse* try_split_response);
     void timeout_try_split_response(TrySplitCall* try_split_call);
 
+    // LEAVE // UDP
+    // tell a partner that we are leaving the network, so they can immediately switch to their associate
+    void leave_overlay();
+    void send_leave_message(TransportAddress tad);
+    void receive_leave_message(Leave* leave);
+
     // PANIC // UDP
     // gossip a message looking for another panicking node we do not know, recovering one link to our node if found
+    void panic_recover(TransportAddress panicking);
     TransportAddress get_best_next_hop_matching_panic_status(bool panic_status, TransportAddress panicking, TransportAddress last_hop);
     void send_panic_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time = simTime());
     bool can_recover_panic(TransportAddress panicking);
@@ -130,6 +145,7 @@ public:
 
     // PANIC_SPLIT, PANIC_SPLIT_FOUND // UDP
     // gossip a message looking for two nodes that we do not know, but know each other, to split between, recovering two links to our node if found
+    void panic_split_recover(TransportAddress panicking, TransportAddress last_hop);
     void send_panic_split_message(TransportAddress tad, TransportAddress panicking, simtime_t send_time = simTime(), LastHopOpinion last_hop_opinion = CANT_HELP);
     bool can_recover_panic_split(TransportAddress panicking, TransportAddress last_hop);
     void receive_panic_split_message(PanicSplitMsg* panic_split);

@@ -89,7 +89,8 @@ void Node::initializeOverlay(int stage) {
             par("block_length_s"),
             par("buffer_size"));
 }
-
+// TODO: WE ARE HERE AN D WE SHOULD PROBABLYU CHECK THAT OUR FAILURE STATES ARE ALL CORRECT BEACAUSE ITR IOAS NOT GOOD AS IT IRS RIGHT NOW.
+// AND THEN. CHECK ALL MESSAGES ARE IN VS ORIGINAL SPEC AND MERGE !!!! wowee ...
 // called at overlay join time. configures timers
 void Node::joinOverlay() {
     if (heterogeneous_upload) {
@@ -104,6 +105,7 @@ void Node::joinOverlay() {
 void Node::finishOverlay() {
     leaving = true;
     membership_manager.leave_overlay();
+    partnerlink_manager.leave_overlay();
     setOverlayReady(false);
 }
 
@@ -114,7 +116,8 @@ void Node::init_partnerlink_manager() {
             origin ? 0 : par("M"), // so that our origin starts assuming 0 partners as it should
             par("partnership_timeout_s"),
             par("panic_timeout_s"),
-            par("panic_split_timeout_s"));
+            par("panic_split_timeout_s"),
+            par("switch_interval_s"));
     if (origin) {
         // join our two origins, so that we have a starter link to split from
         partnerlink_manager.send_link_origin_nodes_message(origin_tad);
@@ -129,12 +132,27 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
         buffer.receive_block_message(block);
     } else if (BlockRequest* block_request = dynamic_cast<BlockRequest*>(msg)) {
         buffer.receive_block_request_message_and_respond(block_request);
-    }
-    if (!leaving) {
+    } else if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
+        membership_manager.receive_heartbeat_message(heartbeat);
+    } else if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
+        membership_manager.receive_unsubscribe_message(unsubscription);
+    } else if (GossipedUnsubscription* gossiped_unsubscription = dynamic_cast<GossipedUnsubscription*>(msg)) {
+        membership_manager.receive_gossiped_unsubscribe_message(gossiped_unsubscription);
+    } else if (PanicSplitFound* panic_split_found_msg = dynamic_cast<PanicSplitFound*>(msg)) {
+        // this seems a bad idea to allow while leaving but there is a logic:
+        // if we ignore this message the incoming node loses two links and our partner loses one.
+        // if we return it as normal, the incoming node loses the one link that will time out as we leave.
+        // ideally we would define have another return type that handles this case, instructing only
+        // to connect to the first node - but we have a deadline!
+        partnerlink_manager.receive_panic_split_found_message(panic_split_found_msg);
+    } else if (PanicMsg* panic_msg = dynamic_cast<PanicMsg*>(msg)) {
+        // this and panic_split have contained cases for leaving nodes
+        partnerlink_manager.receive_panic_message(panic_msg);
+    } else if (PanicSplitMsg* panic_split_msg = dynamic_cast<PanicSplitMsg*>(msg)) {
+        partnerlink_manager.receive_panic_split_message(panic_split_msg);
+    } else if (!leaving) {
         if (Membership* membership = dynamic_cast<Membership*>(msg)) {
             membership_manager.receive_membership_message(membership);
-        } else if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
-            membership_manager.receive_heartbeat_message(heartbeat);
         } else if (LinkOriginNodes* link_origin_nodes = dynamic_cast<LinkOriginNodes*>(msg)) {
             partnerlink_manager.receive_link_origin_nodes_message(link_origin_nodes);
         } else if (BufferMap* buffer_map = dynamic_cast<BufferMap*>(msg)) {
@@ -144,28 +162,26 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
             auto expected_set = buffer.get_expected_set();
             auto playout_index = buffer.get_playout_index();
             scheduler.request_buffer_map_blocks(expected_set, partners, playout_index);
-        } else if (PanicMsg* panic_msg = dynamic_cast<PanicMsg*>(msg)) {
-            partnerlink_manager.receive_panic_message(panic_msg);
-        } else if (PanicSplitMsg* panic_split_msg = dynamic_cast<PanicSplitMsg*>(msg)) {
-            partnerlink_manager.receive_panic_split_message(panic_split_msg);
-        } else if (PanicSplitFound* panic_split_found_msg = dynamic_cast<PanicSplitFound*>(msg)) {
-            partnerlink_manager.receive_panic_split_found_message(panic_split_found_msg);
         } else if (Recover* recover = dynamic_cast<Recover*>(msg)) {
             partnerlink_manager.receive_recover_message(recover);
         }
-
-    }
-    if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
-        membership_manager.receive_unsubscribe_message(unsubscription);
-    } else if (GossipedUnsubscription* gossiped_unsubscription = dynamic_cast<GossipedUnsubscription*>(msg)) {
-        membership_manager.receive_gossiped_unsubscribe_message(gossiped_unsubscription);
     }
     delete msg;
 }
 
 bool Node::handleRpcCall(BaseCallMessage* msg) {
-    if (leaving) return true;
     RPC_SWITCH_START(msg);
+    RPC_ON_CALL(Split) {
+        partnerlink_manager.receive_split_message_and_try_split_with_partner(_SplitCall);
+        RPC_HANDLED = true;
+        break;
+    }
+    RPC_ON_CALL(TrySplit) {
+        partnerlink_manager.receive_try_split_message_and_try_split(_TrySplitCall);
+        RPC_HANDLED = true;
+        break;
+    }
+    if (leaving) return true;
     RPC_ON_CALL(Inview) {
         membership_manager.receive_inview_message_and_respond(_InviewCall);
         RPC_HANDLED = true;
@@ -181,16 +197,6 @@ bool Node::handleRpcCall(BaseCallMessage* msg) {
         RPC_HANDLED = true;
         break;
     }
-    RPC_ON_CALL(Split) {
-        partnerlink_manager.receive_split_message_and_try_split_with_partner(_SplitCall);
-        RPC_HANDLED = true;
-        break;
-    }
-    RPC_ON_CALL(TrySplit) {
-        partnerlink_manager.receive_try_split_message_and_try_split(_TrySplitCall);
-        RPC_HANDLED = true;
-        break;
-    }
     RPC_SWITCH_END();
     return RPC_HANDLED;
 }
@@ -199,8 +205,18 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
                           cObject* context,
                           int rpcId,
                           simtime_t rtt) {
-    if (leaving) return;
     RPC_SWITCH_START(msg);
+    RPC_ON_RESPONSE(Split) {
+        partnerlink_manager.receive_split_response(_SplitResponse);
+        RPC_HANDLED = true;
+        break;
+    }
+    RPC_ON_RESPONSE(TrySplit) {
+        partnerlink_manager.receive_try_split_response(_TrySplitResponse);
+        RPC_HANDLED = true;
+        break;
+    }
+    if (leaving) return;
     RPC_ON_RESPONSE(Inview) {
         membership_manager.receive_inview_ack();
         RPC_HANDLED = true;
@@ -222,16 +238,6 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
         RPC_HANDLED = true;
         break;
     }
-    RPC_ON_RESPONSE(Split) {
-        partnerlink_manager.receive_split_response(_SplitResponse);
-        RPC_HANDLED = true;
-        break;
-    }
-    RPC_ON_RESPONSE(TrySplit) {
-        partnerlink_manager.receive_try_split_response(_TrySplitResponse);
-        RPC_HANDLED = true;
-        break;
-    }
     RPC_SWITCH_END();
 }
 
@@ -239,8 +245,13 @@ void Node::handleRpcTimeout(BaseCallMessage* msg,
                          const TransportAddress& dest,
                          cObject* context, int rpcId,
                          const OverlayKey&) {
-    if (leaving) return;
     RPC_SWITCH_START(msg);
+    RPC_ON_CALL(TrySplit) {
+        partnerlink_manager.timeout_try_split_response(_TrySplitCall);
+        RPC_HANDLED = true;
+        break;
+    }
+    if (leaving) return;
     RPC_ON_CALL(Inview) {
         membership_manager.timeout_inview_ack(_InviewCall);
         RPC_HANDLED = true;
@@ -263,11 +274,6 @@ void Node::handleRpcTimeout(BaseCallMessage* msg,
         RPC_HANDLED = true;
         break;
     }
-    RPC_ON_CALL(TrySplit) {
-        partnerlink_manager.timeout_try_split_response(_TrySplitCall);
-        RPC_HANDLED = true;
-        break;
-    }
     RPC_SWITCH_END();
 }
 
@@ -279,14 +285,13 @@ void Node::handleTimerEvent(cMessage *msg) {
         membership_manager.send_heartbeats();
     } else if (msg == membership_manager.no_heartbeat_timer) {
         membership_manager.no_heartbeat();
-    // TODO: this should be done eventually
-//    } else if (msg == partnership_manager.switch_timer) {
-//        try {
-//            auto to = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads());
-//            partnership_manager.score_and_switch(to.first, to.second.bandwidth);
-//        } catch (const char* c) {
-//            partnership_manager.reset_switch_timer();
-//        }
+    } else if (msg == partnerlink_manager.switch_timer) {
+        try {
+            auto to = membership_manager.random_mcache_entry(partnerlink_manager.get_partner_tads()).first;
+            partnerlink_manager.start_switch_from_mcache(to);
+        } catch (const char* c) {
+            partnerlink_manager.reset_switch_timer();
+        }
     } else if (msg == partnerlink_manager.panic_timeout_timer) {
         partnerlink_manager.timeout_panic();
     } else if (msg == partnerlink_manager.panic_split_timeout_timer) {
@@ -302,8 +307,9 @@ void Node::handleTimerEvent(cMessage *msg) {
             std::map<TransportAddress, std::unordered_set<int>> buffer_maps = buffer.get_origin_buffer_maps(partner_k);
             scheduler.exchange_origin_partners(buffer_maps);
         } else {
+            std::map<TransportAddress, TransportAddress> associations = partnerlink_manager.get_associations();
             std::unordered_set<int> buffer_map = buffer.get_buffer_map();
-            scheduler.exchange_all_partners(partners, buffer_map);
+            scheduler.exchange_all_partners(partners, buffer_map, associations);
         }
     } else if (TotalPartnerFailure* total_partner_failure = dynamic_cast<TotalPartnerFailure*>(msg)) {
         init_partnerlink_manager();
