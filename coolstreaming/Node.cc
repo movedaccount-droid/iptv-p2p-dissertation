@@ -48,7 +48,9 @@ void Node::initializeOverlay(int stage) {
     if (stage != MIN_STAGE_OVERLAY) return;
 
     origin = par("origin");
-    origin_tad = TransportAddress(IPv4Address(par("origin_ip").stringValue()), 1024);
+    bool is_first_origin = this->getThisNode().getIp().str() == par("first_origin_ip").stdstringValue();
+    auto origin_tad_par = is_first_origin ? "second_origin_ip" : "first_origin_ip";
+    origin_tad = TransportAddress(IPv4Address(par(origin_tad_par).stringValue()), 1024);
     heterogeneous_upload = par("heterogeneous_upload");
     arrow_type = par("arrow_type").stdstringValue();
     leaving = false;
@@ -67,11 +69,6 @@ void Node::initializeOverlay(int stage) {
         bandwidth = block_size_bits * par("block_length_s").intValue() * 3;
     }
 
-    partnership_manager.init(this,
-            par("substream_count"),
-            bandwidth,
-            par("switch_interval"),
-            par("M"));
     membership_manager.init(this,
             origin_tad,
             bandwidth,
@@ -82,10 +79,7 @@ void Node::initializeOverlay(int stage) {
             par("M"));
     stream_manager.init(this,
             par("substream_count"),
-            par("block_length_s"),
-            block_size_bits,
-            par("ts"),
-            par("tp"));
+    init_partnerlink_manager();
 }
 
 // called at overlay join time. configures timers
@@ -102,7 +96,24 @@ void Node::joinOverlay() {
 void Node::finishOverlay() {
     leaving = true;
     membership_manager.leave_overlay();
+    partnerlink_manager.leave_overlay();
     setOverlayReady(false);
+}
+
+void Node::init_partnerlink_manager() {
+    partnerlink_manager = PartnerlinkManager();
+    partnerlink_manager.init(this,
+            par("M"),
+            origin ? 0 : par("M"), // so that our origin starts assuming 0 partners as it should
+            par("partnership_timeout_s"),
+            par("panic_timeout_s"),
+            par("panic_split_timeout_s"),
+            par("switch_interval_s"));
+    if (origin) {
+        // join our two origins, so that we have a starter link to split from
+        partnerlink_manager.send_link_origin_nodes_message(origin_tad);
+    }
+    partnerlink_manager.update_display_string();
 }
 
 // rpc handling
@@ -110,29 +121,40 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
     // we have this at the top for optimization
     if (Block* block = dynamic_cast<Block*>(msg)) {
         stream_manager.receive_block_message(block);
-    }
-    if (!leaving) {
-        if (Membership* membership = dynamic_cast<Membership*>(msg)) {
-            bool accepted = membership_manager.receive_membership_message(membership);
-            if (accepted) partnership_manager.insert_new_partner_if_needed(membership->getTad(), membership->getBandwidth());
-        } else if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
-            membership_manager.receive_heartbeat_message(heartbeat);
-        } else if (Partnership* partnership = dynamic_cast<Partnership*>(msg)) {
-            partnership_manager.receive_partnership_message(partnership);
-        } else if (BufferMapMsg* buffer_map_msg = dynamic_cast<BufferMapMsg*>(msg)) {
-            // TODO: we need to reexchange on a timer in new coolstreaming
-            bool was_from_partner = partnership_manager.receive_buffer_map_latest_blocks(buffer_map_msg);
-            if (was_from_partner) stream_manager.receive_buffer_map_subscriptions(buffer_map_msg);
-        }
-    }
-    if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
+    } else if (BlockRequest* block_request = dynamic_cast<BlockRequest*>(msg)) {
+        buffer.receive_block_request_message_and_respond(block_request);
+    } else if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
+        membership_manager.receive_heartbeat_message(heartbeat);
+    } else if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
         membership_manager.receive_unsubscribe_message(unsubscription);
-    } else if (PartnershipEnd* partnership_end = dynamic_cast<PartnershipEnd*>(msg)) {
-        try {
-            auto replacement = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads());
-            partnership_manager.receive_partnership_end_message(partnership_end, replacement.first, replacement.second.bandwidth);
-        } catch (const char* c) {
-            partnership_manager.erase_partner(partnership_end->getFrom());
+    } else if (GossipedUnsubscription* gossiped_unsubscription = dynamic_cast<GossipedUnsubscription*>(msg)) {
+        membership_manager.receive_gossiped_unsubscribe_message(gossiped_unsubscription);
+    } else if (PanicSplitFound* panic_split_found_msg = dynamic_cast<PanicSplitFound*>(msg)) {
+        // this seems a bad idea to allow while leaving but there is a logic:
+        // if we ignore this message the incoming node loses two links and our partner loses one.
+        // if we return it as normal, the incoming node loses the one link that will time out as we leave.
+        // ideally we would define have another return type that handles this case, instructing only
+        // to connect to the first node - but we have a deadline!
+        partnerlink_manager.receive_panic_split_found_message(panic_split_found_msg);
+    } else if (PanicMsg* panic_msg = dynamic_cast<PanicMsg*>(msg)) {
+        // this and panic_split have contained cases for leaving nodes
+        partnerlink_manager.receive_panic_message(panic_msg);
+    } else if (PanicSplitMsg* panic_split_msg = dynamic_cast<PanicSplitMsg*>(msg)) {
+        partnerlink_manager.receive_panic_split_message(panic_split_msg);
+    } else if (!leaving) {
+        if (Membership* membership = dynamic_cast<Membership*>(msg)) {
+            membership_manager.receive_membership_message(membership);
+        } else if (LinkOriginNodes* link_origin_nodes = dynamic_cast<LinkOriginNodes*>(msg)) {
+            partnerlink_manager.receive_link_origin_nodes_message(link_origin_nodes);
+        } else if (BufferMap* buffer_map = dynamic_cast<BufferMap*>(msg)) {
+            partnerlink_manager.receive_buffer_map_message(buffer_map);
+            // request from all buffer maps after each buffer map reception
+            auto partners = partnerlink_manager.get_partners();
+            auto expected_set = buffer.get_expected_set();
+            auto playout_index = buffer.get_playout_index();
+            scheduler.request_buffer_map_blocks(expected_set, partners, playout_index);
+        } else if (Recover* recover = dynamic_cast<Recover*>(msg)) {
+            partnerlink_manager.receive_recover_message(recover);
         }
     }
 
@@ -140,8 +162,18 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
 }
 
 bool Node::handleRpcCall(BaseCallMessage* msg) {
-    if (leaving) return true;
     RPC_SWITCH_START(msg);
+    RPC_ON_CALL(Split) {
+        partnerlink_manager.receive_split_message_and_try_split_with_partner(_SplitCall);
+        RPC_HANDLED = true;
+        break;
+    }
+    RPC_ON_CALL(TrySplit) {
+        partnerlink_manager.receive_try_split_message_and_try_split(_TrySplitCall);
+        RPC_HANDLED = true;
+        break;
+    }
+    if (leaving) return true;
     RPC_ON_CALL(Inview) {
         membership_manager.receive_inview_message_and_respond(_InviewCall);
         RPC_HANDLED = true;
@@ -153,8 +185,7 @@ bool Node::handleRpcCall(BaseCallMessage* msg) {
         break;
     }
     RPC_ON_CALL(GetCandidatePartners) {
-        std::map<TransportAddress, double> candidates = membership_manager.get_partner_candidates(_GetCandidatePartnersCall->getFrom(), partnership_manager.partners.size());
-        partnership_manager.receive_get_candidate_partners_message_and_respond(_GetCandidatePartnersCall, candidates);
+        membership_manager.receive_get_candidate_partners_message_and_respond(_GetCandidatePartnersCall);
         RPC_HANDLED = true;
         break;
     }
@@ -166,8 +197,18 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
                           cObject* context,
                           int rpcId,
                           simtime_t rtt) {
-    if (leaving) return;
     RPC_SWITCH_START(msg);
+    RPC_ON_RESPONSE(Split) {
+        partnerlink_manager.receive_split_response(_SplitResponse);
+        RPC_HANDLED = true;
+        break;
+    }
+    RPC_ON_RESPONSE(TrySplit) {
+        partnerlink_manager.receive_try_split_response(_TrySplitResponse);
+        RPC_HANDLED = true;
+        break;
+    }
+    if (leaving) return;
     RPC_ON_RESPONSE(Inview) {
         membership_manager.receive_inview_ack();
         RPC_HANDLED = true;
@@ -175,13 +216,17 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
     }
     RPC_ON_RESPONSE(GetDeputy) {
         stream_manager.start(_GetDeputyResponse->getBlock_index());
-        partnership_manager.get_candidate_partners_from_deputy(_GetDeputyResponse->getDeputy());
-        membership_manager.receive_get_deputy_response(_GetDeputyResponse);
+        if (partnerlink_manager.needs_deputy) {
+            partnerlink_manager.send_get_candidate_partners_message(_GetDeputyResponse->getDeputy());
+        }
+        if (membership_manager.needs_deputy) {
+            membership_manager.receive_get_deputy_response(_GetDeputyResponse);
+        }
         RPC_HANDLED = true;
         break;
     }
     RPC_ON_RESPONSE(GetCandidatePartners) {
-        partnership_manager.receive_get_candidate_partners_response(_GetCandidatePartnersResponse);
+        partnerlink_manager.receive_get_candidate_partners_response(_GetCandidatePartnersResponse);
         RPC_HANDLED = true;
         break;
     }
@@ -192,8 +237,13 @@ void Node::handleRpcTimeout(BaseCallMessage* msg,
                          const TransportAddress& dest,
                          cObject* context, int rpcId,
                          const OverlayKey&) {
-    if (leaving) return;
     RPC_SWITCH_START(msg);
+    RPC_ON_CALL(TrySplit) {
+        partnerlink_manager.timeout_try_split_response(_TrySplitCall);
+        RPC_HANDLED = true;
+        break;
+    }
+    if (leaving) return;
     RPC_ON_CALL(Inview) {
         membership_manager.timeout_inview_ack(_InviewCall);
         RPC_HANDLED = true;
@@ -211,6 +261,11 @@ void Node::handleRpcTimeout(BaseCallMessage* msg,
         RPC_HANDLED = true;
         break;
     }
+    RPC_ON_CALL(Split) {
+        partnerlink_manager.timeout_split_response(_SplitCall);
+        RPC_HANDLED = true;
+        break;
+    }
     RPC_SWITCH_END();
 }
 
@@ -222,20 +277,31 @@ void Node::handleTimerEvent(cMessage *msg) {
         membership_manager.send_heartbeats();
     } else if (msg == membership_manager.no_heartbeat_timer) {
         membership_manager.no_heartbeat();
-    } else if (msg == partnership_manager.switch_timer) {
+    } else if (msg == partnerlink_manager.switch_timer) {
         try {
-            auto to = membership_manager.random_mcache_entry(partnership_manager.get_partner_tads());
-            partnership_manager.score_and_switch(to.first, to.second.bandwidth);
+            auto to = membership_manager.random_mcache_entry(partnerlink_manager.get_partner_tads()).first;
+            partnerlink_manager.start_switch_from_mcache(to);
         } catch (const char* c) {
-            partnership_manager.reset_switch_timer();
+            partnerlink_manager.reset_switch_timer();
         }
     } else if (msg == stream_manager.playout_timer) {
         stream_manager.playout();
     } else if (msg == stream_manager.exchange_timer) {
-        std::map<TransportAddress, std::vector<int>> latest_blocks = partnership_manager.get_partner_latest_blocks();
+        std::map<TransportAddress, TransportAddress> associations = partnerlink_manager.get_associations();
+        std::map<TransportAddress, std::vector<int>> latest_blocks = partnerlink_manager.get_partner_latest_blocks();
         // TODO: possibly include k-order balancing for origin node
         // TODO: acutally handle origin node having all blocks all the time
-        stream_manager.reselect_partners_and_exchange(latest_blocks);
+        stream_manager.reselect_parents_and_exchange(latest_blocks, associations);
+    } else if (msg == partnerlink_manager.panic_timeout_timer) {
+        partnerlink_manager.timeout_panic();
+    } else if (msg == partnerlink_manager.panic_split_timeout_timer) {
+        partnerlink_manager.timeout_panic_split();
+    } else if (Failure* failure = dynamic_cast<Failure*>(msg)) {
+        partnerlink_manager.read_failure_timer_and_fail_connection(failure);
+    } else if (TotalPartnerFailure* total_partner_failure = dynamic_cast<TotalPartnerFailure*>(msg)) {
+        init_partnerlink_manager();
+        membership_manager.send_get_deputy_message(origin_tad);
+        cancelAndDelete(msg);
     }
 }
 

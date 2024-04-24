@@ -91,20 +91,92 @@ packet GetCandidatePartnersResponse extends BaseResponseMessage {
  	BandwidthMap candidates;   
 }
 
-// coolstreaming partnership initiation/ending
-packet Partnership extends BaseOverlayMessage {
+// novel "interlink" algorithm partnership split messages
+
+packet LinkOriginNodes extends BaseOverlayMessage {
+ 	TransportAddress origin;
+}
+
+enum SplitResult {
+	SUCCESS = 0;
+	FAILED = 1;
+}
+
+packet SplitCall extends BaseCallMessage {
+    int uuid; // to associate TrySplit with this SplitCall later
+    TransportAddress into;
+}
+
+packet SplitResponse extends BaseResponseMessage {
+    int uuid;
+    int result enum (SplitResult);
+    TransportAddress first_node;
+    TransportAddress second_node;
+}
+
+packet TrySplitCall extends BaseCallMessage {
+    int uuid;
+    TransportAddress into;
+    TransportAddress from;
+}
+
+packet TrySplitResponse extends BaseResponseMessage {
+    int uuid;
+    int result enum (SplitResult);
+    TransportAddress into;
+    TransportAddress from;
+}
+
+packet Leave extends BaseOverlayMessage {
 	TransportAddress from;
-	double bandwidth;
 }
 
-packet PartnershipEnd extends BaseOverlayMessage {
-    TransportAddress from;
+packet PanicMsg extends BaseOverlayMessage {
+ 	TransportAddress panicking;
+ 	TransportAddress last_hop;
+    simtime_t send_time;
 }
 
-// new coolstreaming buffermap exchange
-packet BufferMapMsg extends BaseOverlayMessage {
+enum LastHopOpinion {
+ 	CAN_HELP = 0;
+ 	CANT_HELP = 1;   
+}
+
+packet PanicSplitMsg extends BaseOverlayMessage {
+    int last_hop_opinion enum (LastHopOpinion);
+    TransportAddress panicking;
+    TransportAddress last_hop;
+    simtime_t send_time;
+}
+
+packet PanicSplitFound extends BaseOverlayMessage {
+    TransportAddress panicking;
+    TransportAddress last_hop;
+}
+
+packet Recover extends BaseOverlayMessage {
+ 	TransportAddress helper;   
+}
+
+// self-message to track when to fail a partner connection after not receiving buffermaps for some period
+message Failure {
+	TransportAddress failed;   
+}
+
+// self-message to call when the node's partner network is completely collapsed and we should start over
+message TotalPartnerFailure {}
+
+// coolstreaming buffermap exchange
+packet BufferMap extends BaseOverlayMessage {
     TransportAddress from;
- 	BufferMap buffer_map;
+    TransportAddress associate;
+ 	BM buffer_map;
+}
+
+// coolstreaming block request
+packet BlockRequest extends BaseOverlayMessage {
+    TransportAddress from;
+ 	BM blocks;
 }
 
 // new coolstreaming block push
@@ -113,4 +185,18 @@ packet BufferMapMsg extends BaseOverlayMessage {
 packet Block extends BaseOverlayMessage {
  	int index;
  	bool should_trigger_send;
+
+// active_node finished downloading self-message/timer
+message ExchangeAfterDownload {
+	TransportAddress finished;   
+}
+
+// TODO: remove these
+packet Partnership extends BaseOverlayMessage {
+    TransportAddress from;
+    int bandwidth;
+}
+
+packet PartnershipEnd extends BaseOverlayMessage {
+    TransportAddress from;
 }

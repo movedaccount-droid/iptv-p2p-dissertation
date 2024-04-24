@@ -57,8 +57,8 @@ public:
     // GET CANDIDATE PARTNERS MESSAGES // TCP
     // get list of possible starting partners from the deputy
     void send_get_candidate_partners_message(TransportAddress tad);
-    void receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call, std::map<TransportAddress, double> from_mCache);
-    void timeout_get_candidate_partners_response(GetCandidatePartnersCall* get_candidate_partners_call);
+    // std::map<TransportAddress, double> receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call) => MembershipManager.h
+    // on timeout we get a new deputy and retry: void send_get_deputy_message(TransportAddress tad) => MembershipManager.h
     void receive_get_candidate_partners_response(GetCandidatePartnersResponse* get_candidate_partners_response);
 
     // PARTNERSHIP MESSAGES // UDP

@@ -28,12 +28,16 @@ class Node;
 class MembershipManager {
 
 private:
+
+    // variables
     Node* parent; // parent
     std::map<TransportAddress, mCacheEntry> mCache; // membership cache
     std::set<TransportAddress> inview; // inview listing
     std::unordered_map<int, int> uuidCounts; // message uuid counting
-    TransportAddress origin_tad; // tad to contact to reach the origin
     int seq_num; // sequence number for next message
+
+    // params
+    TransportAddress origin_tad; // tad to contact to reach the origin
     double bandwidth; // bandwidth for this node
     int c; // SCAMP constant determining proportion of tolerated failures
     int scamp_resubscription_interval; // delay before resubscriptions, sub ttl
@@ -42,6 +46,9 @@ private:
     int M; // target number of partners, needed to produce candidate_partners
 
 public:
+
+    // variables
+    bool needs_deputy; // if we would like to be informed of deputies from any next get_deputies response
 
     // timers, public for checking in parent
     cMessage *resubscription_timer;
@@ -61,7 +68,7 @@ public:
     // utility functions
     std::pair<const TransportAddress, mCacheEntry> random_mcache_entry(TransportAddress exclude = TransportAddress());
     std::pair<const TransportAddress, mCacheEntry> random_mcache_entry(std::set<TransportAddress> exclude);
-    std::map<TransportAddress, double> get_partner_candidates(TransportAddress exclude, int this_node_partner_count);
+    void receive_get_candidate_partners_message_and_respond(GetCandidatePartnersCall* get_candidate_partners_call);
     void insert_mcache_entry(TransportAddress tad, int seq_num, int num_partner, simtime_t ttl, double bandwidth);
     void remove_mcache_entry(TransportAddress tad);
 
