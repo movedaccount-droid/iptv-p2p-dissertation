@@ -26,7 +26,7 @@ public:
     simtime_t start;
     bool panicking;
     double bandwidth;
-    std::unordered_set<int> buffer_map;
+    std::vector<int> latest_blocks;
     TransportAddress associate;
 
     double score() const {
@@ -40,13 +40,13 @@ public:
 
     friend bool operator<(const PartnerlinkEntry& l, const PartnerlinkEntry& r);
 
-    PartnerlinkEntry(bool panic = false):
+    PartnerlinkEntry(int substream_count, bool panic = false):
         sent(0),
         retrieved(0),
         start(simTime()),
         panicking(panic),
         bandwidth(3000000),
-        buffer_map(),
+        latest_blocks(substream_count, 0),
         associate()
     {};
 

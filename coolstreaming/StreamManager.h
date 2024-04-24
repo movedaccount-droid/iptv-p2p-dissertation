@@ -28,43 +28,49 @@ typedef std::pair<std::vector<int>, std::map<int, int>> BufferMap;
 class Node;
 class StreamManager {
 public:
+    // params
     Node* parent;
-    std::vector<std::deque<int>> buffers; // one queue for each buffer. we don't need to sim the cache buffer
-    std::vector<std::map<TransportAddress, int>> substream_children; // currently active children in each substream, and their current catch-up position
-    std::vector<TransportAddress> substream_parents; // map of substream to partner
-
     int substream_count; // number of substreams
+    int exchange_interval_s; // time between buffermap sends
+    int buffer_size; // max length of the buffer. this should only be needed by the origin since nodes are semi-synchronized
     int block_length_s; // block length in seconds
     int block_size_bits; // block size in bits
     int ts; // constant for maximum gap within a node's substreams
     int tp; // constant for maximum gap between a node's partners
 
+    // vars
+    std::vector<std::deque<int>> buffers; // one queue for each buffer. we don't need to sim the cache buffer
+    std::vector<std::map<TransportAddress, int>> substream_children; // currently active children in each substream, and their current catch-up position
+    std::vector<TransportAddress> substream_parents; // map of substream to partner
     bool playing; // if the stream is playing
     int playout_index; // next block to be played by playout
 
+    // timers
     cMessage* exchange_timer;
     cMessage* playout_timer;
 
     // lifecycle
-    void init(Node* p, int sc, int bls, int bsb, int ts_in, int tp_in);
+    void init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in);
     void start(int start_index);
-    void reselect_partners_and_exchange(std::map<TransportAddress, std::vector<int>> partner_latest_blocks);
+    void reselect_parents_and_exchange_partners(std::map<TransportAddress, std::vector<int>> parent_latest_blocks,
+            std::map<TransportAddress, TransportAddress> associations, bool panicking);
+    void reselect_parents(std::map<TransportAddress, std::vector<int>> parent_latest_blocks);
     void playout();
     void end();
 
     // utility
     int get_next_needed_block(int substream);
     int get_playout_index();
-    BufferMap get_buffer_map(TransportAddress partner);
+    BufferMap get_buffer_map(TransportAddress parent);
     std::vector<int> get_latest_blocks(); // returns first vector for buffer map
     std::map<int, int> get_subscription_map(TransportAddress partner); // second vector for buffer map
-    bool is_partner_failing(TransportAddress partner, int j, std::map<TransportAddress, std::vector<int>> partner_latest_blocks);
+    bool is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks);
 
     // BUFFER_MAP // UDP
     // exchange buffer_maps with peers to update local view of blocks
     // remember: exchange doesn't mean tit-for-tat!! the two nodes
     // send each other the map in their own time, by their own timer
-    void send_buffer_map_message(TransportAddress partner, BufferMap buffer_map);
+    void send_buffer_map_message(TransportAddress partner, TransportAddress associate, bool panicking);
     // bool receive_buffer_map_latest_blocks(BufferMapMsg* buffer_map_msg) => PartnershipManager.h
     void receive_buffer_map_subscriptions(BufferMapMsg* buffer_map_msg);
 

@@ -166,17 +166,12 @@ message Failure {
 // self-message to call when the node's partner network is completely collapsed and we should start over
 message TotalPartnerFailure {}
 
-// coolstreaming buffermap exchange
-packet BufferMap extends BaseOverlayMessage {
+// new coolstreaming buffermap exchange, extended with partnerlink data
+packet BufferMapMsg extends BaseOverlayMessage {
     TransportAddress from;
+ 	BufferMap buffer_map;
     TransportAddress associate;
- 	BM buffer_map;
-}
-
-// coolstreaming block request
-packet BlockRequest extends BaseOverlayMessage {
-    TransportAddress from;
- 	BM blocks;
+    bool panicking;
 }
 
 // new coolstreaming block push
@@ -185,6 +180,7 @@ packet BlockRequest extends BaseOverlayMessage {
 packet Block extends BaseOverlayMessage {
  	int index;
  	bool should_trigger_send;
+}
 
 // active_node finished downloading self-message/timer
 message ExchangeAfterDownload {

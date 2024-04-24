@@ -19,7 +19,6 @@
 #include <unordered_set>
 
 #include "../coolstreaming/MembershipManager.h"
-#include "../coolstreaming/PartnershipManager.h"
 #include "../coolstreaming/StreamManager.h"
 #include "../coolstreaming/PartnerlinkManager.h"
 #include "common/BaseOverlay.h"

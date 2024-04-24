@@ -28,42 +28,63 @@
 parent->scheduleAt(simTime() + offset, timer)
 
 // lifecycle
-void StreamManager::init(Node* p, int sc, int bls, int bsb, int ts_in, int tp_in) {
+void StreamManager::init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in) {
     parent = p;
     substream_count = sc;
+    exchange_interval_s = eis;
+    buffer_size = bs;
     block_length_s = bls;
     block_size_bits = bsb;
     playing = false;
-    playout_index = 0;
+    playout_index = parent->origin ? 1000 : 0; // we act as though the stream has been playing a while
     ts = ts_in;
     tp = tp_in;
-    buffers = std::vector<std::deque<int>>(substream_count, std::deque<int>());
     substream_children = std::vector<std::map<TransportAddress, int>>(substream_count, std::map<TransportAddress, int>());
     substream_parents = std::vector<TransportAddress>(substream_count, TransportAddress());
+
+    buffers = std::vector<std::deque<int>>(substream_count, std::deque<int>());
+    if (parent->origin) {
+        // origin buffers are always filled
+        for (int block = playout_index; block < playout_index + buffer_size; ++block) {
+            buffers[block % substream_count].push_back(block);
+        }
+    }
 }
 
 void StreamManager::start(int start_index) {
     playout_index = start_index;
     playing = true;
+    setOrReplace(exchange_timer, "exchange_timer", exchange_interval_s);
     playout();
 }
 
-void StreamManager::reselect_partners_and_exchange(std::map<TransportAddress, std::vector<int>> partner_latest_blocks) {
+void StreamManager::reselect_parents_and_exchange_partners(std::map<TransportAddress, std::vector<int>> parent_latest_blocks,
+        std::map<TransportAddress, TransportAddress> associations, bool panicking) {
+    parent->getParentModule()->getParentModule()->bubble(std::string("exchanging...").c_str());
+    if (!parent->origin) {
+        reselect_parents(parent_latest_blocks);
+    }
+    for (auto partner : associations) {
+        send_buffer_map_message(partner.first, partner.second, panicking);
+    }
+    setOrReplace(exchange_timer, "exchange_timer", exchange_interval_s);
+}
+
+void StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>> parent_latest_blocks) {
     for (int ss = 0; ss < substream_count; ++ss) {
         TransportAddress parent = substream_parents[ss];
-        if (parent.isUnspecified() || is_partner_failing(parent, ss, partner_latest_blocks)) {
-            // ensure our selection is random
+        if (parent.isUnspecified() || is_parent_failing(parent, ss, parent_latest_blocks)) {
+            // get random parent as replacement
             std::vector<TransportAddress> random_candidate;
-            for (auto candidate : partner_latest_blocks) {
+            for (auto candidate : parent_latest_blocks) {
                 random_candidate.push_back(candidate.first);
             }
             std::random_device ran;
             std::mt19937 rng(ran());
             std::shuffle(random_candidate.begin(), random_candidate.end(), rng);
-
             for (TransportAddress candidate : random_candidate) {
-                if (!is_partner_failing(candidate, ss, partner_latest_blocks)) {
-
+                if (!is_parent_failing(candidate, ss, parent_latest_blocks)) {
+                    substream_parents[ss] = candidate;
                     break;
                 }
             }
@@ -73,19 +94,26 @@ void StreamManager::reselect_partners_and_exchange(std::map<TransportAddress, st
 
 void StreamManager::playout() {
     setOrReplace(playout_timer, "playout_timer", block_length_s);
-    if (buffers[playout_index % substream_count].front() == playout_index) {
+    if (parent->origin) {
         buffers[playout_index % substream_count].pop_front();
-        // TODO: and measure stats
+        buffers[playout_index % substream_count].push_back(buffers[playout_index % substream_count].back() + substream_count);
     } else {
-        // TODO: missed playout... blahhhh atasts
+        // TODO: nodes probably can get Very Fucked Up in bad cases. but we might not have the deadline space to fix that....
+        if (buffers[playout_index % substream_count].front() == playout_index) {
+            buffers[playout_index % substream_count].pop_front();
+            // TODO: and measure stats
+        } else {
+            parent->getParentModule()->getParentModule()->bubble(std::string("[!] missed playout...").c_str());
+            // TODO: missed playout... blahhhh atasts
+        }
     }
     playout_index++;
-    if (playout_timer != NULL) parent->cancelAndDelete(playout_timer);
 }
 
 void StreamManager::end() {
     // TODO: commit stats
     playing = false;
+    if (exchange_timer != NULL) parent->cancelAndDelete(exchange_timer);
 }
 
 // utility
@@ -112,7 +140,11 @@ BufferMap StreamManager::get_buffer_map(TransportAddress partner) {
 std::vector<int> StreamManager::get_latest_blocks() {
     std::vector<int> latest_blocks;
     for (int ss = 0; ss < substream_count; ++ss) {
-        latest_blocks.push_back(buffers[ss].back());
+        if (buffers[ss].size() > 0) {
+            latest_blocks.push_back(buffers[ss].back());
+        } else {
+            latest_blocks.push_back(-100000);
+        }
     }
     return latest_blocks;
 }
@@ -120,16 +152,16 @@ std::vector<int> StreamManager::get_latest_blocks() {
 std::map<int, int> StreamManager::get_subscription_map(TransportAddress partner) {
     std::map<int, int> subscription_map;
     for (int ss = 0; ss < substream_count; ++ss) {
-        if (substream_parents[ss] == partner) {
+        if (!substream_parents[ss].isUnspecified() && substream_parents[ss] == partner) {
             subscription_map.insert({ss, get_next_needed_block(ss)});
         }
     }
     return subscription_map;
 }
 
-bool StreamManager::is_partner_failing(TransportAddress partner, int j, std::map<TransportAddress, std::vector<int>> partner_latest_blocks) {
+bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks) {
     // check if parent is failing
-    int hsjp = partner_latest_blocks[partner][j];
+    int hsjp = parent_latest_blocks[parent][j];
 
     // inequality 1: limiting maximum fall-behind on single substream within node
     std::set<int> abs_hsia_hsjp;
@@ -147,9 +179,9 @@ bool StreamManager::is_partner_failing(TransportAddress partner, int j, std::map
 
     // inequality 2: limiting maximum fall-behind on parent substream from highest known block
     std::set<int> highest_per_partner;
-    for (auto partner : partner_latest_blocks) {
-        if (partner.second.size() == 0) continue;
-        highest_per_partner.insert(*max_element(partner.second.begin(), partner.second.end()));
+    for (auto parent : parent_latest_blocks) {
+        if (parent.second.size() == 0) continue;
+        highest_per_partner.insert(*max_element(parent.second.begin(), parent.second.end()));
     }
     if (highest_per_partner.size() == 0) {
         return true;
@@ -165,10 +197,12 @@ bool StreamManager::is_partner_failing(TransportAddress partner, int j, std::map
 // exchange buffer_maps with peers to update local view of blocks
 // remember: exchange doesn't mean tit-for-tat!! the two nodes
 // send each other the map in their own time, by their own timer
-void StreamManager::send_buffer_map_message(TransportAddress partner, BufferMap buffer_map) {
+void StreamManager::send_buffer_map_message(TransportAddress partner, TransportAddress associate, bool panicking) {
     BufferMapMsg* buffer_map_msg = new BufferMapMsg();
     buffer_map_msg->setFrom(parent->getThisNode());
-    buffer_map_msg->setBuffer_map(buffer_map);
+    buffer_map_msg->setBuffer_map(get_buffer_map(partner));
+    buffer_map_msg->setAssociate(associate);
+    buffer_map_msg->setPanicking(panicking);
     parent->sendMessageToUDP(partner, buffer_map_msg);
 }
 
@@ -208,16 +242,16 @@ void StreamManager::receive_block_message(Block* block) {
     // when we do this, that block would send four blocks, eight, sixteen etc. in turn
     // to avoid this we only allow the second block to trigger forwarding; the following node thus only sends two blocks
     if (block->getShould_trigger_send() && substream.size() > 0) {
-        for (auto child_entry : substream_children[substream_id]) {
+        for (auto child_catchup_position : substream_children[substream_id]) {
             std::vector<int> to_send;
 
-            while (to_send.size() < 2 && std::find(substream.begin(), substream.end(), child_entry.second) != substream.end()) {
-                to_send.push_back(child_entry.second);
-                child_entry.second += substream_count;
+            while (to_send.size() < 2 && std::find(substream.begin(), substream.end(), child_catchup_position.second) != substream.end()) {
+                to_send.push_back(child_catchup_position.second);
+                child_catchup_position.second += substream_count;
             }
 
             for (auto it = to_send.begin(); it != to_send.end(); ++it) {
-                send_block_message(child_entry.first, *it, it == to_send.end());
+                send_block_message(child_catchup_position.first, *it, it == to_send.end());
             }
         }
     }

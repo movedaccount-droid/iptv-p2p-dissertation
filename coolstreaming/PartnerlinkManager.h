@@ -43,6 +43,7 @@ public:
     simtime_t panic_split_timeout; // time-to-live for panicsplit messages traversing the network
     simtime_t switch_interval; // time between switching to a new random peer from our mcache
     bool needs_deputy; // if we would like to be informed of deputies from any next get_deputies response
+    int substream_count; // to build the default partnerlinkentry
 
     // vars
     std::string display_name; // used to set display name to Mc
@@ -69,13 +70,14 @@ public:
     std::map<TransportAddress, PartnerlinkEntry> get_partners();
     std::set<TransportAddress> get_partner_tads();
     std::vector<TransportAddress> get_partner_k();
+    std::map<TransportAddress, std::vector<int>> get_partner_latest_blocks();
     std::map<TransportAddress, TransportAddress> get_associations();
     void insert_partner_to_partners(TransportAddress partner);
     void remove_partner_from_partners(TransportAddress partner);
     bool is_timed_out(simtime_t origin_time, simtime_t timeout);
 
     // lifecycle
-    void init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis);
+    void init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc);
 
     // failure timers and buffermap timeout
     void set_failure_timer(TransportAddress partner);
@@ -158,7 +160,7 @@ public:
 
     // BUFFER_MAP // UDP
     // receiving and caching buffermap-adjacent stats for our partners
-    void receive_buffer_map_message(BufferMap* buffer_map);
+    void receive_buffer_map_message(BufferMapMsg* buffer_map);
 
     PartnerlinkManager();
     virtual ~PartnerlinkManager();

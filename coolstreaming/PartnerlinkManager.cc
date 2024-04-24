@@ -29,7 +29,7 @@ parent->scheduleAt(simTime() + offset, timer)
 
 void PartnerlinkManager::count(int increment) {
     count_without_checking(increment);
-    int temp = Mc; // breakpoint here to capture all Mc changes and their call stack
+    // int temp = Mc; // breakpoint here to capture all Mc changes and their call stack
     check_panic_status();
 }
 
@@ -109,6 +109,13 @@ std::vector<TransportAddress> PartnerlinkManager::get_partner_k() {
     return partner_k;
 }
 
+std::map<TransportAddress, std::vector<int>> PartnerlinkManager::get_partner_latest_blocks() {
+    std::map<TransportAddress, std::vector<int>> latest_blocks;
+    for (auto partner : partners) {
+        latest_blocks.insert({partner.first, partner.second.latest_blocks});
+    }
+    return latest_blocks;
+}
 
 std::map<TransportAddress, TransportAddress> PartnerlinkManager::get_associations() {
     // TODO: this is a basic implementation and will later be replaced
@@ -151,7 +158,7 @@ void PartnerlinkManager::insert_partner_to_partners(TransportAddress partner) {
             .append(partner.getIp().str())
             .append(" but we already know it!").c_str());
     } else {
-        partners.insert({partner, false});
+        partners.insert({partner, PartnerlinkEntry(substream_count, false)});
         parent->set_arrow(partner, "PARTNER", true);
         parent->getParentModule()->getParentModule()->bubble(std::string("partnered with node ")
             .append(partner.getIp().str())
@@ -183,7 +190,7 @@ bool PartnerlinkManager::is_timed_out(simtime_t origin_time, simtime_t timeout) 
 }
 
 // lifecycle
-void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis) {
+void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc) {
     parent = p;
     M = m;
     Mc = mc;
@@ -191,6 +198,7 @@ void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, 
     panic_timeout = SimTime(pants, SIMTIME_S);
     panic_split_timeout = SimTime(pansts, SIMTIME_S);
     switch_interval = SimTime(sis, SIMTIME_S);
+    substream_count = ssc;
     needs_deputy = !parent->origin;
 }
 
@@ -214,6 +222,7 @@ void PartnerlinkManager::reset_failure_timer(TransportAddress partner) {
 }
 
 void PartnerlinkManager::read_failure_timer_and_fail_connection(Failure* failure) {
+    parent->getParentModule()->getParentModule()->bubble(std::string("timed out partner ").append(failure->getFailed().getIp().str()).append("...").c_str());
     recover_from_leaving_partner(failure->getFailed());
 }
 
@@ -225,7 +234,7 @@ void PartnerlinkManager::recover_from_leaving_partner(TransportAddress partner) 
     // in most cases in substantial networks this means nodes do not have to gossip any messages
     // to recover from a node leaving, cleanly or otherwise.
 
-    TransportAddress associate = partners[partner].associate;
+    TransportAddress associate = partners.at(partner).associate;
     std::cout << parent->getThisNode().getIp().str() << ": partner " << partner.getIp().str() << " left, associate " << associate.getIp().str() << std::endl;
     parent->getParentModule()->getParentModule()->bubble(std::string("partner ")
         .append(partner.getIp().str())
@@ -356,7 +365,7 @@ void PartnerlinkManager::finalize_mcache_switch(int uuid) {
     try {
         if (has_associate.size() > 0) {
             TransportAddress replaced = get_random_in(has_associate);
-            leave_remove(partners[replaced].associate);
+            leave_remove(partners.at(replaced).associate);
             leave_remove(replaced);
         } else {
             TransportAddress replaced = get_random_partner();
@@ -543,6 +552,7 @@ void PartnerlinkManager::send_leave_message(TransportAddress tad) {
 }
 
 void PartnerlinkManager::receive_leave_message(Leave* leave) {
+    parent->getParentModule()->getParentModule()->bubble(std::string("partner ").append(leave->getFrom().getIp().str()).append(" leaving...").c_str());
     recover_from_leaving_partner(leave->getFrom());
 }
 
@@ -686,10 +696,10 @@ void PartnerlinkManager::receive_recover_message(Recover* recover) {
 
 // BUFFER_MAP // UDP
 // receiving and caching buffermap-adjacent stats for our partners
-void PartnerlinkManager::receive_buffer_map_message(BufferMap* buffer_map) {
+void PartnerlinkManager::receive_buffer_map_message(BufferMapMsg* buffer_map) {
     auto partner = partners.find(buffer_map->getFrom());
     if (partner != partners.end()) {
-        partner->second.buffer_map = buffer_map->getBuffer_map();
+        partner->second.latest_blocks = buffer_map->getBuffer_map().first;
         partner->second.associate = buffer_map->getAssociate();
         reset_failure_timer(buffer_map->getFrom());
     }

@@ -79,6 +79,12 @@ void Node::initializeOverlay(int stage) {
             par("M"));
     stream_manager.init(this,
             par("substream_count"),
+            par("exchange_interval_s"),
+            par("buffer_size"),
+            par("block_length_s"),
+            block_size_bits,
+            par("ts"),
+            par("tp"));
     init_partnerlink_manager();
 }
 
@@ -108,7 +114,8 @@ void Node::init_partnerlink_manager() {
             par("partnership_timeout_s"),
             par("panic_timeout_s"),
             par("panic_split_timeout_s"),
-            par("switch_interval_s"));
+            par("switch_interval_s"),
+            par("substream_count"));
     if (origin) {
         // join our two origins, so that we have a starter link to split from
         partnerlink_manager.send_link_origin_nodes_message(origin_tad);
@@ -121,16 +128,12 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
     // we have this at the top for optimization
     if (Block* block = dynamic_cast<Block*>(msg)) {
         stream_manager.receive_block_message(block);
-    } else if (BlockRequest* block_request = dynamic_cast<BlockRequest*>(msg)) {
-        buffer.receive_block_request_message_and_respond(block_request);
     } else if (Heartbeat* heartbeat = dynamic_cast<Heartbeat*>(msg)) {
         membership_manager.receive_heartbeat_message(heartbeat);
     } else if (Unsubscription* unsubscription = dynamic_cast<Unsubscription*>(msg)) {
         membership_manager.receive_unsubscribe_message(unsubscription);
-    } else if (GossipedUnsubscription* gossiped_unsubscription = dynamic_cast<GossipedUnsubscription*>(msg)) {
-        membership_manager.receive_gossiped_unsubscribe_message(gossiped_unsubscription);
     } else if (PanicSplitFound* panic_split_found_msg = dynamic_cast<PanicSplitFound*>(msg)) {
-        // this seems a bad idea to allow while leaving but there is a logic:
+        // this seems a bad idea to allow while leaving but there is logic:
         // if we ignore this message the incoming node loses two links and our partner loses one.
         // if we return it as normal, the incoming node loses the one link that will time out as we leave.
         // ideally we would define have another return type that handles this case, instructing only
@@ -146,13 +149,8 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
             membership_manager.receive_membership_message(membership);
         } else if (LinkOriginNodes* link_origin_nodes = dynamic_cast<LinkOriginNodes*>(msg)) {
             partnerlink_manager.receive_link_origin_nodes_message(link_origin_nodes);
-        } else if (BufferMap* buffer_map = dynamic_cast<BufferMap*>(msg)) {
+        } else if (BufferMapMsg* buffer_map = dynamic_cast<BufferMapMsg*>(msg)) {
             partnerlink_manager.receive_buffer_map_message(buffer_map);
-            // request from all buffer maps after each buffer map reception
-            auto partners = partnerlink_manager.get_partners();
-            auto expected_set = buffer.get_expected_set();
-            auto playout_index = buffer.get_playout_index();
-            scheduler.request_buffer_map_blocks(expected_set, partners, playout_index);
         } else if (Recover* recover = dynamic_cast<Recover*>(msg)) {
             partnerlink_manager.receive_recover_message(recover);
         }
@@ -287,11 +285,12 @@ void Node::handleTimerEvent(cMessage *msg) {
     } else if (msg == stream_manager.playout_timer) {
         stream_manager.playout();
     } else if (msg == stream_manager.exchange_timer) {
-        std::map<TransportAddress, TransportAddress> associations = partnerlink_manager.get_associations();
         std::map<TransportAddress, std::vector<int>> latest_blocks = partnerlink_manager.get_partner_latest_blocks();
+        std::map<TransportAddress, TransportAddress> associations = partnerlink_manager.get_associations();
+        bool panicking = partnerlink_manager.get_panic_status() != Nominal;
         // TODO: possibly include k-order balancing for origin node
         // TODO: acutally handle origin node having all blocks all the time
-        stream_manager.reselect_parents_and_exchange(latest_blocks, associations);
+        stream_manager.reselect_parents_and_exchange_partners(latest_blocks, associations, panicking);
     } else if (msg == partnerlink_manager.panic_timeout_timer) {
         partnerlink_manager.timeout_panic();
     } else if (msg == partnerlink_manager.panic_split_timeout_timer) {

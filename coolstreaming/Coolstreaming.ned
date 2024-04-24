@@ -41,7 +41,7 @@ simple Node extends BaseOverlay
    	 	double panic_split_timeout_s; // duration before gossiped panic_split is invalidated
    	 	double switch_interval_s; // delay between scoring and trying out new partners from mcache
    	 	
-   	 	int bm_exchange_interval; // delay between buffermap being sent
+   	 	int exchange_interval_s; // delay between buffermap being sent
    	 	int buffer_size; // stored blocks in buffer. probably just 120
     	double start_threshold; // percentage filled before we start playback
    	 	
