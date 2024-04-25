@@ -48,12 +48,14 @@ simple Node extends BaseOverlay
    	 	int bitrate_kbps; // video bitrate in kbps
    	 	int block_length_s; // segment length in seconds
    	 	int substream_count; // number of substreams to split video into
+   	 	double partner_percentage_threshold_to_start_playout; // value of partners.size() / M to reach before surveying starting position and starting playout
    	 	
         bool origin; // if this node should act as the origin
         string first_origin_ip; // ip to contact to reach the first origin. changes regularly depending on seed...
         string second_origin_ip; // second origin. in a real system this could be a list of any length
         bool heterogeneous_upload; // if we should enable heterogenous upload. only works on inet underlay
         string arrow_type; // which arrow type to display
+        string display_string; // which display string to display
         
         int ts; // constant for maximum gap within a node's substreams
         int tp; // constant for maximum gap between a node's partners

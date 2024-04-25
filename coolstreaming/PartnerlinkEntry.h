@@ -35,6 +35,9 @@ public:
         double sij = retrieved / time_units;
         return std::max(sji, sij);
     };
+    bool buffer_map_received() const {
+        return *latest_blocks.begin() != -2;
+    }
     void add_sent();
     void add_retrieved();
 
@@ -46,7 +49,7 @@ public:
         start(simTime()),
         panicking(panic),
         bandwidth(3000000),
-        latest_blocks(substream_count, 0),
+        latest_blocks(substream_count, -2),
         associate()
     {};
 

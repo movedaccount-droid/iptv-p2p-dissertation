@@ -13,6 +13,7 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
+#include <algorithm>
 #include <functional>
 #include <iterator>
 #include <random>
@@ -39,18 +40,22 @@ void PartnerlinkManager::count_without_checking(int increment) {
 }
 
 void PartnerlinkManager::update_display_string() {
-    display_name = std::string("Mc: ")
-        .append(std::to_string(Mc))
-        .append(", P: ")
-        .append(std::to_string(partners.size()))
-        .append(", IP: ")
-        .append(parent->getThisNode().getIp().str());
-    bool panicking = (get_panic_status() != Nominal);
-    bool perfect = partners.size() == Mc && Mc == M;
-    if (panicking) display_name = std::string("[PANIC] ").append(display_name);
-    cDisplayString& ds = parent->getParentModule()->getParentModule()->getDisplayString();
-    ds.setTagArg("t", 0, display_name.c_str());
-    ds.setTagArg("t", 2, perfect ? "cornflowerblue" : panicking ? "red" : "blue");
+    if (display_string) {
+        display_name = std::string("Mc: ")
+            .append(std::to_string(Mc))
+            .append(", P: ")
+            .append(std::to_string(partners.size()))
+            .append(", IP: ")
+            .append(parent->getThisNode().getIp().str())
+            .append(", Part%: ")
+            .append(std::to_string(get_partner_percent_out_of_m()));
+        bool panicking = (get_panic_status() != Nominal);
+        bool perfect = partners.size() == Mc && Mc == M;
+        if (panicking) display_name = std::string("[PANIC] ").append(display_name);
+        cDisplayString& ds = parent->getParentModule()->getParentModule()->getDisplayString();
+        ds.setTagArg("t", 0, display_name.c_str());
+        ds.setTagArg("t", 2, perfect ? "cornflowerblue" : panicking ? "red" : "blue");
+    }
 }
 
 void PartnerlinkManager::update_and_check() {
@@ -100,6 +105,25 @@ std::set<TransportAddress> PartnerlinkManager::get_partner_tads() {
     return partner_tads;
 }
 
+double PartnerlinkManager::get_partner_percent_out_of_m() {
+    // partners are Fully, Really initialized after we have received their buffer map
+    int with_buffer_map = 0;
+    for (auto partner : partners) {
+        if (partner.second.buffer_map_received())
+            with_buffer_map++;
+    }
+    return with_buffer_map / (double)M;
+}
+
+int PartnerlinkManager::get_starting_index() {
+    int starting_index = 0;
+    for (auto partner : get_partner_latest_blocks()) {
+        int max_total_block = *max_element(partner.second.begin(), partner.second.end());
+        if (max_total_block > starting_index) starting_index = max_total_block;
+    }
+    return starting_index - tp;
+}
+
 // TODO: this is doumb as fuck and needs removing at some point
 std::vector<TransportAddress> PartnerlinkManager::get_partner_k() {
     std::vector<TransportAddress> partner_k;
@@ -132,11 +156,11 @@ std::map<TransportAddress, TransportAddress> PartnerlinkManager::get_association
             partner++;
         }
     }
-    std::cout << "assocs running..." << std::endl;
-    for (auto assoc : associations) {
-        std::cout << parent->getThisNode().getIp().str() << ": assoc " << assoc.first.getIp().toIPv4().getInt() << " (" << assoc.first.getIp().str() << ") to " <<
-                assoc.second.getIp().toIPv4().getInt() << " (" << assoc.second.getIp().str() << ")" << std::endl;
-    }
+//    std::cout << "assocs running..." << std::endl;
+//    for (auto assoc : associations) {
+//        std::cout << parent->getThisNode().getIp().str() << ": assoc " << assoc.first.getIp().toIPv4().getInt() << " (" << assoc.first.getIp().str() << ") to " <<
+//                assoc.second.getIp().toIPv4().getInt() << " (" << assoc.second.getIp().str() << ")" << std::endl;
+//    }
     return associations;
 }
 
@@ -150,7 +174,6 @@ std::map<TransportAddress, TransportAddress> PartnerlinkManager::get_association
 // the function will correct our value for us.
 
 void PartnerlinkManager::insert_partner_to_partners(TransportAddress partner) {
-    assert(Mc < 15);
     auto partner_entry = partners.find(partner);
     if (partner_entry != partners.end()) {
         count_without_checking(-1); // we added a connection but already knew it
@@ -168,7 +191,6 @@ void PartnerlinkManager::insert_partner_to_partners(TransportAddress partner) {
 }
 
 void PartnerlinkManager::remove_partner_from_partners(TransportAddress partner) {
-    assert(Mc > 0);
     auto partner_entry = partners.find(partner);
     if (partner_entry == partners.end()) {
         count_without_checking(1); // we removed a connection but didn't know it
@@ -190,7 +212,7 @@ bool PartnerlinkManager::is_timed_out(simtime_t origin_time, simtime_t timeout) 
 }
 
 // lifecycle
-void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc) {
+void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc, int tp_in, bool ds) {
     parent = p;
     M = m;
     Mc = mc;
@@ -199,6 +221,8 @@ void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, 
     panic_split_timeout = SimTime(pansts, SIMTIME_S);
     switch_interval = SimTime(sis, SIMTIME_S);
     substream_count = ssc;
+    tp = tp_in;
+    display_string = ds;
     needs_deputy = !parent->origin;
 }
 
@@ -235,12 +259,6 @@ void PartnerlinkManager::recover_from_leaving_partner(TransportAddress partner) 
     // to recover from a node leaving, cleanly or otherwise.
 
     TransportAddress associate = partners.at(partner).associate;
-    std::cout << parent->getThisNode().getIp().str() << ": partner " << partner.getIp().str() << " left, associate " << associate.getIp().str() << std::endl;
-    parent->getParentModule()->getParentModule()->bubble(std::string("partner ")
-        .append(partner.getIp().str())
-        .append(" left, associate ")
-        .append(associate.getIp().str())
-        .c_str());
     if (associate.isUnspecified()) {
         remove_partner_from_partners(partner);
         count(-1);
@@ -267,6 +285,17 @@ PanicStatus PartnerlinkManager::get_panic_status() {
 }
 
 void PartnerlinkManager::check_panic_status() {
+    if (!(Mc <= M && Mc >= 0)) {
+        std::cout << parent->getThisNode().getIp().str() << std::endl;
+        std::cout << "Mc was " << Mc << std::endl;
+        assert(false);
+    }
+    if (partners.size() > Mc) {
+        std::cout << parent->getThisNode().getIp().str() << std::endl;
+        std::cout << "Mc was " << Mc << std::endl;
+        std::cout << "partners was " << partners.size() << std::endl;
+        assert(false);
+    }
     switch (get_panic_status()) {
     case Nominal:
         // awesome. cancel everything because we don't care anymore
@@ -352,26 +381,30 @@ void PartnerlinkManager::finalize_mcache_switch(int uuid) {
     active_switch_messages.erase(uuid);
     // request two random associated nodes to link, only picking
     // nodes that will panic if we have to
+    std::map<TransportAddress, TransportAddress> associations = get_associations();
     std::set<TransportAddress> has_associate;
-    for (auto partner : partners) {
-        if (!partner.second.associate.isUnspecified()) {
-            has_associate.insert(partner.first);
+    for (auto association : associations) {
+        if (!association.second.isUnspecified()) {
+            has_associate.insert(association.first);
         }
     }
-    static auto leave_remove = [this](TransportAddress l) {
-        send_leave_message(l);
-        remove_partner_from_partners(l);
-    };
     try {
         if (has_associate.size() > 0) {
             TransportAddress replaced = get_random_in(has_associate);
-            leave_remove(partners.at(replaced).associate);
-            leave_remove(replaced);
+            send_leave_message(associations[replaced]);
+            remove_partner_from_partners(associations[replaced]);
+            send_leave_message(replaced);
+            remove_partner_from_partners(replaced);
         } else {
             TransportAddress replaced = get_random_partner();
-            leave_remove(replaced);
+            send_leave_message(replaced);
+            remove_partner_from_partners(replaced);
         }
     } catch (const char* c) {} // i don't think this can happen. but i'd rather not find out!
+}
+
+void PartnerlinkManager::fail_mcache_switch(int uuid) {
+    active_switch_messages.erase(uuid);
 }
 
 // LINK_ORIGIN_NODES // UDP
@@ -453,6 +486,7 @@ void PartnerlinkManager::send_split_failure_response(SplitCall* split_call) {
 }
 
 void PartnerlinkManager::receive_split_response(SplitResponse* split_response) {
+    bool was_scheduled_switch = active_switch_messages.find(split_response->getUuid()) != active_switch_messages.end();
     if (split_response->getResult() == SUCCESS) {
         if (parent->leaving) {
             // send Leave messages to force the other nodes to panic faster
@@ -462,19 +496,24 @@ void PartnerlinkManager::receive_split_response(SplitResponse* split_response) {
             // if we already know one of these, we start Panicking
             insert_partner_to_partners(split_response->getFirst_node());
             insert_partner_to_partners(split_response->getSecond_node());
-            if (active_switch_messages.find(split_response->getUuid()) != active_switch_messages.end()) {
+            if (was_scheduled_switch) {
                 finalize_mcache_switch(split_response->getUuid());
             }
             update_and_check();
         }
     } else {
-        count(-2); // causing the node to start sending PanicSplits
+        if (was_scheduled_switch) {
+            fail_mcache_switch(split_response->getUuid());
+        } else {
+            count(-2); // causing the node to start sending PanicSplits
+        }
     }
 }
 
 void PartnerlinkManager::timeout_split_response(SplitCall* split_call) {
-    active_switch_messages.erase(split_call->getUuid());
-    count(-2); // causing the node to start sending PanicSplits
+    if (!active_switch_messages.erase(split_call->getUuid())) {
+        count(-2); // causing the node to start sending PanicSplits
+    };
 }
 
 // TRY_SPLIT // TCP

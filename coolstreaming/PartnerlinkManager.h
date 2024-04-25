@@ -44,6 +44,8 @@ public:
     simtime_t switch_interval; // time between switching to a new random peer from our mcache
     bool needs_deputy; // if we would like to be informed of deputies from any next get_deputies response
     int substream_count; // to build the default partnerlinkentry
+    int tp; // constant for maximum gap between a node's partners
+    bool display_string; // if to show partnerlink_manager display strings
 
     // vars
     std::string display_name; // used to set display name to Mc
@@ -69,6 +71,8 @@ public:
     TransportAddress get_random_partner_matching_predicate(std::function<bool(std::pair<TransportAddress, PartnerlinkEntry>)> const& lambda);
     std::map<TransportAddress, PartnerlinkEntry> get_partners();
     std::set<TransportAddress> get_partner_tads();
+    double get_partner_percent_out_of_m();
+    int get_starting_index();
     std::vector<TransportAddress> get_partner_k();
     std::map<TransportAddress, std::vector<int>> get_partner_latest_blocks();
     std::map<TransportAddress, TransportAddress> get_associations();
@@ -77,7 +81,7 @@ public:
     bool is_timed_out(simtime_t origin_time, simtime_t timeout);
 
     // lifecycle
-    void init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc);
+    void init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc, int tp_in, bool ds);
 
     // failure timers and buffermap timeout
     void set_failure_timer(TransportAddress partner);
@@ -98,6 +102,8 @@ public:
     void start_switch_from_mcache(TransportAddress switch_to);
     void reset_switch_timer();
     void finalize_mcache_switch(int uuid);
+    void fail_mcache_switch(int uuid);
+
 
     // LINK_ORIGIN_NODES // UDP
     // construct the initial link between our two friendly origin nodes

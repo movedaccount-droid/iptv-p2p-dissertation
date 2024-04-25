@@ -175,11 +175,8 @@ packet BufferMapMsg extends BaseOverlayMessage {
 }
 
 // new coolstreaming block push
-// when we send two blocks to catch up a node, that block would send four blocks in turn, eight, sixteen etc.
-// to avoid this we only allow the second block to trigger forwarding; the following node thus only sends two blocks
 packet Block extends BaseOverlayMessage {
  	int index;
- 	bool should_trigger_send;
 }
 
 // active_node finished downloading self-message/timer

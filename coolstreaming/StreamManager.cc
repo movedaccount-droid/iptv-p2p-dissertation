@@ -28,7 +28,7 @@
 parent->scheduleAt(simTime() + offset, timer)
 
 // lifecycle
-void StreamManager::init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in) {
+void StreamManager::init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in, double ppttsp, bool ds) {
     parent = p;
     substream_count = sc;
     exchange_interval_s = eis;
@@ -36,32 +36,50 @@ void StreamManager::init(Node* p, int sc, int eis, int bs, int bls, int bsb, int
     block_length_s = bls;
     block_size_bits = bsb;
     playing = false;
-    playout_index = parent->origin ? 1000 : 0; // we act as though the stream has been playing a while
+    playout_index = 0;
     ts = ts_in;
     tp = tp_in;
+    partner_percentage_threshold_to_start_playout = ppttsp;
+    display_string = ds;
     substream_children = std::vector<std::map<TransportAddress, int>>(substream_count, std::map<TransportAddress, int>());
     substream_parents = std::vector<TransportAddress>(substream_count, TransportAddress());
 
+    hit_playouts = 0;
+    missed_playouts = 0;
+    received_blocks = 0;
+    dropped_blocks = 0;
+
     buffers = std::vector<std::deque<int>>(substream_count, std::deque<int>());
     if (parent->origin) {
-        // origin buffers are always filled
+        // origin buffers are always filled and running
+        playout_index = 1000; // we act as though the stream has been playing a while
         for (int block = playout_index; block < playout_index + buffer_size; ++block) {
             buffers[block % substream_count].push_back(block);
         }
+        for (int ss = 0; ss < substream_count; ++ss) {
+            latest_blocks.push_back(buffers[ss].back());
+        }
+        start(playout_index);
+    } else {
+        latest_blocks = std::vector<int>(substream_count, -1);
     }
+    setOrReplace(exchange_timer, "exchange_timer", exchange_interval_s);
+}
+
+bool StreamManager::should_start(double partner_percentage) {
+    return !playing && partner_percentage >= partner_percentage_threshold_to_start_playout;
 }
 
 void StreamManager::start(int start_index) {
     playout_index = start_index;
     playing = true;
-    setOrReplace(exchange_timer, "exchange_timer", exchange_interval_s);
     playout();
 }
 
 void StreamManager::reselect_parents_and_exchange_partners(std::map<TransportAddress, std::vector<int>> parent_latest_blocks,
         std::map<TransportAddress, TransportAddress> associations, bool panicking) {
     parent->getParentModule()->getParentModule()->bubble(std::string("exchanging...").c_str());
-    if (!parent->origin) {
+    if (!parent->origin && playing) {
         reselect_parents(parent_latest_blocks);
     }
     for (auto partner : associations) {
@@ -73,7 +91,9 @@ void StreamManager::reselect_parents_and_exchange_partners(std::map<TransportAdd
 void StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>> parent_latest_blocks) {
     for (int ss = 0; ss < substream_count; ++ss) {
         TransportAddress parent = substream_parents[ss];
-        if (parent.isUnspecified() || is_parent_failing(parent, ss, parent_latest_blocks)) {
+        if (parent.isUnspecified()
+                || parent_latest_blocks.find(parent) == parent_latest_blocks.end()
+                || is_parent_failing(parent, ss, parent_latest_blocks)) {
             // get random parent as replacement
             std::vector<TransportAddress> random_candidate;
             for (auto candidate : parent_latest_blocks) {
@@ -84,6 +104,13 @@ void StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>
             std::shuffle(random_candidate.begin(), random_candidate.end(), rng);
             for (TransportAddress candidate : random_candidate) {
                 if (!is_parent_failing(candidate, ss, parent_latest_blocks)) {
+                    this->parent->set_arrow(parent, "STREAM", false);
+                    this->parent->set_arrow(candidate, "STREAM", true);
+                    this->parent->getParentModule()->getParentModule()->bubble(std::string("switched to parent ")
+                        .append(candidate.getIp().str())
+                        .append(" on substream ")
+                        .append(std::to_string(ss))
+                        .append("...").c_str());
                     substream_parents[ss] = candidate;
                     break;
                 }
@@ -94,38 +121,83 @@ void StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>
 
 void StreamManager::playout() {
     setOrReplace(playout_timer, "playout_timer", block_length_s);
+    setOrReplace(catchup_timer, "catchup_timer", block_length_s / 2.0);
+    int ss = playout_index % substream_count;
     if (parent->origin) {
-        buffers[playout_index % substream_count].pop_front();
-        buffers[playout_index % substream_count].push_back(buffers[playout_index % substream_count].back() + substream_count);
+        parent->getParentModule()->getParentModule()->bubble(std::string("injecting new blocks...").c_str());
+        buffers[ss].pop_front();
+        buffers[ss].push_back(buffers[ss].back() + substream_count);
+        push_substream_blocks_to_subscribers(ss);
     } else {
         // TODO: nodes probably can get Very Fucked Up in bad cases. but we might not have the deadline space to fix that....
-        if (buffers[playout_index % substream_count].front() == playout_index) {
-            buffers[playout_index % substream_count].pop_front();
-            // TODO: and measure stats
+        if (buffers[ss].size() > 0 && buffers[ss].front() == playout_index) {
+            buffers[ss].pop_front();
+            hit_playouts++;
         } else {
             parent->getParentModule()->getParentModule()->bubble(std::string("[!] missed playout...").c_str());
-            // TODO: missed playout... blahhhh atasts
+            missed_playouts++;
         }
     }
     playout_index++;
+    update_display_string();
 }
 
-void StreamManager::end() {
-    // TODO: commit stats
+void StreamManager::catchup_children() {
+    push_substream_blocks_to_subscribers(playout_index % substream_count);
+}
+
+void StreamManager::leave_overlay() {
+    parent->add_std_dev("!StreamManager: hit_playouts", hit_playouts);
+    parent->add_std_dev("!StreamManager: missed_playouts", missed_playouts);
+    parent->add_std_dev("!StreamManager: received_blocks", received_blocks);
+    parent->add_std_dev("!StreamManager: dropped_blocks", dropped_blocks);
     playing = false;
-    if (exchange_timer != NULL) parent->cancelAndDelete(exchange_timer);
+    if (exchange_timer != NULL) parent->cancelAndDelete(exchange_timer); exchange_timer = NULL;
+    if (playout_timer != NULL) parent->cancelAndDelete(playout_timer); playout_timer = NULL;
+    if (catchup_timer != NULL) parent->cancelAndDelete(catchup_timer); catchup_timer = NULL;
 }
 
 // utility
+void StreamManager::update_display_string() {
+    int ratio = hit_playouts + missed_playouts > 0 ? (100 * hit_playouts) / (100 * (hit_playouts + missed_playouts)) : 0;
+    int pc = 0;
+    for (TransportAddress parent : substream_parents) {
+        if (!parent.isUnspecified()) pc++;
+    }
+    int cc = 0;
+    for (auto ss : substream_children) {
+        cc += ss.size();
+    }
+    if (display_string) {
+        display_name = std::string("PI: ")
+            .append(std::to_string(playout_index))
+            .append(", Ratio: ")
+            .append(std::to_string(ratio))
+            .append(", Parents: ")
+            .append(std::to_string(pc))
+            .append(", Children: ")
+            .append(std::to_string(cc))
+            .append("\n[");
+        for (int latest : latest_blocks) {
+            display_name.append(std::to_string(latest));
+            display_name.append(" ");
+        }
+        display_name.append("]");
+        cDisplayString& ds = parent->getParentModule()->getParentModule()->getDisplayString();
+        ds.setTagArg("t", 0, display_name.c_str());
+        ds.setTagArg("t", 2, "purple");
+    }
+}
+
 int StreamManager::get_next_needed_block(int substream) {
-    if (buffers[substream].size() == 0) {
+    if (latest_blocks[substream] == -1) {
         // manually calculate the correct block
         int current_substream_id = playout_index % substream_count;
         int diff = substream - current_substream_id;
         if (diff < 0) diff += substream_count;
         return playout_index + diff;
     } else {
-        return buffers[substream].back() + substream_count;
+        return latest_blocks[substream] + substream_count;
     }
 }
 
@@ -134,19 +206,7 @@ int StreamManager::get_playout_index() {
 }
 
 BufferMap StreamManager::get_buffer_map(TransportAddress partner) {
-    return std::make_pair(get_latest_blocks(), get_subscription_map(partner));
-}
-
-std::vector<int> StreamManager::get_latest_blocks() {
-    std::vector<int> latest_blocks;
-    for (int ss = 0; ss < substream_count; ++ss) {
-        if (buffers[ss].size() > 0) {
-            latest_blocks.push_back(buffers[ss].back());
-        } else {
-            latest_blocks.push_back(-100000);
-        }
-    }
-    return latest_blocks;
+    return std::make_pair(latest_blocks, get_subscription_map(partner));
 }
 
 std::map<int, int> StreamManager::get_subscription_map(TransportAddress partner) {
@@ -170,22 +230,17 @@ bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<T
         int hsia = buffers[i].back();
         abs_hsia_hsjp.insert(abs(hsia - hsjp));
     }
-    if (abs_hsia_hsjp.size() == 0) {
-        return true;
-    } else {
+    if (abs_hsia_hsjp.size() > 0) {
         int max = *max_element(abs_hsia_hsjp.begin(), abs_hsia_hsjp.end());
         if (max >= ts) return true;
     }
 
     // inequality 2: limiting maximum fall-behind on parent substream from highest known block
-    std::set<int> highest_per_partner;
-    for (auto parent : parent_latest_blocks) {
-        if (parent.second.size() == 0) continue;
-        highest_per_partner.insert(*max_element(parent.second.begin(), parent.second.end()));
-    }
-    if (highest_per_partner.size() == 0) {
-        return true;
-    } else {
+    if (parent_latest_blocks.size() > 0) {
+        std::set<int> highest_per_partner;
+        for (auto parent : parent_latest_blocks) {
+            highest_per_partner.insert(*max_element(parent.second.begin(), parent.second.end()));
+        }
         int hsiq = *max_element(highest_per_partner.begin(), highest_per_partner.end());
         if (hsiq - hsjp >= tp) return true;
     }
@@ -206,7 +261,7 @@ void StreamManager::send_buffer_map_message(TransportAddress partner, TransportA
     parent->sendMessageToUDP(partner, buffer_map_msg);
 }
 
-void StreamManager::receive_buffer_map_subscriptions(BufferMapMsg* buffer_map_msg) {
+void StreamManager::receive_buffer_map_message(BufferMapMsg* buffer_map_msg) {
     auto incoming_subscriptions = buffer_map_msg->getBuffer_map().second;
     for (int ss = 0; ss < substream_count; ++ss) {
         auto entry = incoming_subscriptions.find(ss);
@@ -216,49 +271,50 @@ void StreamManager::receive_buffer_map_subscriptions(BufferMapMsg* buffer_map_ms
             substream_children[ss].erase(buffer_map_msg->getFrom());
         }
     }
+    update_display_string();
 }
 
 // BLOCK // UDP
 // sending a block to a child partner, who then forwards it to their children
-void StreamManager::send_block_message(TransportAddress child, int index, bool triggers_send) {
-    Block* block = new Block();
-    block->setIndex(index);
-    block->setShould_trigger_send(triggers_send);
-    block->setBitLength(block_size_bits);
-    parent->sendMessageToUDP(child, block);
-}
-
-void StreamManager::receive_block_message(Block* block) {
-    int index = block->getIndex();
-    int substream_id = index % substream_count;
-    auto substream = buffers[substream_id];
-
-    // check if this is the next block in line and accept if so
-    if (index == get_next_needed_block(substream_id)) {
-        substream.push_back(index);
-    }
-
-    // either way push blocks to subscribers. if the block is still catching up, send two blocks
-    // when we do this, that block would send four blocks, eight, sixteen etc. in turn
-    // to avoid this we only allow the second block to trigger forwarding; the following node thus only sends two blocks
-    if (block->getShould_trigger_send() && substream.size() > 0) {
-        for (auto child_catchup_position : substream_children[substream_id]) {
-            std::vector<int> to_send;
-
-            while (to_send.size() < 2 && std::find(substream.begin(), substream.end(), child_catchup_position.second) != substream.end()) {
-                to_send.push_back(child_catchup_position.second);
+void StreamManager::push_substream_blocks_to_subscribers(int ss) {
+    if (buffers[ss].size() > 0) {
+        for (auto child_catchup_position : substream_children[ss]) {
+            // TODO: what if a child completely falls behind?
+            if (std::find(buffers[ss].begin(), buffers[ss].end(), child_catchup_position.second) != buffers[ss].end()) {
+                send_block_message(child_catchup_position.first, child_catchup_position.second);
                 child_catchup_position.second += substream_count;
-            }
-
-            for (auto it = to_send.begin(); it != to_send.end(); ++it) {
-                send_block_message(child_catchup_position.first, *it, it == to_send.end());
             }
         }
     }
 }
 
+void StreamManager::send_block_message(TransportAddress child, int index) {
+    Block* block = new Block();
+    block->setIndex(index);
+    block->setBitLength(block_size_bits);
+    parent->sendMessageToUDP(child, block);
+}
+
+void StreamManager::receive_block_message(Block* block) {
+    // check if this is the next block in line and accept if so
+    // we check if greater than to account for any missed blocks, thereby assuming our upstream behaves nicely...
+    int block_index = block->getIndex();
+    int ss = block_index % substream_count;
+    if (block_index >= get_next_needed_block(ss)) {
+        buffers[ss].push_back(block_index);
+        latest_blocks[ss] = block_index;
+        received_blocks++;
+    } else {
+        dropped_blocks++;
+        std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << " but needed " << get_next_needed_block(ss) << std::endl;
+    }
+    // either way push blocks to subscribers.
+    push_substream_blocks_to_subscribers(ss);
+}
+
 
 StreamManager::~StreamManager() {
-    if (exchange_timer != NULL) parent->cancelAndDelete(exchange_timer);
-    if (playout_timer != NULL) parent->cancelAndDelete(playout_timer);
+    if (exchange_timer != NULL) parent->cancelAndDelete(exchange_timer); exchange_timer = NULL;
+    if (playout_timer != NULL) parent->cancelAndDelete(playout_timer); playout_timer = NULL;
+    if (catchup_timer != NULL) parent->cancelAndDelete(catchup_timer); catchup_timer = NULL;
 }

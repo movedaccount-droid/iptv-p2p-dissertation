@@ -120,7 +120,7 @@ public:
         c()
     { resubscription_timer = NULL; send_heartbeat_timer = NULL; no_heartbeat_timer = NULL; };
 
-    ~MembershipManager() {};
+    ~MembershipManager();
 };
 
 #endif /* OVERLAY_COOLSTREAMING_MEMBERSHIPMANAGER_H_ */

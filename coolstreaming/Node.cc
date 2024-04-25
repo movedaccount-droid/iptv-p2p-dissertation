@@ -30,18 +30,6 @@
 
 Define_Module(Node);
 
-// arrow drawing/handling
-void Node::set_arrow(TransportAddress tad, std::string requested_type, bool enable) {
-    if (requested_type != arrow_type) return;
-    deleteOverlayNeighborArrow(tad);
-    if (!enable) return;
-    if (arrow_type == std::string("MCACHE") && requested_type == std::string("MCACHE")) {
-        showOverlayNeighborArrow(tad, false, "ls=#B99DE8,2,s");
-    } else if (arrow_type == std::string("PARTNER") && requested_type == std::string("PARTNER")) {
-        showOverlayNeighborArrow(tad, false, "ls=#334455,3,s");
-    }
-}
-
 // overlay routines
 // called at overlay construction
 void Node::initializeOverlay(int stage) {
@@ -84,7 +72,9 @@ void Node::initializeOverlay(int stage) {
             par("block_length_s"),
             block_size_bits,
             par("ts"),
-            par("tp"));
+            par("tp"),
+            par("partner_percentage_threshold_to_start_playout"),
+            par("display_string").stdstringValue() == std::string("STREAM"));
     init_partnerlink_manager();
 }
 
@@ -103,6 +93,7 @@ void Node::finishOverlay() {
     leaving = true;
     membership_manager.leave_overlay();
     partnerlink_manager.leave_overlay();
+    stream_manager.leave_overlay();
     setOverlayReady(false);
 }
 
@@ -115,7 +106,9 @@ void Node::init_partnerlink_manager() {
             par("panic_timeout_s"),
             par("panic_split_timeout_s"),
             par("switch_interval_s"),
-            par("substream_count"));
+            par("substream_count"),
+            par("tp"),
+            par("display_string").stdstringValue() == std::string("PARTNER"));
     if (origin) {
         // join our two origins, so that we have a starter link to split from
         partnerlink_manager.send_link_origin_nodes_message(origin_tad);
@@ -151,6 +144,14 @@ void Node::handleUDPMessage(BaseOverlayMessage* msg) {
             partnerlink_manager.receive_link_origin_nodes_message(link_origin_nodes);
         } else if (BufferMapMsg* buffer_map = dynamic_cast<BufferMapMsg*>(msg)) {
             partnerlink_manager.receive_buffer_map_message(buffer_map);
+            stream_manager.receive_buffer_map_message(buffer_map);
+            if (!stream_manager.playing) {
+                double partner_percent = partnerlink_manager.get_partner_percent_out_of_m();
+                int starting_index = partnerlink_manager.get_starting_index();
+                if (stream_manager.should_start(partner_percent) && starting_index >= 0) {
+                    stream_manager.start(starting_index);
+                }
+            }
         } else if (Recover* recover = dynamic_cast<Recover*>(msg)) {
             partnerlink_manager.receive_recover_message(recover);
         }
@@ -212,8 +213,8 @@ void Node::handleRpcResponse(BaseResponseMessage* msg,
         RPC_HANDLED = true;
         break;
     }
+    // TODO: remove starting block from deputy call
     RPC_ON_RESPONSE(GetDeputy) {
-        stream_manager.start(_GetDeputyResponse->getBlock_index());
         if (partnerlink_manager.needs_deputy) {
             partnerlink_manager.send_get_candidate_partners_message(_GetDeputyResponse->getDeputy());
         }
@@ -291,6 +292,8 @@ void Node::handleTimerEvent(cMessage *msg) {
         // TODO: possibly include k-order balancing for origin node
         // TODO: acutally handle origin node having all blocks all the time
         stream_manager.reselect_parents_and_exchange_partners(latest_blocks, associations, panicking);
+    } else if (msg == stream_manager.catchup_timer) {
+        stream_manager.catchup_children();
     } else if (msg == partnerlink_manager.panic_timeout_timer) {
         partnerlink_manager.timeout_panic();
     } else if (msg == partnerlink_manager.panic_split_timeout_timer) {
@@ -300,8 +303,25 @@ void Node::handleTimerEvent(cMessage *msg) {
     } else if (TotalPartnerFailure* total_partner_failure = dynamic_cast<TotalPartnerFailure*>(msg)) {
         init_partnerlink_manager();
         membership_manager.send_get_deputy_message(origin_tad);
-        cancelAndDelete(msg);
     }
+}
+
+// arrow drawing/handling
+void Node::set_arrow(TransportAddress tad, std::string requested_type, bool enable) {
+    if (requested_type != arrow_type) return;
+    deleteOverlayNeighborArrow(tad);
+    if (!enable) return;
+    if (arrow_type == std::string("MCACHE") && requested_type == std::string("MCACHE")) {
+        showOverlayNeighborArrow(tad, false, "ls=#B99DE8,2,s");
+    } else if (arrow_type == std::string("PARTNER") && requested_type == std::string("PARTNER")) {
+        showOverlayNeighborArrow(tad, false, "ls=#334455,3,s");
+    } else if (arrow_type == std::string("STREAM") && requested_type == std::string("STREAM")) {
+        showOverlayNeighborArrow(tad, false, "ls=#774433,3,s");
+    }
+}
+
+void Node::add_std_dev(const std::string& name, double value) {
+    globalStatistics->addStdDev(name, value);
 }
 
 // sending messages. our object structure is Bad

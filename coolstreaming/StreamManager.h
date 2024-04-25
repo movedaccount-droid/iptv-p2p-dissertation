@@ -37,32 +37,45 @@ public:
     int block_size_bits; // block size in bits
     int ts; // constant for maximum gap within a node's substreams
     int tp; // constant for maximum gap between a node's partners
+    double partner_percentage_threshold_to_start_playout; // value of partners.size() / M to reach before surveying starting position and starting playout
+    bool display_string; // whether to show streammanager display strings
 
     // vars
     std::vector<std::deque<int>> buffers; // one queue for each buffer. we don't need to sim the cache buffer
+    std::vector<int> latest_blocks; // latest block received in each buffer, stored even after the block is played out
     std::vector<std::map<TransportAddress, int>> substream_children; // currently active children in each substream, and their current catch-up position
     std::vector<TransportAddress> substream_parents; // map of substream to partner
+    std::string display_name; // cached display name
     bool playing; // if the stream is playing
     int playout_index; // next block to be played by playout
 
     // timers
     cMessage* exchange_timer;
     cMessage* playout_timer;
+    cMessage* catchup_timer;
+
+    // stats
+    int hit_playouts;
+    int missed_playouts;
+    int received_blocks;
+    int dropped_blocks;
 
     // lifecycle
-    void init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in);
+    void init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in, double ppttsp, bool ds);
+    bool should_start(double partner_percentage);
     void start(int start_index);
     void reselect_parents_and_exchange_partners(std::map<TransportAddress, std::vector<int>> parent_latest_blocks,
             std::map<TransportAddress, TransportAddress> associations, bool panicking);
     void reselect_parents(std::map<TransportAddress, std::vector<int>> parent_latest_blocks);
     void playout();
-    void end();
+    void catchup_children();
+    void leave_overlay();
 
     // utility
+    void update_display_string();
     int get_next_needed_block(int substream);
     int get_playout_index();
     BufferMap get_buffer_map(TransportAddress parent);
-    std::vector<int> get_latest_blocks(); // returns first vector for buffer map
     std::map<int, int> get_subscription_map(TransportAddress partner); // second vector for buffer map
     bool is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks);
 
@@ -72,14 +85,15 @@ public:
     // send each other the map in their own time, by their own timer
     void send_buffer_map_message(TransportAddress partner, TransportAddress associate, bool panicking);
     // bool receive_buffer_map_latest_blocks(BufferMapMsg* buffer_map_msg) => PartnershipManager.h
-    void receive_buffer_map_subscriptions(BufferMapMsg* buffer_map_msg);
+    void receive_buffer_map_message(BufferMapMsg* buffer_map_msg);
 
     // BLOCK // UDP
     // sending a block to a child partner, who then forwards it to their children
-    void send_block_message(TransportAddress child, int index, bool triggers_send);
+    void push_substream_blocks_to_subscribers(int substream);
+    void send_block_message(TransportAddress child, int index);
     void receive_block_message(Block* block);
 
-    StreamManager() { exchange_timer = NULL; playout_timer = NULL; };
+    StreamManager() { exchange_timer = NULL; playout_timer = NULL; catchup_timer = NULL; };
     virtual ~StreamManager();
 };
 

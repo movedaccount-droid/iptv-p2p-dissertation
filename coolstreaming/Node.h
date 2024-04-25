@@ -67,6 +67,9 @@ public:
     // arrow drawing/handling
     void set_arrow(TransportAddress tad, std::string requested_type, bool enable);
 
+    // statistics
+    void add_std_dev(const std::string& name, double value);
+
     // message sending. our object structure is bad
     void send_rpc(TransportAddress tad, BaseCallMessage* msg);
     void send_rpc_response(BaseCallMessage* call, BaseResponseMessage* response);

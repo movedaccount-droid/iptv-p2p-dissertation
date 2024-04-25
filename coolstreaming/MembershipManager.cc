@@ -216,10 +216,9 @@ void MembershipManager::no_heartbeat() {
 
 void MembershipManager::leave_overlay() {
     unsubscribe();
-    parent->cancelAndDelete(resubscription_timer);
-    parent->cancelAndDelete(send_heartbeat_timer);
-    parent->cancelAndDelete(no_heartbeat_timer);
-    parent = NULL;
+    if (resubscription_timer != NULL) parent->cancelAndDelete(resubscription_timer); resubscription_timer = NULL;
+    if (send_heartbeat_timer != NULL) parent->cancelAndDelete(send_heartbeat_timer); send_heartbeat_timer = NULL;
+    if (no_heartbeat_timer != NULL) parent->cancelAndDelete(no_heartbeat_timer); no_heartbeat_timer = NULL;
 }
 
 // GET DEPUTY MESSAGES // TCP
@@ -489,4 +488,10 @@ void MembershipManager::send_heartbeat_message(TransportAddress tad) {
 }
 void MembershipManager::receive_heartbeat_message(Heartbeat* heartbeat) {
     setOrReplace(no_heartbeat_timer, "no_heartbeat_timer", scamp_heartbeat_failure_interval);
+}
+
+MembershipManager::~MembershipManager() {
+    if (resubscription_timer != NULL) parent->cancelAndDelete(resubscription_timer); resubscription_timer = NULL;
+    if (send_heartbeat_timer != NULL) parent->cancelAndDelete(send_heartbeat_timer); send_heartbeat_timer = NULL;
+    if (no_heartbeat_timer != NULL) parent->cancelAndDelete(no_heartbeat_timer); no_heartbeat_timer = NULL;
 }
