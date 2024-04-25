@@ -47,17 +47,18 @@ void StreamManager::init(Node* p, int sc, int eis, int bs, int bls, int bsb, int
     hit_playouts = 0;
     missed_playouts = 0;
     received_blocks = 0;
-    dropped_blocks = 0;
+    duplicate_blocks = 0;
+    oob_blocks = 0;
 
-    buffers = std::vector<std::deque<int>>(substream_count, std::deque<int>());
+    buffers = std::set<int>();
     if (parent->origin) {
         // origin buffers are always filled and running
         playout_index = 1000; // we act as though the stream has been playing a while
         for (int block = playout_index; block < playout_index + buffer_size; ++block) {
-            buffers[block % substream_count].push_back(block);
+            buffers.insert(block);
         }
-        for (int ss = 0; ss < substream_count; ++ss) {
-            latest_blocks.push_back(buffers[ss].back());
+        for (int max_block = playout_index + buffer_size - substream_count; max_block < playout_index + buffer_size; ++max_block) {
+            latest_blocks.push_back(max_block);
         }
         start(playout_index);
     } else {
@@ -103,7 +104,7 @@ void StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>
             std::mt19937 rng(ran());
             std::shuffle(random_candidate.begin(), random_candidate.end(), rng);
             for (TransportAddress candidate : random_candidate) {
-                if (!is_parent_failing(candidate, ss, parent_latest_blocks)) {
+                if (!is_parent_failing(candidate, ss, parent_latest_blocks, true)) {
                     this->parent->set_arrow(parent, "STREAM", false);
                     this->parent->set_arrow(candidate, "STREAM", true);
                     this->parent->getParentModule()->getParentModule()->bubble(std::string("switched to parent ")
@@ -125,13 +126,13 @@ void StreamManager::playout() {
     int ss = playout_index % substream_count;
     if (parent->origin) {
         parent->getParentModule()->getParentModule()->bubble(std::string("injecting new blocks...").c_str());
-        buffers[ss].pop_front();
-        buffers[ss].push_back(buffers[ss].back() + substream_count);
+        buffers.erase(playout_index);
+        latest_blocks[ss] += substream_count;
+        buffers.insert(latest_blocks[ss]);
         push_substream_blocks_to_subscribers(ss);
     } else {
         // TODO: nodes probably can get Very Fucked Up in bad cases. but we might not have the deadline space to fix that....
-        if (buffers[ss].size() > 0 && buffers[ss].front() == playout_index) {
-            buffers[ss].pop_front();
+        if (buffers.erase(playout_index)) {
             hit_playouts++;
         } else {
             parent->getParentModule()->getParentModule()->bubble(std::string("[!] missed playout...").c_str());
@@ -150,7 +151,8 @@ void StreamManager::leave_overlay() {
     parent->add_std_dev("!StreamManager: hit_playouts", hit_playouts);
     parent->add_std_dev("!StreamManager: missed_playouts", missed_playouts);
     parent->add_std_dev("!StreamManager: received_blocks", received_blocks);
-    parent->add_std_dev("!StreamManager: dropped_blocks", dropped_blocks);
+    parent->add_std_dev("!StreamManager: duplicate_blocks", duplicate_blocks);
+    parent->add_std_dev("!StreamManager: oob_blocks", oob_blocks);
     playing = false;
     if (exchange_timer != NULL) parent->cancelAndDelete(exchange_timer); exchange_timer = NULL;
     if (playout_timer != NULL) parent->cancelAndDelete(playout_timer); playout_timer = NULL;
@@ -219,20 +221,23 @@ std::map<int, int> StreamManager::get_subscription_map(TransportAddress partner)
     return subscription_map;
 }
 
-bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks) {
+bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks, bool local_node_compromised) {
     // check if parent is failing
     int hsjp = parent_latest_blocks[parent][j];
 
     // inequality 1: limiting maximum fall-behind on single substream within node
-    std::set<int> abs_hsia_hsjp;
-    for (int i = 0; i < substream_count; ++i) {
-        if (buffers[i].size() == 0) continue;
-        int hsia = buffers[i].back();
-        abs_hsia_hsjp.insert(abs(hsia - hsjp));
-    }
-    if (abs_hsia_hsjp.size() > 0) {
-        int max = *max_element(abs_hsia_hsjp.begin(), abs_hsia_hsjp.end());
-        if (max >= ts) return true;
+    // the specification claims a new parent must satisfy these inequalities. however, inequality 1 relies on our own node's health.
+    // since we're reselecting, we can assume our own node is not a good measure! so we only run the second inequality
+    if (!local_node_compromised) {
+        std::set<int> abs_hsia_hsjp;
+        for (int ss = 0; ss < substream_count; ++ss) {
+            int hsia = latest_blocks[ss];
+            abs_hsia_hsjp.insert(abs(hsia - hsjp));
+        }
+        if (abs_hsia_hsjp.size() > 0) {
+            int max = *max_element(abs_hsia_hsjp.begin(), abs_hsia_hsjp.end());
+            if (max >= ts) return true;
+        }
     }
 
     // inequality 2: limiting maximum fall-behind on parent substream from highest known block
@@ -277,13 +282,11 @@ void StreamManager::receive_buffer_map_message(BufferMapMsg* buffer_map_msg) {
 // BLOCK // UDP
 // sending a block to a child partner, who then forwards it to their children
 void StreamManager::push_substream_blocks_to_subscribers(int ss) {
-    if (buffers[ss].size() > 0) {
-        for (auto child_catchup_position : substream_children[ss]) {
-            // TODO: what if a child completely falls behind?
-            if (std::find(buffers[ss].begin(), buffers[ss].end(), child_catchup_position.second) != buffers[ss].end()) {
-                send_block_message(child_catchup_position.first, child_catchup_position.second);
-                child_catchup_position.second += substream_count;
-            }
+    for (auto child_catchup_position : substream_children[ss]) {
+        // TODO: what if a child completely falls behind?
+        if (std::find(buffers.begin(), buffers.end(), child_catchup_position.second) != buffers.end()) {
+            send_block_message(child_catchup_position.first, child_catchup_position.second);
+            child_catchup_position.second += substream_count;
         }
     }
 }
@@ -296,17 +299,23 @@ void StreamManager::send_block_message(TransportAddress child, int index) {
 }
 
 void StreamManager::receive_block_message(Block* block) {
-    // check if this is the next block in line and accept if so
-    // we check if greater than to account for any missed blocks, thereby assuming our upstream behaves nicely...
+    // the presentation on coolstreaming suggests nodes can rearrange blocks in their
+    // buffers at will, so we can take any block at any time, provided it fits our limit
     int block_index = block->getIndex();
     int ss = block_index % substream_count;
-    if (block_index >= get_next_needed_block(ss)) {
-        buffers[ss].push_back(block_index);
-        latest_blocks[ss] = block_index;
+    if (block_index >= playout_index && block_index <= playout_index + buffer_size) {
+        std::cout << parent->getThisNode().getIp().str()
+                << ": received out-of-bounds block " << block_index
+                << ((block_index >= playout_index) ? " (too high)" : " (too low)")
+                << std::endl;
+        oob_blocks++;
+    } else if (buffers.find(block_index) == buffers.end()) {
+        if (block_index > latest_blocks[ss]) latest_blocks[ss] = block_index;
+        buffers.insert(block_index);
         received_blocks++;
     } else {
-        dropped_blocks++;
-        std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << " but needed " << get_next_needed_block(ss) << std::endl;
+        std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << " more than once..." << std::endl;
+        duplicate_blocks++;
     }
     // either way push blocks to subscribers.
     push_substream_blocks_to_subscribers(ss);

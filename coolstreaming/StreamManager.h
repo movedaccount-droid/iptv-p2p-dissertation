@@ -41,7 +41,7 @@ public:
     bool display_string; // whether to show streammanager display strings
 
     // vars
-    std::vector<std::deque<int>> buffers; // one queue for each buffer. we don't need to sim the cache buffer
+    std::set<int> buffers; // since the blocks in the buffer are "reordered on arrival", they act closer to a set than a buffer, though we ensure we cap the total buffer size
     std::vector<int> latest_blocks; // latest block received in each buffer, stored even after the block is played out
     std::vector<std::map<TransportAddress, int>> substream_children; // currently active children in each substream, and their current catch-up position
     std::vector<TransportAddress> substream_parents; // map of substream to partner
@@ -58,7 +58,8 @@ public:
     int hit_playouts;
     int missed_playouts;
     int received_blocks;
-    int dropped_blocks;
+    int duplicate_blocks;
+    int oob_blocks;
 
     // lifecycle
     void init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in, double ppttsp, bool ds);
@@ -77,7 +78,7 @@ public:
     int get_playout_index();
     BufferMap get_buffer_map(TransportAddress parent);
     std::map<int, int> get_subscription_map(TransportAddress partner); // second vector for buffer map
-    bool is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks);
+    bool is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks, bool local_node_compromised = false);
 
     // BUFFER_MAP // UDP
     // exchange buffer_maps with peers to update local view of blocks
