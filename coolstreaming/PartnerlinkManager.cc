@@ -573,7 +573,7 @@ void PartnerlinkManager::receive_try_split_response(TrySplitResponse* try_split_
 }
 void PartnerlinkManager::timeout_try_split_response(TrySplitCall* try_split_call) {
     SplitCall* split_call = currently_splitting[try_split_call->getUuid()];
-    send_split_failure_response(split_call);
+    if (split_call != NULL) send_split_failure_response(split_call); // might have been timed out / deleted
 }
 
 // LEAVE // UDP

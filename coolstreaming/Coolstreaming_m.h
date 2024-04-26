@@ -991,6 +991,45 @@ inline void doParsimUnpacking(omnetpp::cCommBuffer *b, TotalPartnerFailure& obj)
 /**
  * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:170</tt> by nedtool.
  * <pre>
+ * // self-message to disable/enable reselection of a given substream
+ * message Cooldown
+ * {
+ *     int substream;
+ * }
+ * </pre>
+ */
+class Cooldown : public ::omnetpp::cMessage
+{
+  protected:
+    int substream;
+
+  private:
+    void copy(const Cooldown& other);
+
+  protected:
+    // protected and unimplemented operator==(), to prevent accidental usage
+    bool operator==(const Cooldown&);
+
+  public:
+    Cooldown(const char *name=nullptr, short kind=0);
+    Cooldown(const Cooldown& other);
+    virtual ~Cooldown();
+    Cooldown& operator=(const Cooldown& other);
+    virtual Cooldown *dup() const override {return new Cooldown(*this);}
+    virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
+    virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
+
+    // field getter/setter methods
+    virtual int getSubstream() const;
+    virtual void setSubstream(int substream);
+};
+
+inline void doParsimPacking(omnetpp::cCommBuffer *b, const Cooldown& obj) {obj.parsimPack(b);}
+inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Cooldown& obj) {obj.parsimUnpack(b);}
+
+/**
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:175</tt> by nedtool.
+ * <pre>
  * // new coolstreaming buffermap exchange, extended with partnerlink data
  * packet BufferMapMsg extends BaseOverlayMessage
  * {
@@ -1043,12 +1082,13 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const BufferMapMsg& obj) {o
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, BufferMapMsg& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:178</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:183</tt> by nedtool.
  * <pre>
  * // new coolstreaming block push
  * packet Block extends BaseOverlayMessage
  * {
  *     int index;
+ *     TransportAddress from;
  * }
  * </pre>
  */
@@ -1056,6 +1096,7 @@ class Block : public ::BaseOverlayMessage
 {
   protected:
     int index;
+    TransportAddress from;
 
   private:
     void copy(const Block& other);
@@ -1076,13 +1117,16 @@ class Block : public ::BaseOverlayMessage
     // field getter/setter methods
     virtual int getIndex() const;
     virtual void setIndex(int index);
+    virtual TransportAddress& getFrom();
+    virtual const TransportAddress& getFrom() const {return const_cast<Block*>(this)->getFrom();}
+    virtual void setFrom(const TransportAddress& from);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const Block& obj) {obj.parsimPack(b);}
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Block& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:183</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:189</tt> by nedtool.
  * <pre>
  * // active_node finished downloading self-message/timer
  * message ExchangeAfterDownload
@@ -1122,7 +1166,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const ExchangeAfterDownload
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, ExchangeAfterDownload& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:188</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:194</tt> by nedtool.
  * <pre>
  * // TODO: remove these
  * packet Partnership extends BaseOverlayMessage
@@ -1166,7 +1210,7 @@ inline void doParsimPacking(omnetpp::cCommBuffer *b, const Partnership& obj) {ob
 inline void doParsimUnpacking(omnetpp::cCommBuffer *b, Partnership& obj) {obj.parsimUnpack(b);}
 
 /**
- * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:193</tt> by nedtool.
+ * Class generated from <tt>overlay/coolstreaming/../coolstreaming/Coolstreaming.msg:199</tt> by nedtool.
  * <pre>
  * packet PartnershipEnd extends BaseOverlayMessage
  * {

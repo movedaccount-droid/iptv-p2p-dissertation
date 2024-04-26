@@ -49,6 +49,7 @@ void Node::initializeOverlay(int stage) {
 
     if (heterogeneous_upload) {
         // set our bandwidth randomly between 100-900Kbps, biased towards the low end
+        // or if we're the origin, 15Mbps
         std::mt19937 rng(rand());
         std::fisher_f_distribution<double> distribution(15, 10);
         bandwidth = origin ? 15 * Mb_to_b : (distribution(rng) * 133.33 + 100) * Kb_to_b;
@@ -68,6 +69,7 @@ void Node::initializeOverlay(int stage) {
     stream_manager.init(this,
             par("substream_count"),
             par("exchange_interval_s"),
+            par("reselect_cooldown_interval_s"),
             par("buffer_size"),
             par("block_length_s"),
             block_size_bits,
@@ -303,6 +305,8 @@ void Node::handleTimerEvent(cMessage *msg) {
     } else if (TotalPartnerFailure* total_partner_failure = dynamic_cast<TotalPartnerFailure*>(msg)) {
         init_partnerlink_manager();
         membership_manager.send_get_deputy_message(origin_tad);
+    } else if (Cooldown* cooldown = dynamic_cast<Cooldown*>(msg)) {
+        stream_manager.remove_cooldown(cooldown);
     }
 }
 

@@ -28,10 +28,11 @@
 parent->scheduleAt(simTime() + offset, timer)
 
 // lifecycle
-void StreamManager::init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in, double ppttsp, bool ds) {
+void StreamManager::init(Node* p, int sc, int eis, int rcis, int bs, int bls, int bsb, int ts_in, int tp_in, double ppttsp, bool ds) {
     parent = p;
     substream_count = sc;
     exchange_interval_s = eis;
+    reselect_cooldown_interval = SimTime(rcis, SIMTIME_S);
     buffer_size = bs;
     block_length_s = bls;
     block_size_bits = bsb;
@@ -43,6 +44,7 @@ void StreamManager::init(Node* p, int sc, int eis, int bs, int bls, int bsb, int
     display_string = ds;
     substream_children = std::vector<std::map<TransportAddress, int>>(substream_count, std::map<TransportAddress, int>());
     substream_parents = std::vector<TransportAddress>(substream_count, TransportAddress());
+    reselect_cooldown = std::vector<Cooldown*>(substream_count, NULL);
 
     hit_playouts = 0;
     missed_playouts = 0;
@@ -77,11 +79,20 @@ void StreamManager::start(int start_index) {
     playout();
 }
 
-void StreamManager::reselect_parents_and_exchange_partners(std::map<TransportAddress, std::vector<int>> parent_latest_blocks,
+void StreamManager::reselect_parents_and_exchange_partners(std::map<TransportAddress, std::vector<int>> partner_latest_blocks,
         std::map<TransportAddress, TransportAddress> associations, bool panicking) {
     parent->getParentModule()->getParentModule()->bubble(std::string("exchanging...").c_str());
     if (!parent->origin && playing) {
-        reselect_parents(parent_latest_blocks);
+
+        // we might be reselecting parents because we're no longer partners with them at all.
+        // in that case we should send them one last hail mary buffermap to end our subscription,
+        // else if they're still alive they will send us blocks Forever
+
+        std::set<TransportAddress> removed_parents = reselect_parents(partner_latest_blocks);
+        for (TransportAddress parent : removed_parents) {
+            // TODO: sending the unassociated transportaddress here is Very Bad
+            // send_buffer_map_message(parent, TransportAddress(), panicking);
+        }
     }
     for (auto partner : associations) {
         send_buffer_map_message(partner.first, partner.second, panicking);
@@ -89,22 +100,25 @@ void StreamManager::reselect_parents_and_exchange_partners(std::map<TransportAdd
     setOrReplace(exchange_timer, "exchange_timer", exchange_interval_s);
 }
 
-void StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>> parent_latest_blocks) {
+// returns set of removed parents
+std::set<TransportAddress> StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>> partner_latest_blocks) {
+    std::set<TransportAddress> removed_parents;
     for (int ss = 0; ss < substream_count; ++ss) {
         TransportAddress parent = substream_parents[ss];
-        if (parent.isUnspecified()
-                || parent_latest_blocks.find(parent) == parent_latest_blocks.end()
-                || is_parent_failing(parent, ss, parent_latest_blocks)) {
+        if (reselect_cooldown[ss] == NULL
+                && (parent.isUnspecified()
+                || partner_latest_blocks.find(parent) == partner_latest_blocks.end()
+                || is_parent_failing(parent, ss, partner_latest_blocks))) {
             // get random parent as replacement
             std::vector<TransportAddress> random_candidate;
-            for (auto candidate : parent_latest_blocks) {
+            for (auto candidate : partner_latest_blocks) {
                 random_candidate.push_back(candidate.first);
             }
             std::random_device ran;
             std::mt19937 rng(ran());
             std::shuffle(random_candidate.begin(), random_candidate.end(), rng);
             for (TransportAddress candidate : random_candidate) {
-                if (!is_parent_failing(candidate, ss, parent_latest_blocks, true)) {
+                if (!is_parent_failing(candidate, ss, partner_latest_blocks, true)) {
                     this->parent->set_arrow(parent, "STREAM", false);
                     this->parent->set_arrow(candidate, "STREAM", true);
                     this->parent->getParentModule()->getParentModule()->bubble(std::string("switched to parent ")
@@ -112,12 +126,15 @@ void StreamManager::reselect_parents(std::map<TransportAddress, std::vector<int>
                         .append(" on substream ")
                         .append(std::to_string(ss))
                         .append("...").c_str());
+                    if (!parent.isUnspecified() && partner_latest_blocks.find(parent) == partner_latest_blocks.end()) removed_parents.insert(parent);
                     substream_parents[ss] = candidate;
+                    set_cooldown(ss);
                     break;
                 }
             }
         }
     }
+    return removed_parents;
 }
 
 void StreamManager::playout() {
@@ -221,9 +238,9 @@ std::map<int, int> StreamManager::get_subscription_map(TransportAddress partner)
     return subscription_map;
 }
 
-bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks, bool local_node_compromised) {
+bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> partner_latest_blocks, bool local_node_compromised) {
     // check if parent is failing
-    int hsjp = parent_latest_blocks[parent][j];
+    int hsjp = partner_latest_blocks[parent][j];
 
     // inequality 1: limiting maximum fall-behind on single substream within node
     // the specification claims a new parent must satisfy these inequalities. however, inequality 1 relies on our own node's health.
@@ -241,9 +258,9 @@ bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<T
     }
 
     // inequality 2: limiting maximum fall-behind on parent substream from highest known block
-    if (parent_latest_blocks.size() > 0) {
+    if (partner_latest_blocks.size() > 0) {
         std::set<int> highest_per_partner;
-        for (auto parent : parent_latest_blocks) {
+        for (auto parent : partner_latest_blocks) {
             highest_per_partner.insert(*max_element(parent.second.begin(), parent.second.end()));
         }
         int hsiq = *max_element(highest_per_partner.begin(), highest_per_partner.end());
@@ -251,6 +268,19 @@ bool StreamManager::is_parent_failing(TransportAddress parent, int j, std::map<T
     }
 
     return false;
+}
+
+// cooldowns
+void StreamManager::set_cooldown(int substream) {
+    Cooldown* cooldown = new Cooldown();
+    cooldown->setSubstream(substream);
+    reselect_cooldown[substream] = cooldown;
+    parent->scheduleAt(simTime() + reselect_cooldown_interval, cooldown);
+}
+
+void StreamManager::remove_cooldown(Cooldown* cooldown) {
+    reselect_cooldown[cooldown->getSubstream()] = NULL;
+    delete cooldown;
 }
 
 // BUFFER_MAP // UDP
@@ -271,9 +301,19 @@ void StreamManager::receive_buffer_map_message(BufferMapMsg* buffer_map_msg) {
     for (int ss = 0; ss < substream_count; ++ss) {
         auto entry = incoming_subscriptions.find(ss);
         if (entry != incoming_subscriptions.end()) {
+            if (substream_children[ss].find(buffer_map_msg->getFrom()) == substream_children[ss].end()) {
+                if (buffer_map_msg->getFrom().getIp().str() == std::string("1.0.0.10")) {
+                    std::cout << "    + " << ss << " " << parent->getThisNode().getIp().str() << std::endl;
+                }
+            }
             substream_children[ss].insert({buffer_map_msg->getFrom(), entry->second});
         } else {
-            substream_children[ss].erase(buffer_map_msg->getFrom());
+            int temp = substream_children[ss].erase(buffer_map_msg->getFrom());
+            if (temp == 1) {
+                if (buffer_map_msg->getFrom().getIp().str() == std::string("1.0.0.10")) {
+                    std::cout << "    - " << ss << " " << parent->getThisNode().getIp().str() << std::endl;
+                }
+            }
         }
     }
     update_display_string();
@@ -282,11 +322,11 @@ void StreamManager::receive_buffer_map_message(BufferMapMsg* buffer_map_msg) {
 // BLOCK // UDP
 // sending a block to a child partner, who then forwards it to their children
 void StreamManager::push_substream_blocks_to_subscribers(int ss) {
-    for (auto child_catchup_position : substream_children[ss]) {
+    for (auto it = substream_children[ss].begin(); it != substream_children[ss].end(); ++it) {
         // TODO: what if a child completely falls behind?
-        if (buffers.find(child_catchup_position.second) != buffers.end()) {
-            send_block_message(child_catchup_position.first, child_catchup_position.second);
-            child_catchup_position.second += substream_count;
+        if (buffers.find(it->second) != buffers.end()) {
+            send_block_message(it->first, it->second);
+            it->second += substream_count;
         }
     }
 }
@@ -294,6 +334,7 @@ void StreamManager::push_substream_blocks_to_subscribers(int ss) {
 void StreamManager::send_block_message(TransportAddress child, int index) {
     Block* block = new Block();
     block->setIndex(index);
+    block->setFrom(parent->getThisNode());
     block->setBitLength(block_size_bits);
     parent->sendMessageToUDP(child, block);
 }
@@ -307,6 +348,7 @@ void StreamManager::receive_block_message(Block* block) {
         if (parent->getThisNode().getIp().str() == std::string("1.0.0.10")) {
             std::cout << parent->getThisNode().getIp().str()
                         << ": received out-of-bounds block " << block_index
+                        << " from " << block->getFrom().getIp().str()
                         << ((block_index >= playout_index) ? " (too high)" : " (too low)")
                         << std::endl;
         }
@@ -314,14 +356,20 @@ void StreamManager::receive_block_message(Block* block) {
         oob_blocks++;
     } else if (buffers.find(block_index) == buffers.end()) {
         if (parent->getThisNode().getIp().str() == std::string("1.0.0.10")) {
-            std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << "..." << std::endl;
+            std::cout << parent->getThisNode().getIp().str()
+                    << ": received " << block_index
+                    << " from " << block->getFrom().getIp().str()
+                    << "..." << std::endl;
         }
         if (block_index > latest_blocks[ss]) latest_blocks[ss] = block_index;
         buffers.insert(block_index);
         received_blocks++;
     } else {
         if (parent->getThisNode().getIp().str() == std::string("1.0.0.10")) {
-            std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << " more than once..." << std::endl;
+            std::cout << parent->getThisNode().getIp().str()
+                    << ": received " << block_index
+                    << " from " << block->getFrom().getIp().str()
+                    << " more than once..." << std::endl;
         }
         duplicate_blocks++;
     }

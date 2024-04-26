@@ -166,6 +166,11 @@ message Failure {
 // self-message to call when the node's partner network is completely collapsed and we should start over
 message TotalPartnerFailure {}
 
+// self-message to disable/enable reselection of a given substream
+message Cooldown {
+ 	int substream;   
+}
+
 // new coolstreaming buffermap exchange, extended with partnerlink data
 packet BufferMapMsg extends BaseOverlayMessage {
     TransportAddress from;
@@ -177,6 +182,7 @@ packet BufferMapMsg extends BaseOverlayMessage {
 // new coolstreaming block push
 packet Block extends BaseOverlayMessage {
  	int index;
+ 	TransportAddress from;
 }
 
 // active_node finished downloading self-message/timer

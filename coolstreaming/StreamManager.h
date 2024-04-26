@@ -32,6 +32,7 @@ public:
     Node* parent;
     int substream_count; // number of substreams
     int exchange_interval_s; // time between buffermap sends
+    simtime_t reselect_cooldown_interval; // time before a substream can be reselected again after reselection
     int buffer_size; // max length of the buffer. this should only be needed by the origin since nodes are semi-synchronized
     int block_length_s; // block length in seconds
     int block_size_bits; // block size in bits
@@ -53,6 +54,7 @@ public:
     cMessage* exchange_timer;
     cMessage* playout_timer;
     cMessage* catchup_timer;
+    std::vector<Cooldown*> reselect_cooldown; // reselection cooldown timer for each substream
 
     // stats
     int hit_playouts;
@@ -62,12 +64,12 @@ public:
     int oob_blocks;
 
     // lifecycle
-    void init(Node* p, int sc, int eis, int bs, int bls, int bsb, int ts_in, int tp_in, double ppttsp, bool ds);
+    void init(Node* p, int sc, int eis, int rcis, int bs, int bls, int bsb, int ts_in, int tp_in, double ppttsp, bool ds);
     bool should_start(double partner_percentage);
     void start(int start_index);
     void reselect_parents_and_exchange_partners(std::map<TransportAddress, std::vector<int>> parent_latest_blocks,
             std::map<TransportAddress, TransportAddress> associations, bool panicking);
-    void reselect_parents(std::map<TransportAddress, std::vector<int>> parent_latest_blocks);
+    std::set<TransportAddress> reselect_parents(std::map<TransportAddress, std::vector<int>> parent_latest_blocks);
     void playout();
     void catchup_children();
     void leave_overlay();
@@ -79,6 +81,10 @@ public:
     BufferMap get_buffer_map(TransportAddress parent);
     std::map<int, int> get_subscription_map(TransportAddress partner); // second vector for buffer map
     bool is_parent_failing(TransportAddress parent, int j, std::map<TransportAddress, std::vector<int>> parent_latest_blocks, bool local_node_compromised = false);
+
+    // cooldowns
+    void set_cooldown(int substream);
+    void remove_cooldown(Cooldown* cooldown);
 
     // BUFFER_MAP // UDP
     // exchange buffer_maps with peers to update local view of blocks

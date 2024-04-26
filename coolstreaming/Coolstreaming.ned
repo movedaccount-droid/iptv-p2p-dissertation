@@ -42,6 +42,7 @@ simple Node extends BaseOverlay
    	 	double switch_interval_s; // delay between scoring and trying out new partners from mcache
    	 	
    	 	int exchange_interval_s; // delay between buffermap being sent
+    	int reselect_cooldown_interval_s; // time before a substream can be reselected again after reselection
    	 	int buffer_size; // stored blocks in buffer. probably just 120
     	double start_threshold; // percentage filled before we start playback
    	 	
