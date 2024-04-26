@@ -192,7 +192,7 @@ void StreamManager::update_display_string() {
 }
 
 int StreamManager::get_next_needed_block(int substream) {
-    if (latest_blocks[substream] == -1) {
+    if (latest_blocks[substream] == -1 || latest_blocks[substream] < playout_index) {
         // manually calculate the correct block
         int current_substream_id = playout_index % substream_count;
         int diff = substream - current_substream_id;
@@ -284,7 +284,7 @@ void StreamManager::receive_buffer_map_message(BufferMapMsg* buffer_map_msg) {
 void StreamManager::push_substream_blocks_to_subscribers(int ss) {
     for (auto child_catchup_position : substream_children[ss]) {
         // TODO: what if a child completely falls behind?
-        if (std::find(buffers.begin(), buffers.end(), child_catchup_position.second) != buffers.end()) {
+        if (buffers.find(child_catchup_position.second) != buffers.end()) {
             send_block_message(child_catchup_position.first, child_catchup_position.second);
             child_catchup_position.second += substream_count;
         }
@@ -303,22 +303,31 @@ void StreamManager::receive_block_message(Block* block) {
     // buffers at will, so we can take any block at any time, provided it fits our limit
     int block_index = block->getIndex();
     int ss = block_index % substream_count;
-    if (block_index >= playout_index && block_index <= playout_index + buffer_size) {
-        std::cout << parent->getThisNode().getIp().str()
-                << ": received out-of-bounds block " << block_index
-                << ((block_index >= playout_index) ? " (too high)" : " (too low)")
-                << std::endl;
+    if (block_index < playout_index || block_index > playout_index + buffer_size) {
+        if (parent->getThisNode().getIp().str() == std::string("1.0.0.10")) {
+            std::cout << parent->getThisNode().getIp().str()
+                        << ": received out-of-bounds block " << block_index
+                        << ((block_index >= playout_index) ? " (too high)" : " (too low)")
+                        << std::endl;
+        }
+
         oob_blocks++;
     } else if (buffers.find(block_index) == buffers.end()) {
+        if (parent->getThisNode().getIp().str() == std::string("1.0.0.10")) {
+            std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << "..." << std::endl;
+        }
         if (block_index > latest_blocks[ss]) latest_blocks[ss] = block_index;
         buffers.insert(block_index);
         received_blocks++;
     } else {
-        std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << " more than once..." << std::endl;
+        if (parent->getThisNode().getIp().str() == std::string("1.0.0.10")) {
+            std::cout << parent->getThisNode().getIp().str() << ": received " << block_index << " more than once..." << std::endl;
+        }
         duplicate_blocks++;
     }
     // either way push blocks to subscribers.
     push_substream_blocks_to_subscribers(ss);
+    update_display_string();
 }
 
 
