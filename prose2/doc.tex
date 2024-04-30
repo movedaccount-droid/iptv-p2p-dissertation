@@ -43,16 +43,34 @@ explaining why we use/care about churn vs other characteristics
 \subsection{Overlay Structure}
 \subsection{Peer Selection Strategies}
 \subsection{Chunk Schedulers}
-\subsection{Novelties}
 \subsection{Historic Implementations}
 We now consider historic implementations of peer-to-peer streaming systems in relation to the above characteristics. Of most relevance to our paper is DONet, commercially branded Coolstreaming (\cite{1498486}). Considered the first of its breed, Coolstreaming \cite{Xie2007} \cite{asdasd} \cite{1498486}
-\section{Another Look at Coolstreaming}
-\section{Introducing \textit{Coolstreaming-Spiked}}
-\section{Improvements Chosen}
+\subsection{Implementation-Specific Improvements}
 \section{Methodology}
-\section{Analysis}
+our intended methodology. this is essentially just "we were going to implement coolstreaming, then a few improvements, then a monolithic solution for comparison" with maybe some dates and whatever
+\section{Implementation}
+discussing the failure of coolstreaming and what that involves
+\section{Results}
+jsut offhandedly mentioning that Yes, It Workas Kind Of
 \section{Discussion}
+\subsection{The Coolstreaming Family Tree}
+looking at the various names and confusion this has caused, in this project and others
+\subsection{The Fully-Connected Network Problem}
+the difficulty in specifying a partnership protocol that can handle networks of M+1. this is no longer about it being impossible !! simply that this is non-trivial and should have been specified
+\subsection{Choosing New Neighbours}
+disabling a neighbour inequality to force the network to funciotn. fuck off
+\subsection{Requesting the Block}
+lack of clarity in playout index calculations. we already know this sucks
+\subsection{Brainslugging and Production Optimization}
+the fucked up implementation of scamp and other production optimizations
+\subsection{What does Coolstreaming need to be?}
+a research network. nobody cares about this thing for absolute production performance anymore, we are far far beyond that point. it is more important to operate as a baseline.
+\subsection{Introducing \textit{coolstreaming-spiked}}
+our proposals for a better coolstreaming for the research community. unfucked scamp, the partnerlink specified partnership protocol, and some other things that we clearly do not have answers for [if we did, we'd have a working network!] but should be Open Research Questions
+\subsection{The \textit{Partnerlink} algorithm}
+simple definition of partnerlink. remember we need this because of the research network's shape - we want to keep the switching algorithm, and this was already a problem within donet, now worsened in new coolstreaming.
 \section{Conclusion}
+holy fuck. this sucks
 
 \printbibliography
 \end{document}
