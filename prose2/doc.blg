@@ -1,0 +1,20 @@
+[0] Config.pm:307> INFO - This is Biber 2.17
+[0] Config.pm:310> INFO - Logfile is 'doc.blg'
+[50] biber:340> INFO - === Mon Apr 29, 2024, 23:58:03
+[62] Biber.pm:418> INFO - Reading 'doc.bcf'
+[150] Biber.pm:972> INFO - Found 4 citekeys in bib section 0
+[160] Biber.pm:4383> INFO - Processing section 0
+[166] Biber.pm:4574> INFO - Looking for bibtex file 'jabref.bib' for section 0
+[166] bibtex.pm:1713> INFO - LaTeX decoding ...
+[168] bibtex.pm:1518> INFO - Found BibTeX data source 'jabref.bib'
+[197] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[197] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'level = 4' with 'level = 2'
+[197] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[197] Biber.pm:4203> INFO - Sorting list 'cms/global//global/global' of type 'entry' with template 'cms' and locale 'en-US'
+[197] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
+[199] bbl.pm:654> INFO - Writing 'doc.bbl' with encoding 'UTF-8'
+[200] bbl.pm:757> INFO - Output to doc.bbl
+[200] Biber.pm:130> WARN - I didn't find a database entry for 'archiveCacheLogicResearch' (section 0)
+[200] Biber.pm:130> WARN - I didn't find a database entry for '1498486' (section 0)
+[200] Biber.pm:130> WARN - I didn't find a database entry for 'asdasd' (section 0)
+[200] Biber.pm:132> INFO - WARNINGS: 3
