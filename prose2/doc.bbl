@@ -19,6 +19,290 @@
 
 \refsection{0}
   \datalist[entry]{cms/global//global/global}
+    \entry{Beraldi2010}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=7b0e862cdf301063c88476ad3152f091}{%
+           family={Beraldi},
+           familyi={B\bibinitperiod},
+           given={Roberto},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=305ac396f9f3869b6477cb425a515fb1}{%
+           family={Galiffa},
+           familyi={G\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f38965c69f1d814680e35212ac6cd5bc}{%
+           family={Alnuweiri},
+           familyi={A\bibinitperiod},
+           given={Hussein},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{680052e26c2038711f5c139f519bbcef}
+      \strng{fullhash}{680052e26c2038711f5c139f519bbcef}
+      \strng{bibnamehash}{680052e26c2038711f5c139f519bbcef}
+      \strng{authorbibnamehash}{680052e26c2038711f5c139f519bbcef}
+      \strng{authornamehash}{680052e26c2038711f5c139f519bbcef}
+      \strng{authorfullhash}{680052e26c2038711f5c139f519bbcef}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2010 IEEE 30th International Conference on Distributed Computing Systems Workshops}
+      \field{title}{W-Coolstreaming a Protocol for Collaborative Data Streaming for Wireless Networks}
+      \field{year}{2010}
+      \field{pages}{221\bibrangedash 226}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/ICDCSW.2010.78
+      \endverb
+      \keyw{Peer to peer computing;Streaming media;Delay;Indexes;Protocols;Receivers;Wireless networks}
+    \endentry
+    \entry{Kondo2014}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{un=0,uniquepart=base,hash=ebcea86e011dd703cc751f25f994c105}{%
+           family={Kondo},
+           familyi={K\bibinitperiod},
+           given={Daishi},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2f37cd89805044392262318169db6029}{%
+           family={Hirota},
+           familyi={H\bibinitperiod},
+           given={Yusuke},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=dc9384a4eba73d1d81cbf5fe365e17e4}{%
+           family={Fujimoto},
+           familyi={F\bibinitperiod},
+           given={Akihiro},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7b241b4a45acb65f1c470b4342ded6b7}{%
+           family={Tode},
+           familyi={T\bibinitperiod},
+           given={Hideki},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=216ebfe72a3058e52a1b186343222ca9}{%
+           family={Murakami},
+           familyi={M\bibinitperiod},
+           given={Koso},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{44438360218d23e23dc71b8f8c1ecb89}
+      \strng{fullhash}{a5f900299c6ffec8040fdea6ba0a1b79}
+      \strng{bibnamehash}{a5f900299c6ffec8040fdea6ba0a1b79}
+      \strng{authorbibnamehash}{a5f900299c6ffec8040fdea6ba0a1b79}
+      \strng{authornamehash}{44438360218d23e23dc71b8f8c1ecb89}
+      \strng{authorfullhash}{a5f900299c6ffec8040fdea6ba0a1b79}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2014 16th International Telecommunications Network Strategy and Planning Symposium (Networks)}
+      \field{title}{P2P live streaming system for multi-view video with fast switching}
+      \field{year}{2014}
+      \field{pages}{1\bibrangedash 7}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1109/NETWKS.2014.6959253
+      \endverb
+      \keyw{Switches;Peer-to-peer computing;Streaming media;Servers;Delays;Watches;Overlay networks}
+    \endentry
+    \entry{Lan2011}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=0725e01198a3a778494fe857e8594957}{%
+           family={Lan},
+           familyi={L\bibinitperiod},
+           given={Shanzhen},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=16a6bb056f6786baa492ae9c2e59ac22}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Qi},
+           giveni={Q\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6d3a0b941ba916c2ae41a3a5895f8dad}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Xinggong},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8ae7e65e05955e78f45f85b82b3bd270}{%
+           family={Guo},
+           familyi={G\bibinitperiod},
+           given={Zongming},
+           giveni={Z\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{b5a92147f28d405459bb9d01e858d4d1}
+      \strng{fullhash}{f45ef7e6672cf488cc8f0b2dfa263ebb}
+      \strng{bibnamehash}{f45ef7e6672cf488cc8f0b2dfa263ebb}
+      \strng{authorbibnamehash}{f45ef7e6672cf488cc8f0b2dfa263ebb}
+      \strng{authornamehash}{b5a92147f28d405459bb9d01e858d4d1}
+      \strng{authorfullhash}{f45ef7e6672cf488cc8f0b2dfa263ebb}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2011 3rd International Conference on Computer Research and Development}
+      \field{title}{Dynamic asynchronous buffer management to improve data continuity in P2P live streaming}
+      \field{volume}{2}
+      \field{year}{2011}
+      \field{pages}{65\bibrangedash 69}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/ICCRD.2011.5764085
+      \endverb
+      \keyw{Peer to peer computing;Heuristic algorithms;Synchronization;Availability;Bandwidth;Media;Prediction algorithms;video streaming;playback continuity;peer-to-peer (P2P);buffer synchronization}
+    \endentry
+    \entry{Li2008}{inproceedings}{}
+      \name{author}{7}{}{%
+        {{un=2,uniquepart=given,hash=3cdf5aa30577e71dbbd44bcd3a4a00a0}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={B.},
+           giveni={B\bibinitperiod},
+           givenun=2}}%
+        {{un=0,uniquepart=base,hash=05914ffc126d0a489a0c1e0de4fa2468}{%
+           family={Xie},
+           familyi={X\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7bbb6843e99282aefddce91798eba7e4}{%
+           family={Qu},
+           familyi={Q\bibinitperiod},
+           given={Y.},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a1ee744be699e2f2ada464a2110f08ec}{%
+           family={Keung},
+           familyi={K\bibinitperiod},
+           given={G.\bibnamedelimi Y.},
+           giveni={G\bibinitperiod\bibinitdelim Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4ba20cab839f1fa37eda3adfc1b61b0c}{%
+           family={Lin},
+           familyi={L\bibinitperiod},
+           given={C.},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7bb074c37d04e2fb30a473aa12102ae1}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=30ff3ef4a89e0c6777f480da5386b053}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={X.},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{386c619b92c195e79ab52042f99a0795}
+      \strng{fullhash}{f2d7d08f8b89d1d50b8e2af68478c4ad}
+      \strng{bibnamehash}{f2d7d08f8b89d1d50b8e2af68478c4ad}
+      \strng{authorbibnamehash}{f2d7d08f8b89d1d50b8e2af68478c4ad}
+      \strng{authornamehash}{386c619b92c195e79ab52042f99a0795}
+      \strng{authorfullhash}{f2d7d08f8b89d1d50b8e2af68478c4ad}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IEEE INFOCOM 2008 - The 27th Conference on Computer Communications}
+      \field{title}{Inside the New Coolstreaming: Principles, Measurements and Performance Implications}
+      \field{year}{2008}
+      \field{pages}{1031\bibrangedash 1039}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/INFOCOM.2008.157
+      \endverb
+      \keyw{Peer to peer computing;Streaming media;Contracts;Internet;Topology;Large-scale systems;Proposals;Delay;Communications Society;Broadcasting}
+    \endentry
+    \entry{Li2007}{article}{}
+      \name{author}{7}{}{%
+        {{un=2,uniquepart=given,hash=a9c8728e355996d027a7e56b60820a18}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Bo},
+           giveni={B\bibinitperiod},
+           givenun=2}}%
+        {{un=0,uniquepart=base,hash=ef710a3e4042009fdc0e501bcb5b4af4}{%
+           family={Xie},
+           familyi={X\bibinitperiod},
+           given={Susu},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=046d81c610e43de0b45db1f65d0a80b5}{%
+           family={Keung},
+           familyi={K\bibinitperiod},
+           given={Gabriel\bibnamedelima Y.},
+           giveni={G\bibinitperiod\bibinitdelim Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7b6ee7253d0b6ff8d31a7d6daed3d88e}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Jiangchuan},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=51d9ef26181e2e8a9dc546b401e0bb26}{%
+           family={Stoica},
+           familyi={S\bibinitperiod},
+           given={Ion},
+           giveni={I\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0f5b8b674eea6432492c32e093925682}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Hui},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4bb6570d4c7bca1716f1257e4895a473}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Xinyan},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{59364d087cfb3e47feb01d728ac8c908}
+      \strng{fullhash}{f025dd5d3429c05ef4bfe1b8eb5451aa}
+      \strng{bibnamehash}{f025dd5d3429c05ef4bfe1b8eb5451aa}
+      \strng{authorbibnamehash}{f025dd5d3429c05ef4bfe1b8eb5451aa}
+      \strng{authornamehash}{59364d087cfb3e47feb01d728ac8c908}
+      \strng{authorfullhash}{f025dd5d3429c05ef4bfe1b8eb5451aa}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Journal on Selected Areas in Communications}
+      \field{number}{9}
+      \field{title}{An Empirical Study of the Coolstreaming+ System}
+      \field{volume}{25}
+      \field{year}{2007}
+      \field{pages}{1627\bibrangedash 1639}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1109/JSAC.2007.071203
+      \endverb
+      \keyw{Peer to peer computing;Streaming media;Internet;Protocols;Computer science;Large-scale systems;Resource management;Prototypes;Scalability;Broadcasting}
+    \endentry
     \entry{Xie2007}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=ef710a3e4042009fdc0e501bcb5b4af4}{%
@@ -69,6 +353,56 @@
       \verb 10.1109/TMM.2007.907469
       \endverb
       \keyw{Streaming media;Topology;Peer to peer computing;Internet;System analysis and design;Content management;Dynamic scheduling;Convergence;Scalability;Technological innovation;IPTV;measurement;peer-to-peer technology;video streaming}
+    \endentry
+    \entry{Zhang2005}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=4bb6570d4c7bca1716f1257e4895a473}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Xinyan},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7b6ee7253d0b6ff8d31a7d6daed3d88e}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Jiangchuan},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a9c8728e355996d027a7e56b60820a18}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Bo},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e6addd141e01b06d8314c2eca0850003}{%
+           family={Yum},
+           familyi={Y\bibinitperiod},
+           given={Y.-S.P.},
+           giveni={Y\bibinithyphendelim S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{49484ec699a6c73272523b98fdd2f9e4}
+      \strng{fullhash}{70d70c5b487a56f2b9da12d7621c8340}
+      \strng{bibnamehash}{70d70c5b487a56f2b9da12d7621c8340}
+      \strng{authorbibnamehash}{70d70c5b487a56f2b9da12d7621c8340}
+      \strng{authornamehash}{49484ec699a6c73272523b98fdd2f9e4}
+      \strng{authorfullhash}{70d70c5b487a56f2b9da12d7621c8340}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings IEEE 24th Annual Joint Conference of the IEEE Computer and Communications Societies.}
+      \field{title}{CoolStreaming/DONet: a data-driven overlay network for peer-to-peer live media streaming}
+      \field{volume}{3}
+      \field{year}{2005}
+      \field{pages}{2102\bibrangedash 2111 vol. 3}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1109/INFCOM.2005.1498486
+      \endverb
+      \keyw{Streaming media;Peer to peer computing;Availability;Delay;Scheduling algorithm;Information retrieval;Robustness;Content management;Internet;Large-scale systems}
     \endentry
   \enddatalist
   \missing{1498486}

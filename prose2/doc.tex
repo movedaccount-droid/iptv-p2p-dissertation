@@ -7,6 +7,7 @@
 \usepackage{csquotes}
 
 \usepackage[authordate-trad,backend=biber]{biblatex-chicago}
+\usepackage{todonotes}
 \addbibresource{jabref.bib}
 
 %opening
@@ -47,14 +48,52 @@ explaining why we use/care about churn vs other characteristics
 We now consider historic implementations of peer-to-peer streaming systems in relation to the above characteristics. Of most relevance to our paper is DONet, commercially branded Coolstreaming (\cite{1498486}). Considered the first of its breed, Coolstreaming \cite{Xie2007} \cite{asdasd} \cite{1498486}
 \subsection{Implementation-Specific Improvements}
 \section{Methodology}
-our intended methodology. this is essentially just "we were going to implement coolstreaming, then a few improvements, then a monolithic solution for comparison" with maybe some dates and whatever
+We aimed to pit three models against each other in various QoS tests \todo{which?} to gather specific numbers on the improvements between each. Initial tests would be run on New Coolstreaming, widely considered the last popular IPTV P2P system and a good benchmark \todo{we probably already explained this in the lit review}. We would then extend this with fitting modular improvements for further measurements. \todo{name some shit} were particular targets, because \todo{blah}. Finally, we expected to implement a monolithic model, \todo{name}, to compare the capacity of incremental improvements versus the design of a single, deeply-coupled architecture.
+
+As a simulation environment, we chose OverSim. Its included churn mechanisms, quick-switching between simplified and realistic underlay models, and complete debugging suite eased the otherwise involved development cycle. Ejecting from OverSim to OMNET++ would also have been trivial, though was never necessary.
+
+Statistics would be presented with the built-in OMNET++ visualization tools.
+
+\todo{needs expansion. we could mention dates?? what do people normally put here}
 \section{Implementation}
-discussing the failure of coolstreaming and what that involves
+We based our initial experiments on New Coolstreaming as described in \cite{Li2008}. We quickly ran into problems - whilst the paper describes the stream manager and buffer map exchange in great detail, little time is given to the membership and partnership managers. The upkeep of the \textit{mCache} with incoming peers is unspecified, as is most connection management action related to churning or failing nodes and some key equations to system function. We pushed forward and attempted to fill the blanks ourselves. The final result, whilst technically functional, invariably failed to meet playout across nodes and was in no way correspondent of New Coolstreaming's measured real-world performance.
+
+The New Coolstreaming paper concludes its discussion on the problem modules stating \textit{"these basic modules form the base for the initial Coolstreaming system,"} and that the New Coolstreaming \textit{"has made significant changes in the design of other components."} We thus considered that these modules were holdovers from the older design, and that this statement implied New Coolstreaming must be built with  DONet/Coolstreaming as groundwork. We thereby set about an implementation of this more primitive design.
+
+The final DONet implementation completed following two weeks of work. This network was similarly not ideal, though the cause was mostly banal - New Coolstreaming strips the buffer, scheduler and related messaging completely, so we saw no need to optimize these components. More worryingly, the partnership manager collapsed quickly under even minimal churn, discussed later in section \todo{SECTIONWHAT}. Still, this constituted enough the groundwork needed to continue.
+
+Returning with wiser eyes, we found that our architecture did not align at all with the basic modules in New Coolstreaming. \textit{How could this be?} As discussed later in section \todo{SECTION}, DONet has clarity problems of its own when describing parts of other systems, and we noticed that the output of these components - \textit{M}-number exchanging partners ready for video transmission - \textit{did} align with the older model. We therefore treated this as a simple faulty description, and moved on to the design of the stream manager.
+
+The well-specified stream manager came through without a hitch, but placed new constraints on the partnership manager that our already brittle implementation could not bear. We hence designed \textit{Partnerlink}, a relationship algorithm reconciling the high-churn overlay with New Coolstreaming's low-churn subscription requirements and performance at scale. This new algorithm meshed well with the stream manager, and brought our implementation to a close.
+
+The full development process took over a month. We were therefore not able to complete any further models or make any comparisons on QoS benefits.
+
 \section{Results}
 jsut offhandedly mentioning that Yes, It Workas Kind Of
 \section{Discussion}
+\textit{What went wrong?} New Coolstreaming is not unique as an overlay; no features within should prove particularly challenging to implement. In this section, we explore the Coolstreaming family as a whole, and illuminate the many challenges faced in their implementation amiss in the papers themselves.
 \subsection{The Coolstreaming Family Tree}
-looking at the various names and confusion this has caused, in this project and others
+We have so far regarded Coolstreaming as a dyad of the mesh-pull DONet/Coolstreaming and hybrid-push-pull New Coolstreaming, proposed across two papers. The reality is not so simple. Coolstreaming is formed of two models, as described. However, they have been proposed under \textit{four} different names across \textit{four} papers:
+
+\begin{itemize}
+	\item As \textit{DONet} and \textit{Coolstreaming}, in \textit{CoolStreaming/DONet: a data-driven overlay network for peer-to-peer live media streaming} \cite{Zhang2005}
+	\item As \textit{Coolstreaming}, in \textit{Coolstreaming: Design, Theory, and Practice} \cite{Xie2007}
+	\item As \textit{Coolstreaming+}, in \textit{An Empirical Study of the Coolstreaming+ System} \cite{Li2007}
+	\item As \textit{"the new Coolstreaming,"} in \textit{Inside the New Coolstreaming: Principles, Measurements and Performance Implications} \cite{Li2008}.
+\end{itemize}
+
+Note that the name \textit{Coolstreaming} is intended by this final paper, but \textit{The New Coolstreaming} became the colloquial model name as a result of its title. Only the first paper contains the old model we have discussed as \textit{DONet/Coolstreaming} - the others all specify \textit{New Coolstreaming}, despite the name differences.
+
+The name \textit{Coolstreaming} legally refers both to the older \textit{DONet} model and the newer \textit{New Coolstreaming} model. The confusion that results is obvious. \cite{Kondo2014} describes the \textit{SCAMP} membership protocol, the push-pull mechanism and the bootstrap node as part of the same model, despite \textit{SCAMP} being specific to the mesh-pull \textit{DONet}. \cite{Beraldi2010} makes much the same error. \cite{Lan2011} takes \textit{DONet} as its key example of a buffer-map driven overlay, but ascribes it the synchronization method seen in \textit{New Coolstreaming}. Further examples still can be found of correct prose, but with \cite{Xie2007} being cited in \cite{Zhang2005}'s place, or vice versa.
+
+It is interesting to note that the papers themselves appear to have issues keeping the versions straight:  \cite{Li2008} describes the stream manager and new mCache system as part of the \textit{"initial Coolstreaming system"} and replaced in \textit{"the new Coolstreaming system"}, despite all of these components being local to \textit{New Coolstreaming} only - hence our initial hesitance to visit \textit{DONet}.
+
+This escalates considering the final three papers. \cite{Xie2007} is the canon definition of \textit{New Coolstreaming}, alongside analysis of a real-world test period to determine convergence rates, start-up delay and other overlay-specific statistics. The other papers duplicate this and add further analysis: \cite{Li2007} splits users into categories, identifying network traversal problems and their respective impact on contribution. \cite{Li2008} performs an additional simulation to identify ideal values for key system parameters.
+
+This duplication means each paper opens with a definition of \textit{New Coolstreaming}. These are not summaries - the \textit{Coolstreaming+} specification is shortest yet still clocks in at two and a half pages. The majority of this text is word-for-word identical between papers, or at best reworded. The membership and partnership managers, though, have their specifications cut down completely, no longer parsing as a working system. For instance, connection management is resolved in \cite{Xie2007} by an off-handed mention of TCP - which includes a leaving and timeout mechanism, if specified. In the other papers, TCP is never mentioned; no other connection management is described. Mechanisms to fill the bootstrap node's \textit{mCache} alongside one key function related to playout initialization are similarly constrained to this paper, despite these papers claiming to \textit{"describe the architecture and components in the new Coolstreaming system"}.
+
+Luckily, we appear to be the only researchers to fall into this trap. Resulting development time was certainly extended, but our criticisms of the paper and our final solution remain valid.
+
 \subsection{The Fully-Connected Network Problem}
 the difficulty in specifying a partnership protocol that can handle networks of M+1. this is no longer about it being impossible !! simply that this is non-trivial and should have been specified
 \subsection{Choosing New Neighbours}
@@ -62,7 +101,7 @@ disabling a neighbour inequality to force the network to funciotn. fuck off
 \subsection{Requesting the Block}
 lack of clarity in playout index calculations. we already know this sucks
 \subsection{Brainslugging and Production Optimization}
-the fucked up implementation of scamp and other production optimizations
+\textit{DONet} defers to \textit{SCAMP} for membership connection management. SCAMP, as established \todo{establish this}, is well-proven to 
 \subsection{What does Coolstreaming need to be?}
 a research network. nobody cares about this thing for absolute production performance anymore, we are far far beyond that point. it is more important to operate as a baseline.
 \subsection{Introducing \textit{coolstreaming-spiked}}

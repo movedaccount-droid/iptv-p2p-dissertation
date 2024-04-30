@@ -4440,10 +4440,31 @@
     <bcf:citekey order="3">Xie2007</bcf:citekey>
     <bcf:citekey order="4">asdasd</bcf:citekey>
     <bcf:citekey order="5">1498486</bcf:citekey>
-    <bcf:citekey order="6">archiveCacheLogicResearch</bcf:citekey>
-    <bcf:citekey order="7">1498486</bcf:citekey>
+    <bcf:citekey order="6">Li2008</bcf:citekey>
+    <bcf:citekey order="7">Zhang2005</bcf:citekey>
     <bcf:citekey order="8">Xie2007</bcf:citekey>
-    <bcf:citekey order="9">asdasd</bcf:citekey>
+    <bcf:citekey order="9">Li2007</bcf:citekey>
+    <bcf:citekey order="10">Li2008</bcf:citekey>
+    <bcf:citekey order="11">Kondo2014</bcf:citekey>
+    <bcf:citekey order="12">Beraldi2010</bcf:citekey>
+    <bcf:citekey order="13">Lan2011</bcf:citekey>
+    <bcf:citekey order="14">Xie2007</bcf:citekey>
+    <bcf:citekey order="15">Zhang2005</bcf:citekey>
+    <bcf:citekey order="16">Li2008</bcf:citekey>
+    <bcf:citekey order="17">Xie2007</bcf:citekey>
+    <bcf:citekey order="18">Li2007</bcf:citekey>
+    <bcf:citekey order="19">Li2008</bcf:citekey>
+    <bcf:citekey order="20">Xie2007</bcf:citekey>
+    <bcf:citekey order="21">archiveCacheLogicResearch</bcf:citekey>
+    <bcf:citekey order="22">1498486</bcf:citekey>
+    <bcf:citekey order="23">Xie2007</bcf:citekey>
+    <bcf:citekey order="24">asdasd</bcf:citekey>
+    <bcf:citekey order="25">Li2008</bcf:citekey>
+    <bcf:citekey order="26">Zhang2005</bcf:citekey>
+    <bcf:citekey order="27">Li2007</bcf:citekey>
+    <bcf:citekey order="28">Kondo2014</bcf:citekey>
+    <bcf:citekey order="29">Beraldi2010</bcf:citekey>
+    <bcf:citekey order="30">Lan2011</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="cms">
