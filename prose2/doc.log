@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.4.18)  30 APR 2024 15:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.4.29)  1 MAY 2024 15:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -35,7 +35,7 @@ Package: inputenc 2021/02/14 v1.3d Input encoding file
 Package: babel 2022/01/26 3.70 The Babel package
 \babel@savecnt=\count193
 \U@D=\dimen139
-\l@unhyphenated=\language3
+\l@unhyphenated=\language87
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel/txtbabel.def)
 \bbl@readstream=\read2
@@ -43,16 +43,12 @@ Package: babel 2022/01/26 3.70 The Babel package
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel-english/english.ldf
 Language: english 2017/06/06 v3.3r English support from the babel system
-Package babel Info: Hyphen rules for 'british' set to \l@english
-(babel)             (\language0). Reported on input line 82.
-Package babel Info: Hyphen rules for 'UKenglish' set to \l@english
-(babel)             (\language0). Reported on input line 83.
 Package babel Info: Hyphen rules for 'canadian' set to \l@english
 (babel)             (\language0). Reported on input line 102.
-Package babel Info: Hyphen rules for 'australian' set to \l@english
-(babel)             (\language0). Reported on input line 105.
-Package babel Info: Hyphen rules for 'newzealand' set to \l@english
-(babel)             (\language0). Reported on input line 108.
+Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
+(babel)             (\language40). Reported on input line 105.
+Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
+(babel)             (\language40). Reported on input line 108.
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/csquotes/csquotes.sty
 Package: csquotes 2021-02-22 v5.2l context-sensitive quotations (JAW)
@@ -197,7 +193,7 @@ Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 \bibhang=\skip56
 \blx@bcfin=\read3
 \blx@bcfout=\write3
-\blx@langwohyphens=\language4
+\blx@langwohyphens=\language88
 \c@mincomprange=\count314
 \c@maxcomprange=\count315
 \c@mincompwidth=\count316
@@ -734,31 +730,190 @@ LaTeX Info: Redefining \addtolength on input line 81.
 )
 \c@@todonotes@numberoftodonotes=\count424
 )
+(/usr/share/texlive/texmf-dist/tex/latex/circuitikz/circuitikz.sty
+Package: circuitikz 2021/12/06{} The CircuiTikz circuit drawing package version
+ 1.4.5
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarycalc.code.tex
+File: tikzlibrarycalc.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.
+code.tex
+File: pgflibraryarrows.meta.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfarrowinset=\dimen194
+\pgfarrowlength=\dimen195
+\pgfarrowwidth=\dimen196
+\pgfarrowlinewidth=\dimen197
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarybending.code.tex
+File: tikzlibrarybending.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulebending.code.te
+x
+File: pgfmodulebending.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulenonlineartransf
+ormations.code.tex
+File: pgfmodulenonlineartransformations.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgftransformnonlinearflatness=\dimen198
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibrarycurvilinear.
+code.tex
+File: pgflibrarycurvilinear.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@curvilinear@time@a=\dimen199
+\pgf@curvilinear@length@a=\dimen256
+\pgf@curvilinear@length@b=\dimen257
+\pgf@curvilinear@length@c=\dimen258
+\pgf@curvilinear@length@d=\dimen259
+)
+\pgf@arrows@the@rigidity=\dimen260
+))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibraryfpu.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryfpu.code.tex
+)) (/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcirc.defines.tex
+\pgf@circ@count@a=\count425
+\pgf@circ@count@b=\count426
+\pgf@circ@count@c=\count427
+\pgf@circ@res@up=\dimen261
+\pgf@circ@res@down=\dimen262
+\pgf@circ@res@zero=\dimen263
+\pgf@circ@res@left=\dimen264
+\pgf@circ@res@right=\dimen265
+\pgf@circ@res@other=\dimen266
+\pgf@circ@res@step=\dimen267
+\pgf@circ@res@temp=\dimen268
+\pgf@circ@Rlen=\dimen269
+\pgf@circ@scaled@Rlen=\dimen270
+\pgfstartlinewidth=\dimen271
+)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircutils.tex
+\ctikz@scratchbox=\box62
+)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircpath.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircshapes.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircmonopoles.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircbipoles.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcirctripoles.tex
+\pgf@circ@res@count=\count428
+)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircquadpoles.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircmultipoles.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcirclabel.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircvoltage.tex
+\pgfcirc@labelshift=\dimen272
+)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcirccurrent.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/circuitikz/pgfcircflow.tex))
+(/usr/share/texlive/texmf-dist/tex/latex/mathtools/mathtools.sty
+Package: mathtools 2021/02/02 v1.28 mathematical typesetting tools
+
+(/usr/share/texlive/texmf-dist/tex/latex/mathtools/mhsetup.sty
+Package: mhsetup 2021/03/18 v1.4 programming setup (MH)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2021/10/15 v2.17l AMS math features
+\@mathmargin=\skip75
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks34
+\ex@=\dimen273
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen274
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2021/08/26 v2.02 operator names
+)
+\inf@bad=\count429
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count430
+\leftroot@=\count431
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count432
+\DOTSCASE@=\count433
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box63
+\strutbox@=\box64
+\big@size=\dimen275
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count434
+\c@MaxMatrixCols=\count435
+\dotsspace@=\muskip21
+\c@parentequation=\count436
+\dspbrk@lvl=\count437
+\tag@help=\toks35
+\row@=\count438
+\column@=\count439
+\maxfields@=\count440
+\andhelp@=\toks36
+\eqnshift@=\dimen276
+\alignsep@=\dimen277
+\tagshift@=\dimen278
+\tagwidth@=\dimen279
+\totwidth@=\dimen280
+\lineht@=\dimen281
+\@envbody=\toks37
+\multlinegap=\skip76
+\multlinetaggap=\skip77
+\mathdisplay@stack=\toks38
+LaTeX Info: Redefining \[ on input line 2938.
+LaTeX Info: Redefining \] on input line 2939.
+)
+\g_MT_multlinerow_int=\count441
+\l_MT_multwidth_dim=\dimen282
+\origjot=\skip78
+\l_MT_shortvdotswithinadjustabove_dim=\dimen283
+\l_MT_shortvdotswithinadjustbelow_dim=\dimen284
+\l_MT_above_intertext_sep=\dimen285
+\l_MT_below_intertext_sep=\dimen286
+\l_MT_above_shortintertext_sep=\dimen287
+\l_MT_below_shortintertext_sep=\dimen288
+\xmathstrut@box=\box65
+\xmathstrut@dim=\dimen289
+)
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
 Package csquotes Info: Redefining alias 'default' -> 'english'.
- (./doc.aux)
+ (./doc.aux
+
+LaTeX Warning: Label `some label' multiply defined.
+
+
+LaTeX Warning: Label `some label' multiply defined.
+
+)
 \openout1 = `doc.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
 Package biblatex Info: Trying to load language 'english' -> 'cms-american'...
 Package biblatex Info: ... file 'cms-american.lbx' found.
-
-(/usr/share/texlive/texmf-dist/tex/latex/biblatex-chicago/cms-american.lbx
+ (/usr/share/texlive/texmf-dist/tex/latex/biblatex-chicago/cms-american.lbx
 File: cms-american.lbx 2021/06/30 v 3.16 biblatex localization
 Package biblatex Info: Trying to load language 'american'...
 Package biblatex Info: ... file 'american.lbx' found.
@@ -807,25 +962,36 @@ Package biblatex Warning: The following entry could not be found
 (biblatex)                LaTeX afterwards.
 
 )
-Package biblatex Info: Reference section=0 on input line 17.
-Package biblatex Info: Reference segment=0 on input line 17.
+Package biblatex Info: Reference section=0 on input line 19.
+Package biblatex Info: Reference segment=0 on input line 19.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count425
-\scratchdimen=\dimen194
-\scratchbox=\box62
-\nofMPsegments=\count426
-\nofMParguments=\count427
-\everyMPshowfont=\toks34
-\MPscratchCnt=\count428
-\MPscratchDim=\dimen195
-\MPnumerator=\count429
-\makeMPintoPDFobject=\count430
-\everyMPtoPDFconversion=\toks35
+\scratchcounter=\count442
+\scratchdimen=\dimen290
+\scratchbox=\box66
+\nofMPsegments=\count443
+\nofMParguments=\count444
+\everyMPshowfont=\toks39
+\MPscratchCnt=\count445
+\MPscratchDim=\dimen291
+\MPnumerator=\count446
+\makeMPintoPDFobject=\count447
+\everyMPtoPDFconversion=\toks40
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+
+(/usr/share/texlive/texmf-dist/tex/latex/grfext/grfext.sty
+Package: grfext 2019/12/03 v1.3 Manage graphics extensions (HO)
+
+(/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+))
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 504.
 
 (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
@@ -835,85 +1001,81 @@ e
 Package todonotes Warning: The length marginparwidth is less than 2cm and will 
 most likely cause issues with the appearance of inserted todonotes. The issue c
 an be solved by adding a line like \setlength {\marginparwidth }{2cm} prior to 
-loading the todonotes package. on input line 17.
+loading the todonotes package. on input line 19.
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 19.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 19.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 
 LaTeX Warning: Citation 'archiveCacheLogicResearch' on page 2 undefined on inpu
-t line 34.
+t line 36.
 
 
-LaTeX Warning: Citation '1498486' on page 2 undefined on input line 48.
+LaTeX Warning: Citation '1498486' on page 2 undefined on input line 50.
 
 
-LaTeX Warning: Citation 'asdasd' on page 2 undefined on input line 48.
+LaTeX Warning: Citation 'asdasd' on page 2 undefined on input line 50.
 
 
-LaTeX Warning: Citation '1498486' on page 2 undefined on input line 48.
+LaTeX Warning: Citation '1498486' on page 2 undefined on input line 50.
 
 [2]
-Overfull \hbox (9.50604pt too wide) in paragraph at lines 51--51
+Overfull \hbox (9.50604pt too wide) in paragraph at lines 53--53
 [][][]\T1/cmr/m/n/12 which?[]  
  []
 
 
-Overfull \hbox (9.50604pt too wide) in paragraph at lines 51--51
+Overfull \hbox (9.50604pt too wide) in paragraph at lines 53--53
 [][][]\T1/cmr/m/n/12 which?[]  
  []
 
 
-Overfull \hbox (1.67465pt too wide) in paragraph at lines 51--51
+Overfull \hbox (1.67465pt too wide) in paragraph at lines 53--53
 \T1/cmr/m/n/12 prob- 
  []
 
 
-Overfull \hbox (2.65358pt too wide) in paragraph at lines 51--51
+Overfull \hbox (2.65358pt too wide) in paragraph at lines 53--53
 \T1/cmr/m/n/12 ready 
  []
 
 
-Overfull \hbox (11.46391pt too wide) in paragraph at lines 51--51
+Overfull \hbox (11.46391pt too wide) in paragraph at lines 53--53
 \T1/cmr/m/n/12 plained 
  []
 
 
-Overfull \hbox (1.67465pt too wide) in paragraph at lines 51--51
+Overfull \hbox (1.67465pt too wide) in paragraph at lines 53--53
 \T1/cmr/m/n/12 prob- 
  []
 
 
-Overfull \hbox (2.65358pt too wide) in paragraph at lines 51--51
+Overfull \hbox (2.65358pt too wide) in paragraph at lines 53--53
 \T1/cmr/m/n/12 ready 
  []
 
 
-Overfull \hbox (11.46391pt too wide) in paragraph at lines 51--51
+Overfull \hbox (11.46391pt too wide) in paragraph at lines 53--53
 \T1/cmr/m/n/12 plained 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 51--51
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 53--53
 [][][]\T1/cmr/m/n/12 name 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 51--51
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 53--53
 [][][]\T1/cmr/m/n/12 name 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 51--51
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 53--53
 [][][]\T1/cmr/m/n/12 name[]  
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 51--51
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 53--53
 [][][]\T1/cmr/m/n/12 name[]  
  []
 
@@ -927,42 +1089,42 @@ LaTeX Warning: Marginpar on page 3 moved.
 LaTeX Warning: Marginpar on page 3 moved.
 
 
-Overfull \hbox (2.39255pt too wide) in paragraph at lines 57--57
+Overfull \hbox (2.39255pt too wide) in paragraph at lines 59--59
 [][][]\T1/cmr/m/n/12 needs 
  []
 
 
-Overfull \hbox (1.67462pt too wide) in paragraph at lines 57--57
+Overfull \hbox (1.67462pt too wide) in paragraph at lines 59--59
 \T1/cmr/m/n/12 could 
  []
 
 
-Overfull \hbox (12.18181pt too wide) in paragraph at lines 57--57
+Overfull \hbox (12.18181pt too wide) in paragraph at lines 59--59
 \T1/cmr/m/n/12 dates?? 
  []
 
 
-Overfull \hbox (2.65353pt too wide) in paragraph at lines 57--57
+Overfull \hbox (2.65353pt too wide) in paragraph at lines 59--59
 \T1/cmr/m/n/12 mally 
  []
 
 
-Overfull \hbox (2.39255pt too wide) in paragraph at lines 57--57
+Overfull \hbox (2.39255pt too wide) in paragraph at lines 59--59
 [][][]\T1/cmr/m/n/12 needs 
  []
 
 
-Overfull \hbox (1.67462pt too wide) in paragraph at lines 57--57
+Overfull \hbox (1.67462pt too wide) in paragraph at lines 59--59
 \T1/cmr/m/n/12 could 
  []
 
 
-Overfull \hbox (12.18181pt too wide) in paragraph at lines 57--57
+Overfull \hbox (12.18181pt too wide) in paragraph at lines 59--59
 \T1/cmr/m/n/12 dates?? 
  []
 
 
-Overfull \hbox (2.65353pt too wide) in paragraph at lines 57--57
+Overfull \hbox (2.65353pt too wide) in paragraph at lines 59--59
 \T1/cmr/m/n/12 mally 
  []
 
@@ -970,81 +1132,233 @@ Overfull \hbox (2.65353pt too wide) in paragraph at lines 57--57
 LaTeX Warning: Marginpar on page 3 moved.
 
 [3]
-Overfull \hbox (65.11884pt too wide) in paragraph at lines 63--63
+Overfull \hbox (65.11884pt too wide) in paragraph at lines 65--65
 [][][]\T1/cmr/m/n/12 SECTIONWHAT[]  
  []
 
 
-Overfull \hbox (65.11884pt too wide) in paragraph at lines 63--63
+Overfull \hbox (65.11884pt too wide) in paragraph at lines 65--65
 [][][]\T1/cmr/m/n/12 SECTIONWHAT[]  
  []
 
 
-Overfull \hbox (27.9321pt too wide) in paragraph at lines 65--65
+Overfull \hbox (27.9321pt too wide) in paragraph at lines 67--67
 [][][]\T1/cmr/m/n/12 SECTION[]  
  []
 
 
-Overfull \hbox (27.9321pt too wide) in paragraph at lines 65--65
+Overfull \hbox (27.9321pt too wide) in paragraph at lines 67--67
 [][][]\T1/cmr/m/n/12 SECTION[]  
  []
 
 [4]
-Overfull \hbox (57.19641pt too wide) in paragraph at lines 76--77
+Overfull \hbox (57.19641pt too wide) in paragraph at lines 78--79
 \T1/cmr/m/n/12 We have so far re-garded Cool-stream-ing as a dyad of the mesh-p
 ull DONet/Coolstreaming
  []
 
 [5] [6]
-Overfull \hbox (18.77321pt too wide) in paragraph at lines 104--104
-[][][]\T1/cmr/m/n/12 establish 
+Overfull \hbox (64.301pt too wide) in paragraph at lines 168--168
+[][][]\T1/cmr/m/n/12 SECTIONNAME[]  
  []
 
 
-Overfull \hbox (18.77321pt too wide) in paragraph at lines 104--104
-[][][]\T1/cmr/m/n/12 establish 
+Overfull \hbox (64.301pt too wide) in paragraph at lines 168--168
+[][][]\T1/cmr/m/n/12 SECTIONNAME[]  
  []
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 114.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 114.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 114.
+[7] [8]
+Overfull \hbox (4.28514pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 ahead 
+ []
 
-Overfull \hbox (10.33772pt too wide) in paragraph at lines 115--115
+
+Overfull \hbox (7.22191pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 fanout 
+ []
+
+
+Overfull \hbox (5.6556pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 proofs 
+ []
+
+
+Overfull \hbox (16.83762pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 SCAMP 
+ []
+
+
+Overfull \hbox (4.28514pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 ahead 
+ []
+
+
+Overfull \hbox (7.22191pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 fanout 
+ []
+
+
+Overfull \hbox (5.6556pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 proofs 
+ []
+
+
+Overfull \hbox (16.83762pt too wide) in paragraph at lines 183--183
+\T1/cmr/m/n/12 SCAMP 
+ []
+
+[9]
+Overfull \hbox (7.61348pt too wide) in paragraph at lines 191--191
+\T1/cmr/m/n/12 phrase[]  
+ []
+
+
+Overfull \hbox (7.61348pt too wide) in paragraph at lines 191--191
+\T1/cmr/m/n/12 phrase[]  
+ []
+
+
+Overfull \hbox (15.70595pt too wide) in paragraph at lines 194--194
+[][][]\T1/cmr/m/n/12 mention 
+ []
+
+
+Overfull \hbox (15.70595pt too wide) in paragraph at lines 194--194
+[][][]\T1/cmr/m/n/12 mention 
+ []
+
+
+LaTeX Warning: Marginpar on page 10 moved.
+
+[10] [11]
+Overfull \hbox (20.66582pt too wide) in paragraph at lines 225--225
+[][][]\T1/cmr/m/n/12 section??[]  
+ []
+
+
+Overfull \hbox (20.66582pt too wide) in paragraph at lines 225--225
+[][][]\T1/cmr/m/n/12 section??[]  
+ []
+
+
+Overfull \hbox (27.9321pt too wide) in paragraph at lines 227--227
+[][][]\T1/cmr/m/n/12 SECTION 
+ []
+
+
+Overfull \hbox (10.63358pt too wide) in paragraph at lines 227--227
+\T1/cmr/m/n/12 NAME[]  
+ []
+
+
+Overfull \hbox (27.9321pt too wide) in paragraph at lines 227--227
+[][][]\T1/cmr/m/n/12 SECTION 
+ []
+
+
+Overfull \hbox (10.63358pt too wide) in paragraph at lines 227--227
+\T1/cmr/m/n/12 NAME[]  
+ []
+
+[12] [13] [14]
+Overfull \hbox (2.00093pt too wide) in paragraph at lines 308--308
+\T1/cmr/m/n/12 check 
+ []
+
+
+Overfull \hbox (3.9588pt too wide) in paragraph at lines 308--308
+\T1/cmr/m/n/12 about 
+ []
+
+
+Overfull \hbox (2.00093pt too wide) in paragraph at lines 308--308
+\T1/cmr/m/n/12 check 
+ []
+
+
+Overfull \hbox (3.9588pt too wide) in paragraph at lines 308--308
+\T1/cmr/m/n/12 about 
+ []
+
+
+Overfull \hbox (3.9588pt too wide) in paragraph at lines 309--309
+\T1/cmr/m/n/12 about 
+ []
+
+
+Overfull \hbox (13.81334pt too wide) in paragraph at lines 309--309
+\T1/cmr/m/n/12 changes 
+ []
+
+
+Overfull \hbox (13.42175pt too wide) in paragraph at lines 309--309
+\T1/cmr/m/n/12 halfway 
+ []
+
+
+Overfull \hbox (3.9588pt too wide) in paragraph at lines 309--309
+\T1/cmr/m/n/12 about 
+ []
+
+
+Overfull \hbox (13.81334pt too wide) in paragraph at lines 309--309
+\T1/cmr/m/n/12 changes 
+ []
+
+
+Overfull \hbox (13.42175pt too wide) in paragraph at lines 309--309
+\T1/cmr/m/n/12 halfway 
+ []
+
+
+LaTeX Warning: Marginpar on page 15 moved.
+
+[15]
+Overfull \hbox (10.33772pt too wide) in paragraph at lines 325--325
 [][]\T1/cmr/m/n/12 Beraldi, Roberto, Marco Galiffa, and Hus-sein Al-nuweiri. 20
 10. W-coolstreaming
  []
 
-[7] [8] (./doc.aux)
+[16] [17] (./doc.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+
+Package biblatex Warning: Please rerun LaTeX.
+(biblatex)                Page breaks have changed.
+
 Package logreq Info: Writing requests to 'doc.run.xml'.
 \openout1 = `doc.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 24797 strings out of 480247
- 505268 string characters out of 5896151
- 1533231 words of memory out of 5000000
- 42387 multiletter control sequences out of 15000+600000
- 481582 words of font info for 52 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 115i,9n,118p,1021b,4037s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/sk/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbi1440.600pk>
- </home/sk/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.600pk> <
-/home/sk/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600pk> </h
-ome/sk/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1200.600pk> </hom
-e/sk/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk> </home/
-sk/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/sk
-/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> </home/sk/.
-texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1095.600pk> </home/sk/.te
-xlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </home/sk/.texl
-ive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1440.600pk> </home/sk/.texliv
-e2021/texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm2074.600pk>
-Output written on doc.pdf (8 pages, 122746 bytes).
+ 40440 strings out of 478287
+ 962442 string characters out of 5849289
+ 2241924 words of memory out of 5000000
+ 58175 multiletter control sequences out of 15000+600000
+ 487009 words of font info for 63 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 115i,10n,118p,1200b,4035s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texmf/
+fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+sy10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbi1200.pfb></usr/share
+/texmf/fonts/type1/public/cm-super/sfbi1440.pfb></usr/share/texmf/fonts/type1/p
+ublic/cm-super/sfbi1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1
+095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/
+texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/pu
+blic/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm10
+95.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/t
+exmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/pub
+lic/cm-super/sfrm2074.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti120
+0.pfb>
+Output written on doc.pdf (17 pages, 336570 bytes).
 PDF statistics:
- 391 PDF objects out of 1000 (max. 8388607)
- 67 compressed objects within 1 object stream
+ 152 PDF objects out of 1000 (max. 8388607)
+ 97 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 
