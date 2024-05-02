@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.4.29)  2 MAY 2024 05:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.4.29)  2 MAY 2024 23:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -942,13 +942,6 @@ Package biblatex Warning: The following entry could not be found
 
 Package biblatex Warning: The following entry could not be found
 (biblatex)                in the database:
-(biblatex)                archiveCacheLogicResearch
-(biblatex)                Please verify the spelling and rerun
-(biblatex)                LaTeX afterwards.
-
-
-Package biblatex Warning: The following entry could not be found
-(biblatex)                in the database:
 (biblatex)                asdasd
 (biblatex)                Please verify the spelling and rerun
 (biblatex)                LaTeX afterwards.
@@ -986,338 +979,385 @@ loading the todonotes package. on input line 20.
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-
-LaTeX Warning: Citation 'archiveCacheLogicResearch' on page 2 undefined on inpu
-t line 37.
-
-
-LaTeX Warning: Citation '1498486' on page 2 undefined on input line 51.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+Overfull \hbox (7.61345pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 should 
+ []
 
 
-LaTeX Warning: Citation 'asdasd' on page 2 undefined on input line 51.
+Overfull \hbox (6.30823pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 source 
+ []
 
 
-LaTeX Warning: Citation '1498486' on page 2 undefined on input line 51.
+Overfull \hbox (3.69777pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 some- 
+ []
 
-[2]
-Overfull \hbox (9.50604pt too wide) in paragraph at lines 54--54
+
+Overfull \hbox (1.02202pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 thing 
+ []
+
+
+Overfull \hbox (6.89142pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 About 
+ []
+
+
+Overfull \hbox (7.61345pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 should 
+ []
+
+
+Overfull \hbox (6.30823pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 source 
+ []
+
+
+Overfull \hbox (3.69777pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 some- 
+ []
+
+
+Overfull \hbox (1.02202pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 thing 
+ []
+
+
+Overfull \hbox (6.89142pt too wide) in paragraph at lines 56--56
+\T1/cmr/m/n/12 About 
+ []
+
+
+Overfull \hbox (3.95883pt too wide) in paragraph at lines 58--58
+\T1/cmr/m/n/12 term?[]  
+ []
+
+
+Overfull \hbox (3.95883pt too wide) in paragraph at lines 58--58
+\T1/cmr/m/n/12 term?[]  
+ []
+
+[4]
+Overfull \hbox (3.9588pt too wide) in paragraph at lines 68--68
+\T1/cmr/m/n/12 about 
+ []
+
+
+Overfull \hbox (3.9588pt too wide) in paragraph at lines 68--68
+\T1/cmr/m/n/12 about 
+ []
+
+[5]
+
+LaTeX Warning: Citation '1498486' on page 6 undefined on input line 75.
+
+
+LaTeX Warning: Citation 'asdasd' on page 6 undefined on input line 75.
+
+
+LaTeX Warning: Citation '1498486' on page 6 undefined on input line 75.
+
+
+Overfull \hbox (9.50604pt too wide) in paragraph at lines 81--81
 [][][]\T1/cmr/m/n/12 which?[]  
  []
 
 
-Overfull \hbox (9.50604pt too wide) in paragraph at lines 54--54
+Overfull \hbox (9.50604pt too wide) in paragraph at lines 81--81
 [][][]\T1/cmr/m/n/12 which?[]  
  []
 
 
-Overfull \hbox (1.67465pt too wide) in paragraph at lines 54--54
+Overfull \hbox (1.67465pt too wide) in paragraph at lines 81--81
 \T1/cmr/m/n/12 prob- 
  []
 
 
-Overfull \hbox (2.65358pt too wide) in paragraph at lines 54--54
+Overfull \hbox (2.65358pt too wide) in paragraph at lines 81--81
 \T1/cmr/m/n/12 ready 
  []
 
 
-Overfull \hbox (11.46391pt too wide) in paragraph at lines 54--54
+Overfull \hbox (11.46391pt too wide) in paragraph at lines 81--81
 \T1/cmr/m/n/12 plained 
  []
 
 
-Overfull \hbox (1.67465pt too wide) in paragraph at lines 54--54
+Overfull \hbox (1.67465pt too wide) in paragraph at lines 81--81
 \T1/cmr/m/n/12 prob- 
  []
 
 
-Overfull \hbox (2.65358pt too wide) in paragraph at lines 54--54
+Overfull \hbox (2.65358pt too wide) in paragraph at lines 81--81
 \T1/cmr/m/n/12 ready 
  []
 
 
-Overfull \hbox (11.46391pt too wide) in paragraph at lines 54--54
+Overfull \hbox (11.46391pt too wide) in paragraph at lines 81--81
 \T1/cmr/m/n/12 plained 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 54--54
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 81--81
 [][][]\T1/cmr/m/n/12 name 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 54--54
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 81--81
 [][][]\T1/cmr/m/n/12 name 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 54--54
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 81--81
 [][][]\T1/cmr/m/n/12 name[]  
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 54--54
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 81--81
 [][][]\T1/cmr/m/n/12 name[]  
  []
 
+[6]
 
-LaTeX Warning: Marginpar on page 3 moved.
-
-
-LaTeX Warning: Marginpar on page 3 moved.
+LaTeX Warning: Marginpar on page 7 moved.
 
 
-LaTeX Warning: Marginpar on page 3 moved.
+LaTeX Warning: Marginpar on page 7 moved.
 
 
-Overfull \hbox (2.39255pt too wide) in paragraph at lines 60--60
+LaTeX Warning: Marginpar on page 7 moved.
+
+
+Overfull \hbox (2.39255pt too wide) in paragraph at lines 87--87
 [][][]\T1/cmr/m/n/12 needs 
  []
 
 
-Overfull \hbox (1.67462pt too wide) in paragraph at lines 60--60
+Overfull \hbox (1.67462pt too wide) in paragraph at lines 87--87
 \T1/cmr/m/n/12 could 
  []
 
 
-Overfull \hbox (12.18181pt too wide) in paragraph at lines 60--60
+Overfull \hbox (12.18181pt too wide) in paragraph at lines 87--87
 \T1/cmr/m/n/12 dates?? 
  []
 
 
-Overfull \hbox (2.65353pt too wide) in paragraph at lines 60--60
+Overfull \hbox (2.65353pt too wide) in paragraph at lines 87--87
 \T1/cmr/m/n/12 mally 
  []
 
 
-Overfull \hbox (2.39255pt too wide) in paragraph at lines 60--60
+Overfull \hbox (2.39255pt too wide) in paragraph at lines 87--87
 [][][]\T1/cmr/m/n/12 needs 
  []
 
 
-Overfull \hbox (1.67462pt too wide) in paragraph at lines 60--60
+Overfull \hbox (1.67462pt too wide) in paragraph at lines 87--87
 \T1/cmr/m/n/12 could 
  []
 
 
-Overfull \hbox (12.18181pt too wide) in paragraph at lines 60--60
+Overfull \hbox (12.18181pt too wide) in paragraph at lines 87--87
 \T1/cmr/m/n/12 dates?? 
  []
 
 
-Overfull \hbox (2.65353pt too wide) in paragraph at lines 60--60
+Overfull \hbox (2.65353pt too wide) in paragraph at lines 87--87
 \T1/cmr/m/n/12 mally 
- []
-
-
-LaTeX Warning: Marginpar on page 3 moved.
-
-[3] [4]
-Overfull \hbox (1.02202pt too wide) in paragraph at lines 77--77
-\T1/cmr/m/n/12 know[]  
- []
-
-
-Overfull \hbox (1.02202pt too wide) in paragraph at lines 77--77
-\T1/cmr/m/n/12 know[]  
- []
-
-
-Overfull \hbox (57.19641pt too wide) in paragraph at lines 85--86
-\T1/cmr/m/n/12 We have so far re-garded Cool-stream-ing as a dyad of the mesh-p
-ull DONet/Coolstreaming
- []
-
-[5] [6]
-Overfull \hbox (15.70595pt too wide) in paragraph at lines 108--108
-[][][]\T1/cmr/m/n/12 mention 
- []
-
-
-Overfull \hbox (15.70595pt too wide) in paragraph at lines 108--108
-[][][]\T1/cmr/m/n/12 mention 
  []
 
 
 LaTeX Warning: Marginpar on page 7 moved.
 
-[7] [8] [9]
-Overfull \hbox (4.28514pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 ahead 
+[7]
+Overfull \hbox (1.02202pt too wide) in paragraph at lines 104--104
+\T1/cmr/m/n/12 know[]  
  []
 
 
-Overfull \hbox (7.22191pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 fanout 
+Overfull \hbox (1.02202pt too wide) in paragraph at lines 104--104
+\T1/cmr/m/n/12 know[]  
+ []
+
+[8]
+
+LaTeX Warning: Marginpar on page 9 moved.
+
+
+Overfull \hbox (57.19641pt too wide) in paragraph at lines 112--113
+\T1/cmr/m/n/12 We have so far re-garded Cool-stream-ing as a dyad of the mesh-p
+ull DONet/Coolstreaming
  []
 
 
-Overfull \hbox (5.6556pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 proofs 
+Overfull \hbox (8.05103pt too wide) in paragraph at lines 115--116
+\T1/cmr/m/it/12 over-lay net-work for peer-to-peer live me-dia stream-ing []\T1
+/cmr/m/n/12 X. Zhang et al. 2005 
+ []
+
+[9] [10]
+Overfull \hbox (15.70595pt too wide) in paragraph at lines 135--135
+[][][]\T1/cmr/m/n/12 mention 
  []
 
 
-Overfull \hbox (16.83762pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 SCAMP 
- []
-
-
-Overfull \hbox (4.28514pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 ahead 
- []
-
-
-Overfull \hbox (7.22191pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 fanout 
- []
-
-
-Overfull \hbox (5.6556pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 proofs 
- []
-
-
-Overfull \hbox (16.83762pt too wide) in paragraph at lines 198--198
-\T1/cmr/m/n/12 SCAMP 
- []
-
-[10]
-Overfull \hbox (7.61348pt too wide) in paragraph at lines 206--206
-\T1/cmr/m/n/12 phrase[]  
- []
-
-
-Overfull \hbox (7.61348pt too wide) in paragraph at lines 206--206
-\T1/cmr/m/n/12 phrase[]  
+Overfull \hbox (15.70595pt too wide) in paragraph at lines 135--135
+[][][]\T1/cmr/m/n/12 mention 
  []
 
 
 LaTeX Warning: Marginpar on page 11 moved.
 
-[11]
-Overfull \hbox (1.37346pt too wide) in paragraph at lines 230--231
+[11] [12] [13]
+Overfull \hbox (4.28514pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 ahead 
+ []
+
+
+Overfull \hbox (7.22191pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 fanout 
+ []
+
+
+Overfull \hbox (5.6556pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 proofs 
+ []
+
+
+Overfull \hbox (16.83762pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 SCAMP 
+ []
+
+
+Overfull \hbox (4.28514pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 ahead 
+ []
+
+
+Overfull \hbox (7.22191pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 fanout 
+ []
+
+
+Overfull \hbox (5.6556pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 proofs 
+ []
+
+
+Overfull \hbox (16.83762pt too wide) in paragraph at lines 225--225
+\T1/cmr/m/n/12 SCAMP 
+ []
+
+
+Overfull \hbox (7.61348pt too wide) in paragraph at lines 233--233
+\T1/cmr/m/n/12 phrase[]  
+ []
+
+
+Overfull \hbox (7.61348pt too wide) in paragraph at lines 233--233
+\T1/cmr/m/n/12 phrase[]  
+ []
+
+[14] [15]
+Overfull \hbox (1.37346pt too wide) in paragraph at lines 257--258
 []\T1/cmr/m/n/12 SCAMP does not de-scribe any start-ing topol-ogy. A boot-strap
 ped SCAMP
  []
 
 
-Overfull \hbox (11.20285pt too wide) in paragraph at lines 235--235
+Overfull \hbox (11.20285pt too wide) in paragraph at lines 262--262
 \T1/cmr/m/n/12 doesn't 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 235--235
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 262--262
 \T1/cmr/m/n/12 mean 
  []
 
 
-Overfull \hbox (1.02202pt too wide) in paragraph at lines 235--235
+Overfull \hbox (1.02202pt too wide) in paragraph at lines 262--262
 \T1/cmr/m/n/12 thing[]  
  []
 
 
-Overfull \hbox (11.20285pt too wide) in paragraph at lines 235--235
+Overfull \hbox (11.20285pt too wide) in paragraph at lines 262--262
 \T1/cmr/m/n/12 doesn't 
  []
 
 
-Overfull \hbox (1.67467pt too wide) in paragraph at lines 235--235
+Overfull \hbox (1.67467pt too wide) in paragraph at lines 262--262
 \T1/cmr/m/n/12 mean 
  []
 
 
-Overfull \hbox (1.02202pt too wide) in paragraph at lines 235--235
+Overfull \hbox (1.02202pt too wide) in paragraph at lines 262--262
 \T1/cmr/m/n/12 thing[]  
  []
 
-[12] [13] [14] [15] [16]
-Overfull \hbox (9.70178pt too wide) in paragraph at lines 331--331
-[][][]\T1/cmr/m/n/12 discuss 
- []
-
-
-Overfull \hbox (10.55022pt too wide) in paragraph at lines 331--331
-\T1/cmr/m/n/12 switch- 
- []
-
-
-Overfull \hbox (2.9799pt too wide) in paragraph at lines 331--331
-\T1/cmr/m/n/12 donet 
- []
-
-
-Overfull \hbox (9.70178pt too wide) in paragraph at lines 331--331
-[][][]\T1/cmr/m/n/12 discuss 
- []
-
-
-Overfull \hbox (10.55022pt too wide) in paragraph at lines 331--331
-\T1/cmr/m/n/12 switch- 
- []
-
-
-Overfull \hbox (2.9799pt too wide) in paragraph at lines 331--331
-\T1/cmr/m/n/12 donet 
- []
-
-
-Overfull \hbox (15.37965pt too wide) in paragraph at lines 332--332
+[16] [17] [18] [19] [20]
+Overfull \hbox (15.37965pt too wide) in paragraph at lines 359--359
 [][][]\T1/cmr/m/n/12 however 
  []
 
 
-Overfull \hbox (7.61348pt too wide) in paragraph at lines 332--332
+Overfull \hbox (7.61348pt too wide) in paragraph at lines 359--359
 \T1/cmr/m/n/12 phrase 
  []
 
 
-Overfull \hbox (5.59036pt too wide) in paragraph at lines 332--332
+Overfull \hbox (5.59036pt too wide) in paragraph at lines 359--359
 \T1/cmr/m/n/12 mined 
  []
 
 
-Overfull \hbox (15.37965pt too wide) in paragraph at lines 332--332
+Overfull \hbox (15.37965pt too wide) in paragraph at lines 359--359
 [][][]\T1/cmr/m/n/12 however 
  []
 
 
-Overfull \hbox (7.61348pt too wide) in paragraph at lines 332--332
+Overfull \hbox (7.61348pt too wide) in paragraph at lines 359--359
 \T1/cmr/m/n/12 phrase 
  []
 
 
-Overfull \hbox (5.59036pt too wide) in paragraph at lines 332--332
+Overfull \hbox (5.59036pt too wide) in paragraph at lines 359--359
 \T1/cmr/m/n/12 mined 
  []
 
-
-LaTeX Warning: Marginpar on page 17 moved.
-
-[17] [18]
-Overfull \hbox (5.42981pt too wide) in paragraph at lines 355--356
+[21] [22]
+Overfull \hbox (5.42981pt too wide) in paragraph at lines 384--385
 \T1/cmr/m/n/12 Our im-ple-men-ta-tion dis-cussed prior is \T1/cmr/m/it/12 not \
 T1/cmr/m/n/12 an im-ple-men-ta-tion of \T1/cmr/m/it/12 coolstreaming-
  []
 
-[19]
-Overfull \hbox (10.33772pt too wide) in paragraph at lines 370--370
+[23]
+Overfull \hbox (10.33772pt too wide) in paragraph at lines 399--399
 [][]\T1/cmr/m/n/12 Beraldi, Roberto, Marco Galiffa, and Hus-sein Al-nuweiri. 20
 10. W-coolstreaming
  []
 
-[20] [21] (./doc.aux)
+[24]
+Overfull \hbox (15.7737pt too wide) in paragraph at lines 399--399
+[][]\T1/cmr/m/n/12 Floyd, Sally, Mark Han-d-ley, Ji-ten-dra Pad-hye, and Jörg W
+id-mer. 2000. Equation-
+ []
+
+[25] [26] [27] (./doc.aux)
 Package logreq Info: Writing requests to 'doc.run.xml'.
 \openout1 = `doc.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 40400 strings out of 478287
- 961029 string characters out of 5849289
- 2241081 words of memory out of 5000000
- 58144 multiletter control sequences out of 15000+600000
- 487009 words of font info for 63 fonts, out of 8000000 for 9000
+ 40583 strings out of 478287
+ 967528 string characters out of 5849289
+ 2254066 words of memory out of 5000000
+ 58326 multiletter control sequences out of 15000+600000
+ 487684 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 115i,10n,118p,1277b,4037s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 115i,10n,118p,1528b,4037s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.enc}{/usr/share/texmf/
 fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texlive/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/
@@ -1329,15 +1369,15 @@ sy10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbi1200.pfb></usr/share
 ublic/cm-super/sfbi1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1
 095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/
 texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/pu
-blic/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm10
-95.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/t
-exmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/pub
-lic/cm-super/sfrm2074.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti120
-0.pfb>
-Output written on doc.pdf (21 pages, 352108 bytes).
+blic/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfcc12
+00.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1095.pfb></usr/share/t
+exmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/pub
+lic/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm207
+4.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1200.pfb>
+Output written on doc.pdf (27 pages, 379596 bytes).
 PDF statistics:
- 166 PDF objects out of 1000 (max. 8388607)
- 106 compressed objects within 2 object streams
+ 190 PDF objects out of 1000 (max. 8388607)
+ 122 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

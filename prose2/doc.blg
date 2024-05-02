@@ -1,20 +1,21 @@
 [0] Config.pm:307> INFO - This is Biber 2.17
 [0] Config.pm:310> INFO - Logfile is 'doc.blg'
-[71] biber:340> INFO - === Tue Apr 30, 2024, 14:35:51
-[88] Biber.pm:418> INFO - Reading 'doc.bcf'
-[210] Biber.pm:972> INFO - Found 10 citekeys in bib section 0
-[223] Biber.pm:4383> INFO - Processing section 0
-[232] Biber.pm:4574> INFO - Looking for bibtex file 'jabref.bib' for section 0
-[233] bibtex.pm:1713> INFO - LaTeX decoding ...
-[241] bibtex.pm:1518> INFO - Found BibTeX data source 'jabref.bib'
-[361] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[361] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'level = 4' with 'level = 2'
-[361] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[361] Biber.pm:4203> INFO - Sorting list 'cms/global//global/global' of type 'entry' with template 'cms' and locale 'en-US'
-[362] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
-[380] bbl.pm:654> INFO - Writing 'doc.bbl' with encoding 'UTF-8'
-[391] bbl.pm:757> INFO - Output to doc.bbl
-[391] Biber.pm:130> WARN - I didn't find a database entry for 'archiveCacheLogicResearch' (section 0)
-[391] Biber.pm:130> WARN - I didn't find a database entry for '1498486' (section 0)
-[391] Biber.pm:130> WARN - I didn't find a database entry for 'asdasd' (section 0)
-[391] Biber.pm:132> INFO - WARNINGS: 3
+[53] biber:340> INFO - === Thu May  2, 2024, 23:17:09
+[65] Biber.pm:418> INFO - Reading 'doc.bcf'
+[162] Biber.pm:972> INFO - Found 33 citekeys in bib section 0
+[173] Biber.pm:4383> INFO - Processing section 0
+[180] Biber.pm:4574> INFO - Looking for bibtex file 'jabref.bib' for section 0
+[181] bibtex.pm:1713> INFO - LaTeX decoding ...
+[207] bibtex.pm:1518> INFO - Found BibTeX data source 'jabref.bib'
+[528] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[528] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[528] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'level = 4' with 'level = 2'
+[528] Biber.pm:4203> INFO - Sorting list 'cms/global//global/global' of type 'entry' with template 'cms' and locale 'en-US'
+[528] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
+[559] bbl.pm:654> INFO - Writing 'doc.bbl' with encoding 'UTF-8'
+[579] bbl.pm:757> INFO - Output to doc.bbl
+[579] Biber.pm:130> WARN - legacy month field 'aug' in entry 'Floyd2000' is not an integer - this will probably not sort properly.
+[579] Biber.pm:130> WARN - legacy month field 'jun' in entry 'Bonald2008' is not an integer - this will probably not sort properly.
+[579] Biber.pm:130> WARN - I didn't find a database entry for '1498486' (section 0)
+[579] Biber.pm:130> WARN - I didn't find a database entry for 'asdasd' (section 0)
+[579] Biber.pm:132> INFO - WARNINGS: 4
