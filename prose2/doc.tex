@@ -7,9 +7,10 @@
 \usepackage{csquotes}
 
 \usepackage[authordate-trad,backend=biber]{biblatex-chicago}
-\usepackage{todonotes}
+\usepackage{amsmath}
 \usepackage{circuitikz}
 \usepackage{mathtools}
+\usepackage{todonotes}
 \addbibresource{jabref.bib}
 
 %opening
@@ -24,32 +25,29 @@
 abstract !!! 
 \end{abstract}
 
-\section{Introduction}
+\section{Introduction} \label{introduction}
 Within the past ten years, video streaming traffic across the internet has exploded. Traditional client-server architectures places a large load on the small portion of nodes controlled by the streaming host, and lead to dramatic infrastructure costs. To combat this, peer-to-peer systems have been proposed that spread usage across the network's collective resources. Starting with Coolstreaming in 2004, these networks became defacto for IPTV streaming, especially pirated streams. With their utility proven, research accelerated, in pace and complexity. Industry, however, did not pick up. Since the shutdown of New Coolstreaming and PPLive in the late 2000's, these newer solutions have seen little real-world usage.
 
-As such, the actual impact of current research on network performance is vague. Still, research since has suggested that churn has a substantial and exponential impact on client quality-of-service (QoS) beyond that which was considered in these original models. This paper investigates several marked improvements over the best-documented benchmark architecture, New Coolstreaming, with particular focus on methods to reduce churn throughout the network. wordsw words words 
+As such, the actual impact of current research on network performance is vague. Still, research since has suggested that churn has a substantial and exponential impact on client quality-of-service (QoS) beyond that which was considered in these original models. This paper investigates several marked improvements over the best-documented benchmark architecture, New Coolstreaming, with particular focus on methods to reduce churn throughout the network. wordsw words words and a list of what we discuss
 
-\section{Literature Review}
-\subsection{Peer-to-Peer Streaming Fundamentals}
-In the late 1990's the traditional client-server architecture began to crack, as computer capabilities began to outpace bandwidth growth across the internet. Small clusters of server nodes were expected to take the burden, whilst ample client resources waited idle. BitTorrent allows a swarm of peers to collaborate in file transmission, maximizing global utilization without overwhelming any single node. Peers instead connect to a tracker or query a global DHT, usually \textit{Mainline DHT}, to gather a list of participatory nodes. Targetting the rarest blocks first, data chunks within the swarm are piped directly over UDP node-to-node. As more peers join the network, the overall bandwidth increases, with download speeds following suit.
-
-This approach exploded onto the internet, claiming 35\% of all upstream traffic (\cite{archiveCacheLogicResearch}). It remained in the number one spot for total traffic until recently - finally dethroned in 2024 by video streaming. 
-
-In a file-share network QoS is taken mostly with upload speed, and by extension bandwidth utilization. Any intermediate action from loading a \textit{.torrent} to completion is irrelevant. Video streaming, in contrast, introduces a large number of real-time requirements essential for a good user experience.
+\section{Literature Review}  \label{litreview}
+\subsection{Peer-to-Peer Streaming Fundamentals} \label{litreview:fundamentals}
+Video streaming introduces a numIn a file-share network QoS is taken mostly with upload speed, and by extension bandwidth utilization. Any intermediate action from loading a \textit{.torrent} to completion is irrelevant. Video streaming, in contrast, introduces a large number of real-time requirements essential for a good user experience.
 
 
 
 Peer-to-peer networks pipe data directly between nodes through a network, contrasted with the traditional client-server architecture seen most often today.  Compared to file-sharing applications, peer-to-peer video networks face several new complexities. In the former, QoS is ruled almost entirely by bandwidth utilization. Users care only that a desired file eventually reaches them; the journey it takes to completion is unimportant.  probably list some examples Video livestreaming, however, introduces new complexities. playoutdeadlines startupdelay end-to-enddelay
 one proposed solution was ip multicasting. it was . fucked. s owe don't use it and instead use the various better solutions
-\subsection{Performance Heuristics and Churn}
+\subsection{Performance Heuristics and Churn} \label{litreview:heuristics}
 explaining why we use/care about churn vs other characteristics
-\subsection{Overlay Structure}
-\subsection{Peer Selection Strategies}
-\subsection{Chunk Schedulers}
-\subsection{Historic Implementations}
+\subsection{Overlay Structure} \label{litreview:structure}
+\subsection{Peer Selection Strategies} \label{litreview:selection}
+\subsection{Chunk Schedulers} \label{litreview:schedulers}
+\subsection{Coolstreaming} \label{litreview:coolstreaming}
 We now consider historic implementations of peer-to-peer streaming systems in relation to the above characteristics. Of most relevance to our paper is DONet, commercially branded Coolstreaming (\cite{1498486}). Considered the first of its breed, Coolstreaming \cite{Xie2007} \cite{asdasd} \cite{1498486}
-\subsection{Implementation-Specific Improvements}
-\section{Methodology}
+\subsection{Coolstreaming-Specific Improvements} \label{litreview:specifics}
+\subsection{Monolithic Overlay Solutions} \label{litreview:monoliths}
+\section{Methodology} \label{methodology}
 We aimed to pit three models against each other in various QoS tests \todo{which?} to gather specific numbers on the improvements between each. Initial tests would be run on New Coolstreaming, widely considered the last popular IPTV P2P system and a good benchmark \todo{we probably already explained this in the lit review}. We would then extend this with fitting modular improvements for further measurements. \todo{name some shit} were particular targets, because \todo{blah}. Finally, we expected to implement a monolithic model, \todo{name}, to compare the capacity of incremental improvements versus the design of a single, deeply-coupled architecture.
 
 As a simulation environment, we chose OverSim. Its included churn mechanisms, quick-switching between simplified and realistic underlay models, and complete debugging suite eased the otherwise involved development cycle. Ejecting from OverSim to OMNET++ would also have been trivial, though was never necessary.
@@ -57,24 +55,30 @@ As a simulation environment, we chose OverSim. Its included churn mechanisms, qu
 Statistics would be presented with the built-in OMNET++ visualization tools.
 
 \todo{needs expansion. we could mention dates?? what do people normally put here}
-\section{Implementation}
+\section{Implementation} \label{implementation}
 We based our initial experiments on New Coolstreaming as described in \cite{Li2008}. We quickly ran into problems - whilst the paper describes the stream manager and buffer map exchange in great detail, little time is given to the membership and partnership managers. The upkeep of the \textit{mCache} with incoming peers is unspecified, as is most connection management action related to churning or failing nodes and some key equations to system function. We pushed forward and attempted to fill the blanks ourselves; the final result, whilst technically functional, invariably failed to meet playout across nodes and was in no way correspondent of New Coolstreaming's measured real-world performance.
 
 The New Coolstreaming paper concludes its discussion on the problem modules stating \textit{"these basic modules form the base for the initial Coolstreaming system,"} and that the New Coolstreaming \textit{"has made significant changes in the design of other components."} We thus considered that these modules were holdovers from the older design, implying New Coolstreaming must be built with  DONet/Coolstreaming as groundwork. We thereby set about an implementation of this more primitive design.
 
-The final DONet implementation completed following two weeks of work. This network was similarly not ideal, though the cause was mostly banal - New Coolstreaming strips the buffer, scheduler and related messaging completely, so we saw no need to optimize these components. More worryingly, the partnership manager collapsed quickly under even minimal churn, discussed later in section \todo{SECTIONWHAT}. Still, this constituted enough the groundwork needed to continue.
+The final DONet implementation completed following two weeks of work. This network was similarly not ideal, though the cause was mostly banal - New Coolstreaming strips the buffer, scheduler and related messaging completely, so we saw no need to optimize these components. More worryingly, the partnership manager collapsed quickly under even minimal churn, discussed later in . Still, this constituted enough the groundwork needed to continue.
 
-Returning with wiser eyes, we fcircuitikzound that our architecture did not align at all with the basic modules in New Coolstreaming. \textit{How could this be?} As discussed later in section \todo{SECTION}, DONet has clarity problems of its own when describing parts of other systems, and we noticed that the output of these components - \textit{M}-number exchanging partners ready for video transmission - \textit{did} align with the older model. We therefore treated this as a simple faulty description, and moved on to the design of the stream manager.
+Returning with wiser eyes, we found that our architecture did not align at all with the basic modules in New Coolstreaming. \textit{How could this be?} As discussed later in section~\ref{problems:prodopt}, DONet has clarity problems of its own when describing parts of other systems, and we noticed that the output of these components - \textit{M}-number exchanging partners ready for video transmission - \textit{did} align with the older model. We therefore treated this as a simple faulty description, and moved on to the design of the stream manager.
 
 The well-specified stream manager came through without a hitch, but placed new constraints on the partnership manager that our already brittle implementation could not bear. We hence designed \textit{Partnerlink}, a relationship algorithm reconciling the high-churn overlay with New Coolstreaming's low-churn subscription requirements and performance at scale. This new algorithm meshed well with the stream manager, and brought our implementation to a close.
 
 The full development process took over a month. We were therefore not able to complete any further models or make any comparisons on QoS benefits.
 
-\section{Results}
-jsut offhandedly mentioning that Yes, It Workas Kind Of
-\section{Discussion}
+\section{Results and Analysis} \label{results}
+In testing, we begin with two origin nodes and join 30 client nodes over the course of 90 seconds. Nodes live on average 500 seconds before churning; we allow 300 seconds for the overlay to stabilize before a 2000 second measurement period. The 500Kbps source video is split into 10 substreams, containing blocks of one second duration. Partner and membership count \(M\) is limited to 15.
+
+We first test our model on a simple underlay without packet dropping, bandwidth limitations or timeouts. We find that our partnership mechanism works well in this environment, averaging 14.89 partners across all nodes over the entire measurement period. No node is ever seen with below 11 partners. We also, however, find our potential partner count \(M_c\) to be the same value, as our failure mechanisms are almost never engaged in this ideal environment. We find that our model maintains a satisfactory number of parent-child relationships with an average of 9.30. Despite this, our playout is poor: \todo{there is a fucking term for this i know} only 61.58\% of blocks are received before playout time. Our efficiency is reasonable - of all received blocks, 1.92\% are duplicates and 4.645\% are outside the bounds of the receiver's buffer, almost all being too old.
+
+We test again on a realistic underlay simulating the best-effort internet, with bandwidth limitations, packet loss and queuing. Under this environment, the partnership mechanism begins to fail: despite recording an average \(M_c\) of 12.94, our actual partner count averages 1.78. We explore this and the resultant changes made to \textit{Partnerlink} in section \ref{css:comparison}. Surprisingly, our playout performs very similarly - nodes maintain an average of 9.10 parents and a playout rate of 62.00\%. This is despite a major hit to efficiency - 6.62\% of all received blocks are now out of  bounds, and 11.9\% are now duplicates. As we believe the failure in the partnership manager activates slowly over a node's lifespan, this likely means that our partnerships are very long lived; transmitted blocks must be across relationships made before the failure. The mechanics that allow playout rate to remain so high, however, are unknown.
+
+\section{Discussion} \label{problems}
 \textit{What went wrong?} New Coolstreaming is not unique as an overlay; no features within should prove particularly challenging to implement. In this section, we explore the Coolstreaming family as a whole, and illuminate the many challenges faced in their implementation amiss in the papers themselves.
-\subsection{The Coolstreaming Family Tree}
+
+\subsection{The Coolstreaming Family Tree} \label{problems:familytree}
 We have so far regarded Coolstreaming as a dyad of the mesh-pull DONet/Coolstreaming and hybrid-push-pull New Coolstreaming, proposed across two papers. The reality is not so simple. Coolstreaming is formed of two models, as described. However, they have been proposed under \textit{four} different names across \textit{four} papers:
 
 \begin{itemize}
@@ -96,7 +100,15 @@ This duplication means each paper opens with a definition of \textit{New Coolstr
 
 Luckily, we appear to be the only researchers to fall into this trap. Resulting development time was certainly extended, but our criticisms of the paper and our final solution remain valid.
 
-\subsection{The Fully-Connected Network Problem}
+\subsection{What does Coolstreaming need to be?} \label{problems:what}
+\todo{flow this}
+The \textit{Coolstreaming} family has been replaced in production by monolithic solutions like \todo{mention wiotadiof}. \textit{Coolstreaming}'s usage now lies entirely in the research domain - used as a base for reproducible results, a testbed for new modular features or a point of comparison between larger monolithic models. In all of these cases, consistency and ease of development take priority over QoS performance.
+
+The issues mentioned so far are a sign that \textit{Coolstreaming} was never designed for this purpose. \textit{Coolstreaming} aimed to be the leading production overlay of its time, including optimizations that were inconvenient but deemed worth the miniscule performance boost. More than this, \textit{Coolstreaming} was developed as a commercial system first and a research paper second. This may explain the missing features or heavy modifications of existing solutions - the system was still under active maintenance as the papers were written, and so work had to be quick moreso than correct.
+
+In the next section, we introduce a new model to the \textit{Coolstreaming} family designed for research purposes, outlining our priorities and rationale in doing so.
+
+\subsection{The Fully-Connected Network Problem} \label{problems:fcn}
 Both \textit{DONet} and \textit{New Coolstreaming} make the same demands on the partnership manager: given a random partial view of the network, create and maintain at most \textit{M} connections ready for video transmission. Neither paper provides any exact information on how this should be done.
 
 Suppose a node \textit{n} joins a network of size \textit{M + 1}. All existing nodes in the network are fully saturated with partner count \textit{M}. How can this node join the network?
@@ -128,7 +140,7 @@ Suppose a node \textit{n} joins a network of size \textit{M + 1}. All existing n
 		\end{circuitikz}
 	}%
 	\caption{Node \textit{n} cannot easily join this fully-connected network.}
-	\label{some label}
+	\label{fig1}
 \end{figure}
 
 In our early \textit{DONet} implementation, we forced nodes to accept all incoming partnerships, removing an old partnership to make room. This created long chains of dropped-and-replaced partnerships before the overlay settled and worsened the impact radius of churn. The move to \textit{New Coolstreaming} came with the demand to maximize partnership lifetimes, as churn would interfere with the push mechanism and result in wasted blocks being sent to a peer, totally invalidating this approach.
@@ -162,24 +174,24 @@ Several solutions exist, though none are trivial. Our final implementation reque
 		\end{circuitikz}
 	}%
 	\caption{A solved topology, as according to the pairing method.}
-	\label{some label}
+	\label{fig2}
 \end{figure}
 
-We can at least infer some details from \textit{DONet}. The \textit{mCache} data structure includes \textit{num\_partners} for each visible node, which is updated but never apparently used. In a healthy network, the likelihood of a node directly knowing another node with less than \textit{M} partners is low. Instead, we assume this to be part of a gossiping mechanism where a gossiped partnership request is directed towards nodes with missing partners, which would also justify the use of \textit{SCAMP} as opposed to a more standard partial view aggregator. We include a similar strategy as part of our implementation; we discuss this in detail later in section \todo{SECTIONNAME}.
+We can at least infer some details from \textit{DONet}. The \textit{mCache} data structure includes \textit{num\_partners} for each visible node, which is updated but never apparently used. In a healthy network, the likelihood of a node directly knowing another node with less than \textit{M} partners is low. Instead, we assume this to be part of a gossiping mechanism where a gossiped partnership request is directed towards nodes with missing partners, which would also justify the use of \textit{SCAMP} as opposed to a more standard partial view aggregator. We include a similar strategy as part of our implementation; we discuss this in detail later in section \ref{css:partnerlink:panicking}.
 
 That said, the phrasing of the scheduled switching as established \textit{"with nodes randomly selected from [the] mCache"} implies a more direct communication. In this case, it is unknown how \textit{DONet} or \textit{New Coolstreaming} solve this problem.
 
-\subsection{Choosing New Partners}
+\subsection{Choosing New Partners} \label{problems:newpartners}
 The two inequalities measuring connection quality are also applied to any candidate partners following a detected failure. Inequality 1 limits the gap between a node's  buffers and the parent's. If we apply this to candidates after failing because of this inequality, we will filter out any nodes further ahead than our old node, slipping further back in our buffer. Assuming we never change our playout position, this new node will not be able to service our entire buffer area.
 
 Furthermore, the nodes seen within this inequality will mostly be those similarly falling behind the swarm; that is, nodes with equally poor connections. This groups poorly performant nodes and drags them backwards across the buffers, eventually collapsing entirely. In our model we disabled inequality 1 when measuring candidates, and performance resumed - \textit{New Coolstreaming} must use some other unspecified mechanism to avoid this.
 
-\subsection{Requesting the Block}
-\textit{New Coolstreaming} specifies an algorithm to compare all buffer maps from a node's first partners and calculate the initial block to request. The method through which this is done is somewhat obscure - the subscription map only communicates on-off booleans. We assume this is achieved by manipulating the latest blocks shown to each node to suggest the node has already received up to that block, despite having just joined. This requires some careful planning to execute without triggering subscriptions from nodes but is a clever usage of the limited data structure at play.
+\subsection{Requesting the Block} \label{problems:requesting}
+\textit{New Coolstreaming} specifies an algorithm to compare all buffer maps from a node's first partners and calculate the  to request. The method through which this is done is somewhat obscure - the subscription map only communicates on-off booleans. We assume this is achieved by manipulating the latest blocks shown to each node to suggest the node has already received up to that block, despite having just joined. This requires some careful planning to execute without triggering subscriptions from nodes but is a clever usage of the limited data structure at play.
 
 A feature unmentioned here is the behaviour-of and restrictions-on the playout index. Neither \textit{Coolstreaming} implementation specifies a recovery mechanism - nodes are assumed to never fall completely behind the swarm. This leaves us two options - either the playout index must never buffer or pause after sync, and continue to play forward on encounter with missing blocks, or the recovery mechanism is left undefined. Given that there is a startup delay listed amongst the results, we can assume the latter. If the stream does include buffering or the node is suffering poor local performance, though, the need to recover is inevitable. There are many options for approach that impact performance, and one best solution should ideally be provided.
 
-\subsection{Production Optimizations}
+\subsection{Production Optimizations} \label{problems:prodopt}
 \textit{DONet} defers to \textit{SCAMP} for membership connection management, \todo{we need to establish ahead of time the fanout proofs of SCAMP etc.} before overruling it on several counts. Where \textit{SCAMP} automatically adjusts membership count in sync with the size of the system, \textit{DONet} enforces a hard limit of \textit{M} nodes, usually 15. The indirection mechanism is implemented only in primitive form, with only nodes within the origin's view being available as contacts. As \textit{DONet} only uses \textit{SCAMP} to gather a random partial view, and does not use it as a means of message transmission itself, \textit{DONet} does not require \textit{SCAMP}'s full set of guarantees. Whilst we have not been able to perform experiments to prove this, we hypothesize that these restrictions therefore make no negative impact on the network, included to reduce message overhead.
 
 Other optimizations are less successful. \textit{SCAMP} specifies a leasing system to remove dead nodes from the pool, which \textit{DONet} accepts. However, in the case that the partnership manager finds a partner that fails to send a buffer map in a given period, the partnership overrides the membership manager to remove the node from the \textit{mCache}. The partnership manager then emits a departure message on its behalf, which is gossiped \textit{"similarly to the membership message,"} i.e. once to a peer who then repeats it to every node in its \textit{mCache}. Since exactly \textit{M} departure messages are gossiped, every message would have to reach a peer knowing the failed node for a clean exit. The layers of indirections involved in membership management, however, make it unlikely for this message to reach any such peer at all.
@@ -190,14 +202,9 @@ This appears to be a malformed optimization to allow nodes to depart each other 
 
 Successful or not, these changes represent a problem: we fall back to some existing research solution for a problem and then brain slug \todo{is this actually a good turn of phrase} it for some slight gain, in the process tampering with that solution's proven performance. This is convenient for the original researcher, but requires careful cross-referencing of the two papers for accurate reproduction. New implementation of the model therefore becomes strenuous, and inaccuracies made much more likely.
 
-\subsection{What does Coolstreaming need to be?}
-The \textit{Coolstreaming} family has been replaced. Production networks today will prefer to use monolithic solutions like \todo{mention wiotadiof}. \textit{Coolstreaming}'s usage now lies entirely in the research domain - used as a base for reproducible results, a testbed for new modular features or a shared point of comparison between larger monolithic models. In all of these cases, consistency and ease of development take priority over QoS performance.
+\todo{we need to flow this}
 
-The issues mentioned so far are a sign that \textit{Coolstreaming} was never designed for this purpose. \textit{Coolstreaming} aimed to be the leading production overlay of its time, including optimizations that were inconvenient but deemed worth the miniscule performance boost. More than this, \textit{Coolstreaming} was developed as a commercial system first and a research paper second. This may explain the missing features or heavy modifications of existing solutions - the system was still under active maintenance as the papers were written, and so work had to be quick moreso than correct.
-
-In the next section, we introduce a new model to the \textit{Coolstreaming} family designed for research purposes, outlining our priorities and rationale in doing so.
-
-\section{Introducing \textit{coolstreaming-spiked}}
+\section{Introducing \textit{coolstreaming-spiked}} \label{css}
 \textit{coolstreaming-spiked} is a new iteration of \textit{Coolstreaming} bringing the two models into synthesis. Research usage is targeted through an easier implementation, thorough central specification and compatibility with a wide range of IPTV improvements. Specifically:
 
 \begin{itemize}
@@ -209,24 +216,24 @@ In the next section, we introduce a new model to the \textit{Coolstreaming} fami
 
 We now proceed to describe the function of this model.
 
-\subsection{Architecture}
+\subsection{Architecture} \label{css:architecture}
 Our component architecture is identical to that seen in \textit{New Coolstreaming}: a membership manager provides the model with a continuous pool of random nodes. The partnership manager filters these nodes to find connections suited for video transmission, and handles the exchange of buffer maps. The stream manager creates parent-child relationships, owns the buffer and forwards blocks to peers. Each node within the architecture is provided a unique \textit{NodeID} - an IP address will suffice.
 
 We incorporate the substream system as defined in \textit{New Coolstreaming}. The video sequence is split into blocks of equal size each assigned a timestamp sequence number. These are shared equally between \(K\)-number zero-indexed substreams, where the \textit{i}-th substream contains blocks with sequence numbers \((nK + \textit{i})\) where \(n\) is a positive integer from zero to infinity. For instance, assuming \(K = 4\), substream 2 would contain blocks with ID \(\{2, 6, 10, 14, ...\}\).
 
-\subsection{Membership Manager}
+\subsection{Membership Manager} \label{css:membership}
 The membership manager makes the initial contact to an origin node. We then subscribe as members to a subset of nodes using SCAMP to provide the partial view. No changes are made to SCAMP - the standard subscription, unsubscription, indirection, leasing and recovery methods all apply. There is no limit on the size of the \textit{mCache}. The partnership manager can no longer directly influence the mCache or send unsubscription messages on behalf of another node. These changes allow researchers to follow a well-specified, battle-tested paper for gossiping support without cross-referencing our own. The main output of this component is an arbitrarily sized set of random nodes across the network.
+
+SCAMP does not describe any starting topology. A bootstrapped SCAMP network must contain at least two nodes engaged in a shared subscription.
 
 In the case that the node ever becomes completely isolated and can no longer aggregate members, the node should recontact the origin and gossip a fresh subscription message.
 
-\subsection{Partnership Manager and \textit{Partnerlink}}
-The partnership manager takes these nodes and begins to form TCP connections ready for block transmission. TCP performs the majority of connection upkeep on our behalf - if the connection ends, times out or fails, the partnership should be considered \textit{failed}.
+\subsection{Partnership Manager and \textit{Partnerlink}} \label{css:partnerlink}
+The partnership manager takes these nodes and begins to form TCP connections ready for block transmission. TCP performs the majority of connection upkeep on our behalf - if the connection ends, times out or fails, the partnership should be considered \textit{failed}. \todo{this doesn't mean anything}
 
-The buffer map system remains as specified in \textit{New Coolstreaming}. Each node regularly emits a buffer map to every partner. A buffer map comprises two tuples of length \textit{K} - the first listing the highest block sequence number received in each substream, the second listing the subscription of substreams to the receiving partner. For instance, a node receiving tuples of \(\{40, 41, 42, 39\}\) and \(\{0, 0, 0, 1\}\) from a partner should infer the node to have most recently received block 39 on substream 3, and prepare a subscription for the node on that substream according to the subscription map. We also transfer a \textit{NodeID} representing an \textit{associated peer} and the node's current \textit{panic status}, discussed later in \todo{section??}. If a partner does not transfer a buffer map in some specified length of time, the partner is missing and the partnership should be considered \textit{failed}.
+The buffer map system remains as specified in \textit{New Coolstreaming}. A buffer map comprises two tuples of length \textit{K} - the first listing the highest block sequence number received in each substream, the second listing the subscription of substreams to the receiving partner. For instance, a node receiving tuples of \(\{40, 41, 42, 39\}\) and \(\{0, 0, 0, 1\}\) from a partner should infer the node to have most recently received block 39 on substream 3, and prepare a subscription for the node on that substream according to the subscription map. We also transfer the node's current \textit{panic status} and a \textit{NodeID} representing an \textit{associated peer}, discussed later in \ref{css:partnerlink:panicking} and \ref{css:stream}. A node receiving a buffer map should store these values alongside their relevant partner; the latest block should only be set if the subscription is new as of this message, as we update this value locally as part of the stream manager. If a partner does not transfer a buffer map in some specified length of time, the partner is missing and the partnership should be considered \textit{failed} - the partner connection is removed and \(M_c\) (discussed later) is reduced by 1.
 
-An exception on valid buffer map syntax is made for when the node has just entered the network. Once buffer maps have been exchanged with some minimum proportion of partners, the node must calculate an ideal starting index based on set of known latest received blocks. Designating \(H_{{S_i},A}\) as the latest block received block for substream \(S_i\) at node \(A\), the starting index at substream \(i\) is calculated as \[I_{S_i} = max\{H_{{S_i},q} : q \in partners\} - T_p\] where \(T_p\) is a constant to be introduced later in section \todo{SECTION NAME}. When pushing buffer maps to partners, a new node should fill its latest block tuple with some exceptional value, either a manually-filtered \textit{null} or a very large negative number to ensure the node is never selected, unless the node intends to make its first subscription on a substream to that node. In this case, the latest block on this substream should be listed as \(I_{S_i} - K\) to ensure the partner's stream manager begins transmission from the relevant point.
-
-\subsubsection{\textit{Partnerlink} Description}
+\subsubsection{\textit{Partnerlink} Description} \label{css:partnerlink:description}
 We now describe the \textit{Partnerlink} algorithm. We first make two constraints on the system - a maximum number of partners at each node \(M\) is introduced, where \(M\mod{2} = 0\). Our base join operation grants a node two links per request, so an even partner cap is essential. We define a starting network as two or more nodes in a valid system topology, since at least two peers are necessary to begin splitting. This basic network could be comprised of two guaranteed-trustworthy origin nodes, or built cooperatively with potentially-malicious client nodes.
 
 \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
@@ -265,7 +272,7 @@ We now describe the \textit{Partnerlink} algorithm. We first make two constraint
 		\end{tikzpicture}
 	}%
 	\caption{The base topology from which \textit{Partnerlink} must operate.}
-	\label{some label}
+	\label{fig3}
 \end{figure}
 
 Each node tracks an additional set of variables. We maintain a set of \textit{locks} against \textit{NodeID}s for which operations are still in progress, to protect the system when a node receives several requests regarding the same node. We also maintain an \textit{anticipated} partner count \(M_c\), tracking what our partner count will become if all ongoing operations resolve successfully. Making decisions against this value rather than our actual partner count ensures we do not accidentally request partners above our hard limit \(M\).
@@ -278,22 +285,23 @@ Each node tracks an additional set of variables. We maintain a set of \textit{lo
 \end{itemize}
 We now discuss the systems and messages in place to allow for these operations.
 
-\subsubsection{\textit{Partnerlink} Initiation}
-A node \(n\) entering the network for the first time initializes with \(M_c = M\), locking and retrieving \(M / 2\) nodes from its \textit{mCache} and sending a \textit{Split} message to each. This performs the split operation discussed prior, attempting to place the node in-between an existing partnership. The receiving node \(a\) checks that no partnership nor lock is held against \(n\) - if not, the node forwards a \textit{TrySplit} message to a random unlocked partner \(b\), holding locks against it and \(n\). Node \(b\) performs the same checks, also checking that node \(a\) is not locked. If the checks pass, it returns a \textit{TrySplitSuccess} message, breaks the connection with its old partner and initiates with the new node. Node \(a\) receiving a \textit{TrySplitSuccess} breaks the connection similarly and unlocks the two nodes, after which the exchange is complete. The newly joined node has now gained two links, breaking only one in the process. If all messages respond successfully, the node will have created exactly \(M\) partnerships.
+\subsubsection{\textit{Partnerlink} Initiation} \label{css:partnerlink:initiation}
+A node \(n\) entering the network for the first time awaits the first \textit{SCAMP Inview} message to initialize the \textit{Partnerlink} manager. A list of up to \(M / 2\) candidate partners is requested from the contained node, retrieved at random from its \textit{mCache}. This is necessary as the local node's \textit{mCache} needs time to fill with peers; relying on it for first partners comes with substantial startup delay.
+Upon reception at node \textit{n}, these nodes are all locked and sent a \textit{Split} message. This performs the split operation discussed prior, attempting to place the node in-between an existing partnership. The node also sets \(M_c\) to \(M_r * 2\), where \(M_r\) is the number of nodes received from the initial exchange. A node \(a\) receiving a \textit{Split} message checks that no partnership nor lock is held against \(n\) - if not, the node forwards a \textit{TrySplit} message to a random unlocked partner \(b\), holding locks against it and \(n\). Node \(b\) performs the same checks, additionally requiring that \(a\) is not locked. If the checks pass, it returns a \textit{TrySplitSuccess} message, breaks the connection with its old partner and initiates with the new node. Node \(a\) receiving a \textit{TrySplitSuccess} breaks the connection similarly and unlocks the two nodes, after which the exchange is complete. Upon connection, node \(n\) removes its lock on node \(a\). The newly joined node has now gained two links, breaking only one in the process. If all \textit{Split} messages respond successfully, the node will have created exactly \(M\) partnerships.
 
 If node \(b\) fails its checks, it responds a \textit{TrySplitFailure}. If node \(a\) receives a \textit{TrySplitFailure}, fails its own checks or does not know another unlocked partner, a \textit{SplitFailure} is forwarded back to the new node \(n\) which reduces \(M_c\) by 2 and unlocks the contacted node. This causes the node to immediately begin panicking.
 
-This mechanism was hypothesized to be similar to the existing \textit{DONet} partnership mechanism, and so its performance should be comparable for research purposes.
-
-\subsubsection{\textit{Partnerlink} Panicking}
-If a node does not satisfy \(M_c = M\), it is described as \textit{panicking}. We begin to look for alternative ways to create new links in the system.
+\subsubsection{\textit{Partnerlink} Panicking} \label{css:partnerlink:panicking}
+If a node does not satisfy \(M_c = M\), it is described as \textit{panicking}. A node checks its panic state after each update to \(M_c\). We begin to look for alternative ways to create new links in the system.
 
 If \(M_c = M - 1\), we cannot fill our empty partners by splitting, as we would breach our limit. We instead gossip a 
-\textit{Panic} message containing our \textit{NodeID} to a random partner. This message is directed across the network towards panicking nodes with priority, as determined from their buffer maps. Otherwise, the message is directed towards any node that is not the original panicking node or the last hop. Otherwise, the message is directed anywhere, or else dropped. If a panicking node receives a \textit{Panic} message, it initiates a connection with the contained node and increases its \(M_c\) by 1. The original node receiving this connection does the same, unless has since stopped panicking, in which case it rejects the connection.
+\textit{Panic} message containing our \textit{NodeID} to a random partner. This message is directed across the network towards panicking nodes with priority, as determined from their buffer maps. Otherwise, the message is directed towards any node that is not the original panicking node or the last hop. Otherwise, the message is directed anywhere, or else dropped. If a panicking node receives a \textit{Panic} message, it initiates a connection with the contained node and increases its \(M_c\) by 1. The original node receiving this connection does the same, unless it has since stopped panicking, in which case it rejects the connection.
 
 This joins two panicking nodes together directly and grants one new link each. This is mostly effective in very small networks, where nodes impacted by an improper exit are very few hops together. As networks grow and stabilize, the hops between panicking nodes will increase, worsening delay before node recovery. Note that locks do not influence the transmission of this message, as its result on a partner does not influence a node's local link count.
 
-If \(M_c = M - 2\), we fall back to the splitting method. We gossip a \textit{PanicSplit} message containing our \textit{NodeID} to a random partner. This message contains a field \textit{LastHopOpinion}, initialized to \textit{CANT\_HELP}. The same direction mechanism is applied, although with priority now given to non-panicking nodes and a ban on gossiping to locked partners. At each hop, the node performs similar checks as in a regular \textit{Split} - that we are not already partnered with nor hold any locks against the contained node. If the checks pass, the message is gossiped with a \textit{LastHopOpinion} \textit{CAN\_HELP}; else, it is marked \textit{CANT\_HELP}. If these checks pass and the received message was marked \textit{CAN\_HELP}, we perform an additional check if we hold a lock against the last hop node. If we do, the prior mechanism applies. If not, we proceed as if from a successful \textit{TrySplit} - a \textit{PanicSplitSuccess} is gossiped back to the last hop, our partnership with it is closed and a new connection is initiated with the contained node. The node receiving the \textit{Success} message switches connections similarly.
+If \(M_c = M - 2\), we fall back to the splitting method. We gossip a \textit{PanicSplit} message containing our \textit{NodeID} to a random partner. This message contains a field \textit{LastHopOpinion}, initialized to \textit{CANT\_HELP}. The same direction mechanism is applied, although with priority now given to non-panicking nodes and a ban on gossiping to locked partners. If a node receives a \textit{PanicSplit} with \textit{LastHopOpinion CANT\_HELP}, the node performs similar checks as in a regular \textit{Split} - that we are not already partnered with nor hold any locks against the contained node. If the checks pass, the message is gossiped to a random unlocked partner with a \textit{LastHopOpinion} \textit{CAN\_HELP}, and the contained node and random partner are locked; else, it is marked \textit{CANT\_HELP}.
+
+If a node receives a \textit{PanicSplit} with \textit{LastHopOpinion CAN\_HELP}, we perform the same checks with an additional check that we do not hold a lock against the last hop node. If these checks fail, we throw a \textit{PanicSplitFailed} back to the last hop, who unlocks the contained node and partner. We then recurse and treat the message as if \textit{LastHopOpinion} had been \textit{CANT\_HELP}. If these checks pass, we proceed as if from a successful \textit{TrySplit} - a \textit{PanicSplitSuccess} is gossiped back to the last hop, our partnership with it is closed and a new connection is initiated with the contained node. The node receiving the \textit{PanicSplitSuccess} message switches connections similarly. The panicking node receiving the connections increases \(M_c\) by 1 each, unless it has since stopped panicking, in which case it rejects the connection.
 
 This finds two relatively stable nodes within the network and places the panicking node between them. This is mostly effective in large networks, where the gossiped message will quickly find its way to nodes with no knowledge of the sender. In networks with node count \(Nc \leq M + 1\), this message will never resolve. The resolution rate quickly improves from there.
 
@@ -305,23 +313,56 @@ Each of the above messages contains a time-to-live which is checked at each rece
 
 These messages are gossiped to partners, though they could instead be gossiped to members. We suspect that gossiping to partners will bias recipients towards those with a larger number of partnerships (i.e. those with more stable connections) allowing for more effective recovery, whereas the \textit{mCache} may contain a greater concentration of already-poor connections. We cannot provide any proof of this theory, however - this would prove a fruitful future research question.
 
-\todo{we need to check this and ensure this is all we ned to toalk about here}
-\todo{we forgot about M\_c changes halfway thorugh this}
-
-\subsubsection{\textit{Partnerlink} Leaving}
+\subsubsection{\textit{Partnerlink} Leaving} \label{css:partnerlink:leaving}
 To avoid unneeded panics when disconnecting a node, it is intuitive to pair nodes back together, undoing the splitting we performed to enter. If we perform this via messaging, however, failing nodes will still panic all of their nodes, adding \(M\) panicking nodes to the network - a substantial overlay breakdown. Instead, we continually inform nodes of their \textit{associated peer} when exchanging buffer maps. A clean leave then commands nodes to switch connections to the node they have already been informed of, and nodes detecting timeouts or a failing node can switch automatically without external assistance. This mechanism allows for overlay repair without any gossiped messages in most cases.
 
 Nodes should be associated deterministically - that is, for as long as a node holds the same partners, the associated peer for each partner should not change. Given a set of partners \{A, B, C, ...\}, the associated peer for A is B, and for B is A. If there is an odd number of partners, the final peer is associated with an exceptional \textit{NodeID} to be caught later. Peers receiving a buffer map should store the new associated peer corresponding to this partnership, replacing any prior peer. If the partnership fails or times out, the node should first attempt to connect to their associated peer. If this connection fails, or the node was associated with the exceptional \textit{NodeID}, the node should reduce \(M_c\) by 1, entering a panic state.
 
 A leaving node should send a \textit{Leave} message to each of its peers before ending the connection. Each receiving node should then immediately attempt the above procedure regardless of the state of the partnership.
 
-\subsubsection{\textit{Partnerlink} Switching}
-\textit{coolstreaming-spiked} is designed for compatibility with both \textit{DONet} and \textit{New Coolstreaming} research models. To provide this support, we maintain the switching system unique to \textit{DONet}. At a set interval, each node should perform a standard \textit{Switch} procedure on a random node in its \textit{mCache}, without changing \(M_c\). Two unlocked associated partners should also be locked. If both new links are successful, these two partners should be sent \textit{Leave} messages, so that they reconnect to each other; else, the procedure is abandoned and the two partners unlocked.
+\subsubsection{\textit{Partnerlink} Switching} \label{css:partnerlink:switching}
+\textit{coolstreaming-spiked} is designed for compatibility with both \textit{DONet} and \textit{New Coolstreaming} research models. To provide this support, we retain the switching system unique to \textit{DONet}. At a set interval, each node should perform a standard \textit{Switch} procedure on a random node in its \textit{mCache}, without changing \(M_c\). Two randomly-chosen associated partners should be locked. If both new links are successful, these two partners should be sent \textit{Leave} messages, so that they reconnect to each other; else, the procedure is abandoned and the two partners are unlocked.
 
-\subsection{Stream Manager}
+\subsubsection{\textit{Partnerlink} Rationale} \label{css:partnerlink:rationale}
+The \textit{Split} and \textit{Panic} messages are near-identical to those hypothesized to act within the \textit{DONet} model. Switching could also not be achieved without some similar mechanism. These are essential items  for the minimum output required of the partner component. The \textit{SplitPanic} system primarily acts as a caution against early failure when connecting to initial candidate partners. One downside of the \textit{Split} model is the chance of collisions - there is some chance that two candidates contact the same node to perform two splits. Network conditions may also lead to a node being impossible to contact. In either case, it is not unreasonable to expect a large number of contacted nodes to be unreachable, resulting in a starting \(M_c\) far below \(M\), which would take a long time to recover with the vanilla \textit{Panic} strategy. Whilst performance is not a priority for this model, there is still a minimum bar beyond which research analysis would become clouded by its limitations; starting delay is one such case.
 
+The new \textit{associated peers} model is ultimately easier to implement than the \textit{de facto} leave method associated with a splitting approach. Nodes would have to associate peers and forward them to nodes regardless, with the addition of some special case for nodes leaving without notification. The model also grants extra opportunities for filtering \todo{however we phrase this is determined by our lit review}. Thus, we consider this approach an improvement over the immediately obvious solution.
 
-\section{Conclusion}
+Whilst the switching mechanism does provide compatibility, its impact on the model is limited compared to the more integral role the \textit{mCache} takes in replacing partners in \textit{DONet}. Research surrounding peer selection algorithms will therefore appear less impactful under \textit{coolstreaming-spiked} - a more in-depth port may also include the algorithm as part of the \textit{associated peer} system to accentuate the impact it makes.
+
+\subsection{Stream Manager} \label{css:stream}
+The stream manager is responsible for converting partnerships to parent-child subscriptions, pushing data around as necessary, as well as the dissemination of buffer maps.
+
+Each node regularly emits a buffer map to every partner. The syntax of these maps has already been discussed - however, an exception on valid syntax is made for when the node has just entered the network. Once buffer maps have been received from some defined minimum percentage of partners, the node must calculate an ideal starting index based on the known set of latest received blocks. Designating \(H_{{S_i},A}\) as the latest block received block for substream \(S_i\) at node \(A\), the starting index at substream \(i\) is calculated as \[I_{S_i} = \max\{H_{{S_i},q} : q \in partners\} - T_p\] where \(T_p\) is a constant to be introduced later. The ideal placement of the starting playout index is specific to the playout strategy and is an open research question. We expect that buffering systems should place playout at \(\min\{I_{S_i}\}\) and begin playout once a minimum buffer percentage has been filled. Non-buffering approaches are more complicated - playout should be placed such this buffer percentage will have been filled by the time playout reaches \(\min\{I_{S_i}\}\). The ideal calculation for this remains an open research question and will likely require additional information to be gossiped between nodes.
+
+When pushing buffer maps to partners when it has not yet received blocks in a given substream \textit{i}, a new node should fill its latest block with some exceptional value, either a manually-filtered \textit{null} or a very large negative number to ensure the node is never selected, unless the node intends to make its first subscription on \textit{i} to that partner. In this case, the latest block on this substream should be listed as \(I_{S_i} - K\) to ensure the partner's stream manager begins transmission from the relevant point.
+
+When a node \(n\) subscribes to a substream through their buffer map, the partnership manager reads and stores the node's latest received block \(R_n\). The manager attends to each subscribing partner with a round-robin strategy. At each step, if the node's buffers contains block with sequence number \(R_n + K\), the manager pushes this block to node \(n\) and updates \(R_n\) accordingly, moving on to the next node. The stream manager should aim to fully saturate a node's outgoing bandwidth - as soon as one block finishes transmission, the next should begin. The stream manager will continue to push all blocks in the substream until the partnership or subscription ends; a parent node will not drop a child under any other circumstance.
+
+For monitoring the service of substream \(j\) to child node \(A\) by parent \(p\), two inequalities are defined
+
+\begin{flalign}
+\max\{|H_{{S_i},A} - H_{{S_j},p}| : i \leq K\} < T_s \\
+\max\{|H_{{S_i},q}| : q \in partners\} - H_{{S_j},p} < T_p
+\end{flalign}
+
+Inequality (1) caps the distance between the most up-to-date child substream and the target parent substream. If this inequality does not hold, the parent has blocks we are interested in that we are not receiving, implying issues with the link. Inequality (2) caps the distance between the target parent substream and the most up-to-date substream we know across all partners. If this inequality does not hold, the parent is lagging behind the wider swarm, implying connection issues further upstream. At each buffer map and block reception, these inequalities are measured against each substream parent - if either fail, the parent is reselected. The replacement parent is selected randomly from all other partners meeting inequality (2) for the target substream - if no partner meets the inequality, the reselection is cancelled. If any reselection occurs, a new buffer map is immediately sent to the affected parents. A cooldown timer \(T_i\) is set on a per-substream basis to prevent repeated reselection and stabilize the overlay topology. Substreams with active cooldowns will not be checked.
+
+The failure state for the stream manager depends on playout strategy. If buffering is incorporated, the node may fall behind the blocks available in the wider swarm. If playout does not halt, we may still find ourselves in a situation where all partners provide unsatisfactory connections. A number of heuristics could detect either case; a threshold over the filled percentage of the buffer is one simple example. Whatever the method, the stream manager should assume a widespread failure amongst its underlying partners, and initiate the same recovery mechanism as defined in the partnership manager.
+
+\subsection{Comparison of \textit{coolstreaming-spiked} to our implementation} \label{css:comparison}
+Our implementation discussed prior is \textit{not} an implementation of \textit{coolstreaming-spiked}, though they are basically similar. The key differences are
+
+\begin{itemize}
+	\item Our implementation retains the \textit{DONet} version of \textit{SCAMP}, with all its oddities. We do not anticipate this aspect of the system to have any impact on performance, and the component outputs are the same.
+	\item Our implementation does not include any locking mechanism - instead, more advanced link counting is used to resolve overlapping message streams without hiding nodes from overlay adjustment. The interactions that arise are nearly impossible to reason and are very likely the reason for the desyncing \(M_c\) and partner counts we note in our results. The locking mechanism is proposed due to our experiences with this other approach. This will have an impact on results, though almost certainly a positive one.
+	\item Our implementation does not make any use of TCP connections, instead relying on UDP either directly or through \textit{OverSim}'s RPC support. This is related both to the cut-down paper we worked from and that TCP support in \textit{OverSim} is a somewhat hidden feature. This negatively impacts our results, as TCP networking is essential in the design of \textit{Coolstreaming}.
+	\item Our implementation initiates playout similarly to a buffering playout strategy, syncing to the starting block index and waiting for a threshold percentage of the buffer to be filled to play. No other buffering is performed during playout. This strange hybrid approach, whilst not invalid, is unlikely to be seen in a real research model and would ideally instead align with one or the other.
+\end{itemize}
+
+The changes we have made to \textit{coolstreaming-spiked} since our implementation aim to resolve the poor performance seen in our results. Whilst the final performance figures are unverified, we believe this to be a good future vein of research.
+
+\section{Conclusion} \label{conclusion}
 holy fuck. this sucks
 
 \printbibliography
