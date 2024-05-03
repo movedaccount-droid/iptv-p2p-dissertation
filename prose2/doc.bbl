@@ -402,6 +402,53 @@
       \verb https://api.semanticscholar.org/CorpusID:13803281
       \endverb
     \endentry
+    \entry{Guo2008}{inbook}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=8a56024849f7ac11be339af929f7135c}{%
+           family={Guo},
+           familyi={G\bibinitperiod},
+           given={Yang},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=75fc6a77e1288f3455930e20cd050a18}{%
+           family={Liang},
+           familyi={L\bibinitperiod},
+           given={Chao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bc6c6f66f139beef784a50d9f1485019}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer Berlin Heidelberg}%
+      }
+      \strng{namehash}{0626a539f1a8b2014d4df335216c52ce}
+      \strng{fullhash}{0626a539f1a8b2014d4df335216c52ce}
+      \strng{bibnamehash}{0626a539f1a8b2014d4df335216c52ce}
+      \strng{authorbibnamehash}{0626a539f1a8b2014d4df335216c52ce}
+      \strng{authornamehash}{0626a539f1a8b2014d4df335216c52ce}
+      \strng{authorfullhash}{0626a539f1a8b2014d4df335216c52ce}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Lecture Notes in Computer Science}
+      \field{isbn}{9783540795490}
+      \field{issn}{1611-3349}
+      \field{title}{AQCS: Adaptive Queue-Based Chunk Scheduling for P2P Live Streaming}
+      \field{year}{2008}
+      \field{pages}{433\bibrangedash 444}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1007/978-3-540-79549-0_38
+      \endverb
+    \endentry
     \entry{Hei2008a}{article}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=79d28783e6c40a34d0b431269c1da585}{%
@@ -492,6 +539,100 @@
       \verb{url}
       \verb https://api.semanticscholar.org/CorpusID:12141682
       \endverb
+    \endentry
+    \entry{Ho2014}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=a246dc848e6c1a6df37b2d08e75fe471}{%
+           family={Ho},
+           familyi={H\bibinitperiod},
+           given={Cheng-Yun},
+           giveni={C\bibinithyphendelim Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=aeba637ab5f94b6bf3867bbdb112f355}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Ming-Hsiang},
+           giveni={M\bibinithyphendelim H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5c7c2dd48464ab994c7279752218eabe}{%
+           family={Ho},
+           familyi={H\bibinitperiod},
+           given={Cheng-Yuan},
+           giveni={C\bibinithyphendelim Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d826f9187667311baf9879fba1df0a69}{%
+           family={Tseng},
+           familyi={T\bibinitperiod},
+           given={Chien-Chao},
+           giveni={C\bibinithyphendelim C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{23bb70526e61e7bb66f0ca80787a88c7}
+      \strng{fullhash}{88dde1317a4c9692fc50390c262a37b0}
+      \strng{bibnamehash}{88dde1317a4c9692fc50390c262a37b0}
+      \strng{authorbibnamehash}{88dde1317a4c9692fc50390c262a37b0}
+      \strng{authornamehash}{23bb70526e61e7bb66f0ca80787a88c7}
+      \strng{authorfullhash}{88dde1317a4c9692fc50390c262a37b0}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Communications Letters}
+      \field{number}{9}
+      \field{title}{Bandwidth and Latency Aware Contribution Estimation in P2P Streaming System}
+      \field{volume}{18}
+      \field{year}{2014}
+      \field{pages}{1511\bibrangedash 1514}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1109/LCOMM.2014.2343612
+      \endverb
+      \keyw{Bandwidth;Peer-to-peer computing;Delays;Mathematical model;Receivers;Estimation;Equations;Bandwidth;latency;contribution estimation;BLACE;P2P streaming system}
+    \endentry
+    \entry{Huang2010}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=ef77e7504555b19034ce0cdc3d562665}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={F.},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=eadf47e3a5fef159db82a3575afdddcd}{%
+           family={Ravindran},
+           familyi={R\bibinitperiod},
+           given={B.},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0e459862e8dbf21a16ed1c0b9746d29c}{%
+           family={Khan},
+           familyi={K\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{5db01e78dd7f5a31f026edb187aad1e6}
+      \strng{fullhash}{5db01e78dd7f5a31f026edb187aad1e6}
+      \strng{bibnamehash}{5db01e78dd7f5a31f026edb187aad1e6}
+      \strng{authorbibnamehash}{5db01e78dd7f5a31f026edb187aad1e6}
+      \strng{authornamehash}{5db01e78dd7f5a31f026edb187aad1e6}
+      \strng{authorfullhash}{5db01e78dd7f5a31f026edb187aad1e6}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2010 IEEE Tenth International Conference on Peer-to-Peer Computing (P2P)}
+      \field{title}{NAP: An Agent-Based Scheme on Reducing Churn-Induced Delays for P2P Live Streaming}
+      \field{year}{2010}
+      \field{pages}{1\bibrangedash 10}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/P2P.2010.5569961
+      \endverb
+      \keyw{Delay;Peer to peer computing;Switches;Bandwidth;Queueing analysis;Numerical models;Analytical models}
     \endentry
     \entry{Kim2018}{article}{}
       \name{author}{3}{}{%
@@ -597,6 +738,49 @@
       \verb 10.1109/NETWKS.2014.6959253
       \endverb
       \keyw{Switches;Peer-to-peer computing;Streaming media;Servers;Delays;Watches;Overlay networks}
+    \endentry
+    \entry{Kumar2007}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=d59d2029f930cf2b55b723cca6aafc0e}{%
+           family={Kumar},
+           familyi={K\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ce084360cc68e7db4fe6cae1287b3adf}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Y.},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a9b0f3edcb263939dec307cb0e506771}{%
+           family={Ross},
+           familyi={R\bibinitperiod},
+           given={K.},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{b3d5e0a9c74e61fe6eefddfdfc473967}
+      \strng{fullhash}{b3d5e0a9c74e61fe6eefddfdfc473967}
+      \strng{bibnamehash}{b3d5e0a9c74e61fe6eefddfdfc473967}
+      \strng{authorbibnamehash}{b3d5e0a9c74e61fe6eefddfdfc473967}
+      \strng{authornamehash}{b3d5e0a9c74e61fe6eefddfdfc473967}
+      \strng{authorfullhash}{b3d5e0a9c74e61fe6eefddfdfc473967}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IEEE INFOCOM 2007 - 26th IEEE International Conference on Computer Communications}
+      \field{title}{Stochastic Fluid Theory for P2P Streaming Systems}
+      \field{year}{2007}
+      \field{pages}{919\bibrangedash 927}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/INFCOM.2007.112
+      \endverb
+      \keyw{Stochastic systems;Streaming media;Peer to peer computing;USA Councils;Bandwidth;Bit rate;Internet;Communications Society;Information science;Delay}
     \endentry
     \entry{Lan2011}{inproceedings}{}
       \name{author}{4}{}{%
@@ -784,6 +968,93 @@
       \endverb
       \keyw{Peer to peer computing;Streaming media;Internet;Protocols;Computer science;Large-scale systems;Resource management;Prototypes;Scalability;Broadcasting}
     \endentry
+    \entry{Li2010}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=a040618addb54cb53a2362a85a00a018}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Zhenjiang},
+           giveni={Z\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e734b39ecb6aacc76c2e0a62c2b5be51}{%
+           family={Tsang},
+           familyi={T\bibinitperiod},
+           given={Danny\bibnamedelimb H.\bibnamedelimi K.},
+           giveni={D\bibinitperiod\bibinitdelim H\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2233e82e45af3c0bfaa2a0c15d887cd1}{%
+           family={Lee},
+           familyi={L\bibinitperiod},
+           given={Wang-Chien},
+           giveni={W\bibinithyphendelim C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{6fa16a1bac7fdaa453bc32d5924179c5}
+      \strng{fullhash}{6fa16a1bac7fdaa453bc32d5924179c5}
+      \strng{bibnamehash}{6fa16a1bac7fdaa453bc32d5924179c5}
+      \strng{authorbibnamehash}{6fa16a1bac7fdaa453bc32d5924179c5}
+      \strng{authornamehash}{6fa16a1bac7fdaa453bc32d5924179c5}
+      \strng{authorfullhash}{6fa16a1bac7fdaa453bc32d5924179c5}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2010 Proceedings IEEE INFOCOM}
+      \field{title}{Understanding Sub-stream Scheduling in P2P Hybrid Live Streaming Systems}
+      \field{year}{2010}
+      \field{pages}{1\bibrangedash 5}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/INFCOM.2010.5462227
+      \endverb
+      \keyw{Streaming media;Scheduling;Mathematical model;Internet;Mathematical analysis;Performance analysis;Communications Society;Traffic control;Robustness;Throughput}
+    \endentry
+    \entry{Liang2007}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=75fc6a77e1288f3455930e20cd050a18}{%
+           family={Liang},
+           familyi={L\bibinitperiod},
+           given={Chao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8a56024849f7ac11be339af929f7135c}{%
+           family={Guo},
+           familyi={G\bibinitperiod},
+           given={Yang},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bc6c6f66f139beef784a50d9f1485019}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{eab8e5004392a57efed1fc40ad787eac}
+      \strng{fullhash}{eab8e5004392a57efed1fc40ad787eac}
+      \strng{bibnamehash}{eab8e5004392a57efed1fc40ad787eac}
+      \strng{authorbibnamehash}{eab8e5004392a57efed1fc40ad787eac}
+      \strng{authornamehash}{eab8e5004392a57efed1fc40ad787eac}
+      \strng{authorfullhash}{eab8e5004392a57efed1fc40ad787eac}
+      \field{extraname}{1}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IEEE GLOBECOM 2007 - IEEE Global Telecommunications Conference}
+      \field{title}{Hierarchically Clustered P2P Streaming System}
+      \field{year}{2007}
+      \field{pages}{236\bibrangedash 241}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1109/GLOCOM.2007.52
+      \endverb
+      \keyw{Streaming media;Scheduling algorithm;Bandwidth;Delay;Internet;Peer to peer computing;Topology;Bit rate;Chaos;Upper bound}
+    \endentry
     \entry{Liang2009}{article}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=75fc6a77e1288f3455930e20cd050a18}{%
@@ -811,6 +1082,7 @@
       \strng{authorbibnamehash}{eab8e5004392a57efed1fc40ad787eac}
       \strng{authornamehash}{eab8e5004392a57efed1fc40ad787eac}
       \strng{authorfullhash}{eab8e5004392a57efed1fc40ad787eac}
+      \field{extraname}{2}
       \field{sortinit}{L}
       \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
       \field{extradatescope}{labelyear}
@@ -1175,6 +1447,35 @@
       \verb https://web.archive.org/web/20080617091219/http://www.pplive.com/
       \endverb
     \endentry
+    \entry{Sandvine2024}{booklet}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=fe252893738401afc0afb57cccfcc212}{%
+           family={Sandvine},
+           familyi={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{fe252893738401afc0afb57cccfcc212}
+      \strng{fullhash}{fe252893738401afc0afb57cccfcc212}
+      \strng{bibnamehash}{fe252893738401afc0afb57cccfcc212}
+      \strng{authorbibnamehash}{fe252893738401afc0afb57cccfcc212}
+      \strng{authornamehash}{fe252893738401afc0afb57cccfcc212}
+      \strng{authorfullhash}{fe252893738401afc0afb57cccfcc212}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Digital}
+      \field{month}{3}
+      \field{title}{The Global Internet Phenomena Report March 2024}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.sandvine.com/phenomena
+      \endverb
+      \verb{url}
+      \verb https://www.sandvine.com/phenomena
+      \endverb
+    \endentry
     \entry{Sanghavi2006}{article}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=78484c7f7f265bb7ea1d73937bb42d31}{%
@@ -1254,6 +1555,91 @@
       \verb https://web.archive.org/web/20191009112802/http://www.sopcast.org/
       \endverb
     \endentry
+    \entry{UUSee2007}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=f191d2665e24e0095f985f12462675ab}{%
+           family={UUSee},
+           familyi={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{f191d2665e24e0095f985f12462675ab}
+      \strng{fullhash}{f191d2665e24e0095f985f12462675ab}
+      \strng{bibnamehash}{f191d2665e24e0095f985f12462675ab}
+      \strng{authorbibnamehash}{f191d2665e24e0095f985f12462675ab}
+      \strng{authornamehash}{f191d2665e24e0095f985f12462675ab}
+      \strng{authorfullhash}{f191d2665e24e0095f985f12462675ab}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{UUSee Homepage}
+      \field{urlday}{2}
+      \field{urlmonth}{5}
+      \field{urlyear}{2024}
+      \field{year}{2007}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://web.archive.org/web/20071013072457/http://www.uusee.com/
+      \endverb
+      \verb{url}
+      \verb https://web.archive.org/web/20071013072457/http://www.uusee.com/
+      \endverb
+    \endentry
+    \entry{Vassilakis2010}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=9b3fa92e46512819be463868e4401641}{%
+           family={Vassilakis},
+           familyi={V\bibinitperiod},
+           given={Constantinos},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=19caa9af746acf24376a9d25669702fe}{%
+           family={Stavrakakis},
+           familyi={S\bibinitperiod},
+           given={Ioannis},
+           giveni={I\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {NLD}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier Science Publishers B. V.}%
+      }
+      \strng{namehash}{4f6ca37f357c794074de06238f50b055}
+      \strng{fullhash}{4f6ca37f357c794074de06238f50b055}
+      \strng{bibnamehash}{4f6ca37f357c794074de06238f50b055}
+      \strng{authorbibnamehash}{4f6ca37f357c794074de06238f50b055}
+      \strng{authornamehash}{4f6ca37f357c794074de06238f50b055}
+      \strng{authorfullhash}{4f6ca37f357c794074de06238f50b055}
+      \field{sortinit}{V}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Several peer-to-peer (P2P) streaming systems have proved by now their ability to deliver live video streams to hundreds of users. However the inherent instability of the distribution environment poses several obstacles for these systems to manage to deliver a high quality experience to the end users. In this paper we explore node churn which independently of the distribution topology adopted, is an ''anomaly'' to the operation of the system leading to the degradation of playout quality. We argue that node churn is service specific and that churn in a P2P streaming service is highly correlated to the quality experienced at each node. On this basis we contribute a novel churn model to capture this twofold relationship and reveal unknown till now interactions while operating popular peer selection strategies under node churn. We provide evidence that selection strategies aiming solely at either efficiency or stability of a connection, although efficient for other P2P services such as P2P file sharing, lead to the formation of distribution topologies that are highly sensitive to node churn resulting in degraded performance. We propose a peer selection strategy designed to be P2P streaming service specific that takes decisions in short time scales while balances several factors such as connection efficiency, connection stability and content availability. It is proved that this approach achieves a uniform development of the distribution topology and leads to superior performance in terms of both low node churn and increased experienced quality.}
+      \field{issn}{0140-3664}
+      \field{journaltitle}{Comput. Commun.}
+      \field{month}{9}
+      \field{number}{14}
+      \field{title}{Minimizing node churn in peer-to-peer streaming}
+      \field{volume}{33}
+      \field{year}{2010}
+      \field{pages}{1598\bibrangedash 1614}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1016/j.comcom.2010.04.014
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.comcom.2010.04.014
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.comcom.2010.04.014
+      \endverb
+      \keyw{Node churn,Node churn model,Peer selection strategies,Peer-to-peer streaming}
+    \endentry
     \entry{Wang2013}{inproceedings}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=1f647bb6da8304b7be380ec58eb6373a}{%
@@ -1296,6 +1682,49 @@
       \verb 10.1109/ICIST.2013.6747752
       \endverb
       \keyw{Bandwidth;Peer-to-peer computing;Streaming media;Quality of service;Delays;Internet;Algorithm design and analysis}
+    \endentry
+    \entry{Wu2009}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=b093c37857d6bc46f3f1e883b5cb437e}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={D.},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ce084360cc68e7db4fe6cae1287b3adf}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Y.},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a9b0f3edcb263939dec307cb0e506771}{%
+           family={Ross},
+           familyi={R\bibinitperiod},
+           given={K.},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{cbf927cdfd6f3cb0f4ea558c74195d92}
+      \strng{fullhash}{cbf927cdfd6f3cb0f4ea558c74195d92}
+      \strng{bibnamehash}{cbf927cdfd6f3cb0f4ea558c74195d92}
+      \strng{authorbibnamehash}{cbf927cdfd6f3cb0f4ea558c74195d92}
+      \strng{authornamehash}{cbf927cdfd6f3cb0f4ea558c74195d92}
+      \strng{authorfullhash}{cbf927cdfd6f3cb0f4ea558c74195d92}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{IEEE INFOCOM 2009}
+      \field{title}{Queuing Network Models for Multi-Channel P2P Live Streaming Systems}
+      \field{year}{2009}
+      \field{pages}{73\bibrangedash 81}
+      \range{pages}{9}
+      \verb{doi}
+      \verb 10.1109/INFCOM.2009.5061908
+      \endverb
+      \keyw{Streaming media;ISO;Switches;Computer networks;Large-scale systems;Bandwidth;Delay;Communications Society;Information science;USA Councils}
     \endentry
     \entry{Xie2007}{article}{}
       \name{author}{4}{}{%
@@ -1548,8 +1977,6 @@
       \endverb
     \endentry
   \enddatalist
-  \missing{1498486}
-  \missing{asdasd}
 \endrefsection
 \endinput
 
