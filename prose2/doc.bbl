@@ -178,6 +178,82 @@
       \verb 10.1007/s10922-017-9420-5
       \endverb
     \endentry
+    \entry{Bustamante}{inbook}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=988e4514c7a381de749216aa63e8eb8b}{%
+           family={Bustamante},
+           familyi={B\bibinitperiod},
+           given={Fabian\bibnamedelima E.},
+           giveni={F\bibinitperiod\bibinitdelim E\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d0cc2975f89796df6d4f7ebf5cf86400}{%
+           family={Qiao},
+           familyi={Q\bibinitperiod},
+           given={Yi},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Kluwer Academic Publishers}%
+      }
+      \strng{namehash}{d9177e55a402fef276d94400efa0b2c6}
+      \strng{fullhash}{d9177e55a402fef276d94400efa0b2c6}
+      \strng{bibnamehash}{d9177e55a402fef276d94400efa0b2c6}
+      \strng{authorbibnamehash}{d9177e55a402fef276d94400efa0b2c6}
+      \strng{authornamehash}{d9177e55a402fef276d94400efa0b2c6}
+      \strng{authorfullhash}{d9177e55a402fef276d94400efa0b2c6}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labeldatesource}{nodate}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Web Content Caching and Distribution}
+      \field{isbn}{1402022573}
+      \field{title}{Friendships that Last: Peer Lifespan and its Role in P2P Protocols}
+      \field{pages}{233\bibrangedash 246}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1007/1-4020-2258-1_16
+      \endverb
+    \endentry
+    \entry{Cohen2017}{standard}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=48e49f55c3b1ebfe9cf1954935b19d8d}{%
+           family={Cohen},
+           familyi={C\bibinitperiod},
+           given={Bram},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{1}{%
+        {BitTorrent}%
+      }
+      \list{organization}{1}{%
+        {BitTorrent}%
+      }
+      \strng{namehash}{48e49f55c3b1ebfe9cf1954935b19d8d}
+      \strng{fullhash}{48e49f55c3b1ebfe9cf1954935b19d8d}
+      \strng{bibnamehash}{48e49f55c3b1ebfe9cf1954935b19d8d}
+      \strng{authorbibnamehash}{48e49f55c3b1ebfe9cf1954935b19d8d}
+      \strng{authornamehash}{48e49f55c3b1ebfe9cf1954935b19d8d}
+      \strng{authorfullhash}{48e49f55c3b1ebfe9cf1954935b19d8d}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Digital}
+      \field{month}{2}
+      \field{title}{The BitTorrent Protocol Specification}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb http://bittorrent.org/beps/bep_0003.html
+      \endverb
+      \verb{url}
+      \verb http://bittorrent.org/beps/bep_0003.html
+      \endverb
+    \endentry
     \entry{CoutodaSilva2011}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=44bdec570e7cf9309a56a96b0859a666}{%
@@ -293,6 +369,49 @@
       \verb{url}
       \verb https://doi.org/10.1145/347057.347397
       \endverb
+    \endentry
+    \entry{Friedman2015}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=2a5497b630106858c42489823a43b8a5}{%
+           family={Friedman},
+           familyi={F\bibinitperiod},
+           given={Roy},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=adc92e46af759582b738592ba0164dc7}{%
+           family={Libov},
+           familyi={L\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9f3e9e8a6f27767d0680c0e0274066d8}{%
+           family={Vigfussony},
+           familyi={V\bibinitperiod},
+           given={Ymir},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{f6532240af785c347682bb97e0b38664}
+      \strng{fullhash}{f6532240af785c347682bb97e0b38664}
+      \strng{bibnamehash}{f6532240af785c347682bb97e0b38664}
+      \strng{authorbibnamehash}{f6532240af785c347682bb97e0b38664}
+      \strng{authornamehash}{f6532240af785c347682bb97e0b38664}
+      \strng{authorfullhash}{f6532240af785c347682bb97e0b38664}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2015 IEEE International Conference on Peer-to-Peer Computing (P2P)}
+      \field{title}{Distilling the ingredients of P2P live streaming systems}
+      \field{year}{2015}
+      \field{pages}{1\bibrangedash 10}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/P2P.2015.7328519
+      \endverb
+      \keyw{Protocols;Testing;Streaming media;Peer-to-peer computing;Internet;Scalability;Complexity theory}
     \endentry
     \entry{Ghoshal2007}{inproceedings}{}
       \name{author}{4}{}{%
@@ -449,7 +568,7 @@
       \verb 10.1007/978-3-540-79549-0_38
       \endverb
     \endentry
-    \entry{Hei2008a}{article}{}
+    \entry{Hei2007}{article}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=79d28783e6c40a34d0b431269c1da585}{%
            family={Hei},
@@ -477,6 +596,52 @@
       \strng{authornamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
       \strng{authorfullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
       \field{extraname}{1}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Journal on Selected Areas in Communications}
+      \field{number}{9}
+      \field{title}{Inferring Network-Wide Quality in P2P Live Streaming Systems}
+      \field{volume}{25}
+      \field{year}{2007}
+      \field{pages}{1640\bibrangedash 1654}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1109/JSAC.2007.071204
+      \endverb
+      \keyw{Streaming media;Delay;Peer to peer computing;Scheduling algorithm;Remote monitoring;Video sharing;Crawlers;IPTV;Europe;North America}
+    \endentry
+    \entry{Hei2008a}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=79d28783e6c40a34d0b431269c1da585}{%
+           family={Hei},
+           familyi={H\bibinitperiod},
+           given={Xiaojun},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bc6c6f66f139beef784a50d9f1485019}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c2e119f22d4ef9df7cfb63c82975b459}{%
+           family={Ross},
+           familyi={R\bibinitperiod},
+           given={Keith\bibnamedelima W.},
+           giveni={K\bibinitperiod\bibinitdelim W\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{cb29f4aecc51d0ee0bf0109d538dd727}
+      \strng{fullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
+      \strng{bibnamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
+      \strng{authorbibnamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
+      \strng{authornamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
+      \strng{authorfullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
+      \field{extraname}{2}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{extradate}{1}
@@ -523,7 +688,7 @@
       \strng{authorbibnamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
       \strng{authornamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
       \strng{authorfullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
-      \field{extraname}{2}
+      \field{extraname}{3}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{extradate}{2}
@@ -539,6 +704,56 @@
       \verb{url}
       \verb https://api.semanticscholar.org/CorpusID:12141682
       \endverb
+    \endentry
+    \entry{Ho2013}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=a246dc848e6c1a6df37b2d08e75fe471}{%
+           family={Ho},
+           familyi={H\bibinitperiod},
+           given={Cheng-Yun},
+           giveni={C\bibinithyphendelim Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=074df7e0dd8bd8b527db17ed09b10f18}{%
+           family={Chung},
+           familyi={C\bibinitperiod},
+           given={Ming-Chen},
+           giveni={M\bibinithyphendelim C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=17f16b09b93c8dcda5e55858695e2db2}{%
+           family={Yen},
+           familyi={Y\bibinitperiod},
+           given={Li-Hsing},
+           giveni={L\bibinithyphendelim H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d826f9187667311baf9879fba1df0a69}{%
+           family={Tseng},
+           familyi={T\bibinitperiod},
+           given={Chien-Chao},
+           giveni={C\bibinithyphendelim C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{23bb70526e61e7bb66f0ca80787a88c7}
+      \strng{fullhash}{86a3d74e9556ae47165162c3b4f48311}
+      \strng{bibnamehash}{86a3d74e9556ae47165162c3b4f48311}
+      \strng{authorbibnamehash}{86a3d74e9556ae47165162c3b4f48311}
+      \strng{authornamehash}{23bb70526e61e7bb66f0ca80787a88c7}
+      \strng{authorfullhash}{86a3d74e9556ae47165162c3b4f48311}
+      \field{extraname}{1}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2013 42nd International Conference on Parallel Processing}
+      \field{title}{Churn: A Key Effect on Real-World P2P Software}
+      \field{year}{2013}
+      \field{pages}{140\bibrangedash 149}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1109/ICPP.2013.23
+      \endverb
+      \keyw{Crawlers;Peer-to-peer computing;Topology;Servers;Measurement;Protocols;Dispatching;Churn;Real-world;Unstructured;Peer-to-peer;Performance;TCSS}
     \endentry
     \entry{Ho2014}{article}{}
       \name{author}{4}{}{%
@@ -573,6 +788,7 @@
       \strng{authorbibnamehash}{88dde1317a4c9692fc50390c262a37b0}
       \strng{authornamehash}{23bb70526e61e7bb66f0ca80787a88c7}
       \strng{authorfullhash}{88dde1317a4c9692fc50390c262a37b0}
+      \field{extraname}{2}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
       \field{extradatescope}{labelyear}
@@ -633,6 +849,49 @@
       \verb 10.1109/P2P.2010.5569961
       \endverb
       \keyw{Delay;Peer to peer computing;Switches;Bandwidth;Queueing analysis;Numerical models;Analytical models}
+    \endentry
+    \entry{Kang2012}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=8b7a6014b1b88d0670a2c08628d2b4bb}{%
+           family={Kang},
+           familyi={K\bibinitperiod},
+           given={Xiaohan},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c1e662c73f766f34edfc632ff356e7ec}{%
+           family={Jaramillo},
+           familyi={J\bibinitperiod},
+           given={Juan\bibnamedelima José},
+           giveni={J\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=52521c06d40f30c32dbaca334760a2b0}{%
+           family={Ying},
+           familyi={Y\bibinitperiod},
+           given={Lei},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{4aed0e50723f511148cec9526ee2e6b6}
+      \strng{fullhash}{4aed0e50723f511148cec9526ee2e6b6}
+      \strng{bibnamehash}{4aed0e50723f511148cec9526ee2e6b6}
+      \strng{authorbibnamehash}{4aed0e50723f511148cec9526ee2e6b6}
+      \strng{authornamehash}{4aed0e50723f511148cec9526ee2e6b6}
+      \strng{authorfullhash}{4aed0e50723f511148cec9526ee2e6b6}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2012 50th Annual Allerton Conference on Communication, Control, and Computing (Allerton)}
+      \field{title}{Impacts of peer churn on P2P streaming networks}
+      \field{year}{2012}
+      \field{pages}{1417\bibrangedash 1424}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/Allerton.2012.6483384
+      \endverb
+      \keyw{Peer-to-peer computing;Servers;Analytical models;Approximation methods;Mathematical model;Availability;Steady-state}
     \endentry
     \entry{Kim2018}{article}{}
       \name{author}{3}{}{%
@@ -1101,6 +1360,57 @@
       \endverb
       \keyw{Streaming media;Job shop scheduling;Space exploration;Internet;Web server;Space technology;Large-scale systems;Network servers;Unicast;Delay;Peer-to-peer networks;scheduling;system design;video streaming}
     \endentry
+    \entry{Liu2008}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=7b6ee7253d0b6ff8d31a7d6daed3d88e}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Jiangchuan},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6560c2582841cadfa3658603645b1de4}{%
+           family={Rao},
+           familyi={R\bibinitperiod},
+           given={Sanjay\bibnamedelima G.},
+           giveni={S\bibinitperiod\bibinitdelim G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a9c8728e355996d027a7e56b60820a18}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Bo},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0f5b8b674eea6432492c32e093925682}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Hui},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{fedab62baafb1826b3e65fd5fe9072ae}
+      \strng{fullhash}{3364a6ad848492ceb2645b74d2d72690}
+      \strng{bibnamehash}{3364a6ad848492ceb2645b74d2d72690}
+      \strng{authorbibnamehash}{3364a6ad848492ceb2645b74d2d72690}
+      \strng{authornamehash}{fedab62baafb1826b3e65fd5fe9072ae}
+      \strng{authorfullhash}{3364a6ad848492ceb2645b74d2d72690}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the IEEE}
+      \field{number}{1}
+      \field{title}{Opportunities and Challenges of Peer-to-Peer Internet Video Broadcast}
+      \field{volume}{96}
+      \field{year}{2008}
+      \field{pages}{11\bibrangedash 24}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1109/JPROC.2007.909921
+      \endverb
+      \keyw{Peer to peer computing;Internet;Multimedia communication;Broadcasting;Large-scale systems;Multicast protocols;Scalability;Technological innovation;Streaming media;Costs;Broadcast;multicast;peer-to-peer;video streaming;Broadcast;multicast;peer-to-peer;video streaming}
+    \endentry
     \entry{Liu2004}{inproceedings}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=e1ce30db16e8f18cf5970e2ecf311d7d}{%
@@ -1373,6 +1683,105 @@
       \endverb
       \keyw{Broadcasting;Peer to peer computing;Delay;Streaming media;Scheduling algorithm;Communications Society;Multimedia communication;Motion pictures;Network topology;Heuristic algorithms}
     \endentry
+    \entry{Moltchanov2011}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=89c5e3f2d528dc0f44581ee531f02426}{%
+           family={Moltchanov},
+           familyi={M\bibinitperiod},
+           given={Dmitri},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{89c5e3f2d528dc0f44581ee531f02426}
+      \strng{fullhash}{89c5e3f2d528dc0f44581ee531f02426}
+      \strng{bibnamehash}{89c5e3f2d528dc0f44581ee531f02426}
+      \strng{authorbibnamehash}{89c5e3f2d528dc0f44581ee531f02426}
+      \strng{authornamehash}{89c5e3f2d528dc0f44581ee531f02426}
+      \strng{authorfullhash}{89c5e3f2d528dc0f44581ee531f02426}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Relying on end users to contribute bandwidth to the system peer-to-peer (P2P) overlays provide a cheap and scalable way to distribute live video content in the Internet. However, being inherently dynamic due to peers joining and leaving the system at arbitrary time and running over the best-effort Internet, successful commercial usage of these systems may suffer from unstable media quality provided to end users. In this survey, we consider problems related to providing quality of media delivery in P2P streaming systems. We show that in spite of numerous systems available today no one incorporates mechanisms capable to maintain a certain level of quality of delivered media. We identify reasons behind that and discuss possible solutions to this problem.}
+      \field{issn}{1574-0137}
+      \field{journaltitle}{Computer Science Review}
+      \field{number}{4}
+      \field{title}{Service quality in P2P streaming systems}
+      \field{volume}{5}
+      \field{year}{2011}
+      \field{pages}{319\bibrangedash 340}
+      \range{pages}{22}
+      \verb{doi}
+      \verb https://doi.org/10.1016/j.cosrev.2011.09.003
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S1574013711000219
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S1574013711000219
+      \endverb
+      \keyw{P2P streaming,Perceived video quality,Proactive/reactive quality control}
+    \endentry
+    \entry{Nanao2012}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=b1a0c76ca9b66007eed0900c67f702ea}{%
+           family={Nanao},
+           familyi={N\bibinitperiod},
+           given={Sho},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d76b1baaad54f037ac73cc29952fbdc6}{%
+           family={Masuyama},
+           familyi={M\bibinitperiod},
+           given={Hiroyuki},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4161d2591377e9480f440a43f124fa26}{%
+           family={Kasahara},
+           familyi={K\bibinitperiod},
+           given={Shoji},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=81d5440340a8764eda4c3bc1706242c4}{%
+           family={Takahashi},
+           familyi={T\bibinitperiod},
+           given={Yutaka},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{a5c307baca23e7404c343750fb31cc52}
+      \strng{fullhash}{0681b0586ad1d893a103bc5d822ec2b4}
+      \strng{bibnamehash}{0681b0586ad1d893a103bc5d822ec2b4}
+      \strng{authorbibnamehash}{0681b0586ad1d893a103bc5d822ec2b4}
+      \strng{authornamehash}{a5c307baca23e7404c343750fb31cc52}
+      \strng{authorfullhash}{0681b0586ad1d893a103bc5d822ec2b4}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Coolstreaming is a mesh based peer-to-peer (P2P) video streaming system in which single video stream is decomposed into multiple sub-streams. A client-peer node retrieves the sub-streams from multiple parent-peer nodes, combining them into the original video stream. Each client-peer node has two buffers, a synchronization buffer and a cache buffer, and arriving data blocks are synchronized at the synchronization buffer and then forwarded to the cache buffer. In this buffering system, data-block synchronization is important to guarantee high video quality. In this paper, we consider the effect of churn on the performance of data-block synchronization scheme with which data blocks are simultaneously forwarded just after all the data blocks composing a macro data block arrive at the synchronization buffer. It is assumed that data blocks belonging to a sub-stream arrive at the client-peer node according to an interrupted Poisson process. The synchronization buffer is modeled as a multiple-buffer queueing system with homogeneous interrupted Poisson processes, and the mean forwarding interval is derived. Numerical examples show that the average forwarding interval increases as parent-peer nodes leave more frequently.}
+      \field{issn}{1936-6450}
+      \field{journaltitle}{Peer-to-Peer Networking and Applications}
+      \field{number}{3}
+      \field{title}{Effect of node churn on frame interval for peer-to-peer video streaming with data-block synchronization mechanism}
+      \field{volume}{5}
+      \field{year}{2012}
+      \field{pages}{244\bibrangedash 256}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1007/s12083-011-0120-8
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/s12083-011-0120-8
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/s12083-011-0120-8
+      \endverb
+    \endentry
     \entry{Nguyen2010}{inproceedings}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=d6daad0fe5e333283760125e3f89966e}{%
@@ -1416,6 +1825,59 @@
       \endverb
       \keyw{Peer to peer computing;Network coding;Streaming media;Static VAr compensators;Protocols;Bandwidth;Scalability;Codecs;Automatic voltage control;Fluctuations}
     \endentry
+    \entry{Pouwelse2005}{inbook}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=d2cf29d9a89e6ec368422ed7571d4c95}{%
+           family={Pouwelse},
+           familyi={P\bibinitperiod},
+           given={Johan},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=501e6c3e4361ce264e013ed990924a22}{%
+           family={Garbacki},
+           familyi={G\bibinitperiod},
+           given={Paweł},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=3823d0a4057a863426c3a55d53b992d8}{%
+           family={Epema},
+           familyi={E\bibinitperiod},
+           given={Dick},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9ee291bc7ee2937bd5c5bb3f8cb7bb6d}{%
+           family={Sips},
+           familyi={S\bibinitperiod},
+           given={Henk},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer Berlin Heidelberg}%
+      }
+      \strng{namehash}{22f556d7674db7289a01eddea385d9bc}
+      \strng{fullhash}{7c5ff7b4f7e2a9801da8cb568ab0267d}
+      \strng{bibnamehash}{7c5ff7b4f7e2a9801da8cb568ab0267d}
+      \strng{authorbibnamehash}{7c5ff7b4f7e2a9801da8cb568ab0267d}
+      \strng{authornamehash}{22f556d7674db7289a01eddea385d9bc}
+      \strng{authorfullhash}{7c5ff7b4f7e2a9801da8cb568ab0267d}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Lecture Notes in Computer Science}
+      \field{isbn}{9783540319061}
+      \field{issn}{1611-3349}
+      \field{title}{The Bittorrent P2P File-Sharing System: Measurements and Analysis}
+      \field{year}{2005}
+      \field{pages}{205\bibrangedash 216}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1007/11558989_19
+      \endverb
+    \endentry
     \entry{PPLive}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=4fb1e288aae1b1f375e92a75c649576e}{%
@@ -1446,6 +1908,60 @@
       \verb{url}
       \verb https://web.archive.org/web/20080617091219/http://www.pplive.com/
       \endverb
+    \endentry
+    \entry{Ramzan2012}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=1efe1dc2720e1ac2b8af203fa1618c1a}{%
+           family={Ramzan},
+           familyi={R\bibinitperiod},
+           given={Naeem},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=3769b48214c5ff31bad0232f836ee226}{%
+           family={Park},
+           familyi={P\bibinitperiod},
+           given={Hyunggon},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=417ade172789a3b064d3bc724bbec5aa}{%
+           family={Izquierdo},
+           familyi={I\bibinitperiod},
+           given={Ebroul},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{66e7b34a0963681e4bfcd5f64e45bad5}
+      \strng{fullhash}{66e7b34a0963681e4bfcd5f64e45bad5}
+      \strng{bibnamehash}{66e7b34a0963681e4bfcd5f64e45bad5}
+      \strng{authorbibnamehash}{66e7b34a0963681e4bfcd5f64e45bad5}
+      \strng{authornamehash}{66e7b34a0963681e4bfcd5f64e45bad5}
+      \strng{authorfullhash}{66e7b34a0963681e4bfcd5f64e45bad5}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A robust real-time video communication service over the Internet in a distributed manner is an important challenge, as it influences not only the current Internet structure but also the future Internet evolution. In this context, Peer-to-Peer (P2P) networks are playing an imperative position for providing efficient video transmission over the Internet. Recently, several P2P video transmission systems have been proposed for live video streaming services or video-on-demand services over the Internet. In this paper, we describe and discuss existing video streaming systems over P2P. Efficient (delay tolerant and intolerant) data sharing mechanisms in P2P and current video coding trends are elaborated in detail. Moreover, video streaming solutions (live and on-demand) over P2P from the perspective of tree-based and mesh-based systems are explained. Finally, the conclusion is drawn with key challenges and open issues related to video streaming over P2P.}
+      \field{issn}{0923-5965}
+      \field{journaltitle}{Signal Processing: Image Communication}
+      \field{note}{ADVANCES IN 2D/3D VIDEO STREAMING OVER P2P NETWORKS}
+      \field{number}{5}
+      \field{title}{Video streaming over P2P networks: Challenges and opportunities}
+      \field{volume}{27}
+      \field{year}{2012}
+      \field{pages}{401\bibrangedash 411}
+      \range{pages}{11}
+      \verb{doi}
+      \verb https://doi.org/10.1016/j.image.2012.02.004
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S0923596512000331
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S0923596512000331
+      \endverb
+      \keyw{Video streaming,Peer-to-peer (P2P) networks,Distributed networks,Incentive mechanisms,Scalable video coding (SVC),Quality of experience (QoE)}
     \endentry
     \entry{Sandvine2024}{booklet}{}
       \name{author}{1}{}{%
@@ -1524,6 +2040,62 @@
       \verb http://arxiv.org/abs/cs/0612118
       \endverb
     \endentry
+    \entry{Sina2020}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=f2450e9771e524712fa270ddbc9c75c3}{%
+           family={Sina},
+           familyi={S\bibinitperiod},
+           given={Majid},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=376441463d079ee082125a2d9c259f27}{%
+           family={Dehghan},
+           familyi={D\bibinitperiod},
+           given={Mehdi},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2182745250acb6b24b2295ad448325b9}{%
+           family={Masoud\bibnamedelima Rahmani},
+           familyi={M\bibinitperiod\bibinitdelim R\bibinitperiod},
+           given={Amir},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5b60aab5c48cd5e51ba0647f7d4a4376}{%
+           family={Reshadi},
+           familyi={R\bibinitperiod},
+           given={Midia},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{2}{%
+        {Institution of Engineering}%
+        {Technology (IET)}%
+      }
+      \strng{namehash}{d248138c6092d7a177f33b750b6a84dd}
+      \strng{fullhash}{ec35cccadb2cc5269b8712324105dedc}
+      \strng{bibnamehash}{ec35cccadb2cc5269b8712324105dedc}
+      \strng{authorbibnamehash}{ec35cccadb2cc5269b8712324105dedc}
+      \strng{authornamehash}{d248138c6092d7a177f33b750b6a84dd}
+      \strng{authorfullhash}{ec35cccadb2cc5269b8712324105dedc}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1751-8636}
+      \field{journaltitle}{IET Communications}
+      \field{month}{4}
+      \field{number}{6}
+      \field{title}{WidePLive: a coupled low‐delay overlay construction mechanism and peer‐chunk priority‐based chunk scheduling for P2P live video streaming}
+      \field{volume}{14}
+      \field{year}{2020}
+      \field{pages}{937\bibrangedash 947}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.1049/iet-com.2019.0618
+      \endverb
+    \endentry
     \entry{SopCast2019}{online}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=55c163a59e6728c29c3027aa8f4e630d}{%
@@ -1553,6 +2125,42 @@
       \endverb
       \verb{url}
       \verb https://web.archive.org/web/20191009112802/http://www.sopcast.org/
+      \endverb
+    \endentry
+    \entry{Stutzbach2004}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=d830805511863a5c9fe90e3a535d6637}{%
+           family={Stutzbach},
+           familyi={S\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=aa136937b31bfa912ab738e81c7e9825}{%
+           family={Rejaie},
+           familyi={R\bibinitperiod},
+           given={Reza},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{485965ade8bab9f90c55303e88a93ff1}
+      \strng{fullhash}{485965ade8bab9f90c55303e88a93ff1}
+      \strng{bibnamehash}{485965ade8bab9f90c55303e88a93ff1}
+      \strng{authorbibnamehash}{485965ade8bab9f90c55303e88a93ff1}
+      \strng{authornamehash}{485965ade8bab9f90c55303e88a93ff1}
+      \strng{authorfullhash}{485965ade8bab9f90c55303e88a93ff1}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Towards a Better Understanding of Churn in Peer-to-Peer Networks}
+      \field{year}{2004}
+      \verb{urlraw}
+      \verb https://api.semanticscholar.org/CorpusID:18754274
+      \endverb
+      \verb{url}
+      \verb https://api.semanticscholar.org/CorpusID:18754274
       \endverb
     \endentry
     \entry{UUSee2007}{online}{}
