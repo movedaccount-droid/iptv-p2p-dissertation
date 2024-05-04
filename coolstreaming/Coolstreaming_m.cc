@@ -3151,6 +3151,7 @@ Register_Class(SplitCall)
 SplitCall::SplitCall(const char *name, short kind) : ::BaseCallMessage(name,kind)
 {
     this->uuid = 0;
+    this->is_switch_call = false;
 }
 
 SplitCall::SplitCall(const SplitCall& other) : ::BaseCallMessage(other)
@@ -3173,6 +3174,7 @@ SplitCall& SplitCall::operator=(const SplitCall& other)
 void SplitCall::copy(const SplitCall& other)
 {
     this->uuid = other.uuid;
+    this->is_switch_call = other.is_switch_call;
     this->into = other.into;
 }
 
@@ -3180,6 +3182,7 @@ void SplitCall::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseCallMessage::parsimPack(b);
     doParsimPacking(b,this->uuid);
+    doParsimPacking(b,this->is_switch_call);
     doParsimPacking(b,this->into);
 }
 
@@ -3187,6 +3190,7 @@ void SplitCall::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseCallMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->uuid);
+    doParsimUnpacking(b,this->is_switch_call);
     doParsimUnpacking(b,this->into);
 }
 
@@ -3198,6 +3202,16 @@ int SplitCall::getUuid() const
 void SplitCall::setUuid(int uuid)
 {
     this->uuid = uuid;
+}
+
+bool SplitCall::getIs_switch_call() const
+{
+    return this->is_switch_call;
+}
+
+void SplitCall::setIs_switch_call(bool is_switch_call)
+{
+    this->is_switch_call = is_switch_call;
 }
 
 TransportAddress& SplitCall::getInto()
@@ -3275,7 +3289,7 @@ const char *SplitCallDescriptor::getProperty(const char *propertyname) const
 int SplitCallDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 2+basedesc->getFieldCount() : 2;
+    return basedesc ? 3+basedesc->getFieldCount() : 3;
 }
 
 unsigned int SplitCallDescriptor::getFieldTypeFlags(int field) const
@@ -3288,9 +3302,10 @@ unsigned int SplitCallDescriptor::getFieldTypeFlags(int field) const
     }
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISCOMPOUND,
     };
-    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
 }
 
 const char *SplitCallDescriptor::getFieldName(int field) const
@@ -3303,9 +3318,10 @@ const char *SplitCallDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "uuid",
+        "is_switch_call",
         "into",
     };
-    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
 }
 
 int SplitCallDescriptor::findField(const char *fieldName) const
@@ -3313,7 +3329,8 @@ int SplitCallDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='u' && strcmp(fieldName, "uuid")==0) return base+0;
-    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+1;
+    if (fieldName[0]=='i' && strcmp(fieldName, "is_switch_call")==0) return base+1;
+    if (fieldName[0]=='i' && strcmp(fieldName, "into")==0) return base+2;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -3327,9 +3344,10 @@ const char *SplitCallDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "bool",
         "TransportAddress",
     };
-    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **SplitCallDescriptor::getFieldPropertyNames(int field) const
@@ -3397,7 +3415,8 @@ std::string SplitCallDescriptor::getFieldValueAsString(void *object, int field, 
     SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getUuid());
-        case 1: {std::stringstream out; out << pp->getInto(); return out.str();}
+        case 1: return bool2string(pp->getIs_switch_call());
+        case 2: {std::stringstream out; out << pp->getInto(); return out.str();}
         default: return "";
     }
 }
@@ -3413,6 +3432,7 @@ bool SplitCallDescriptor::setFieldValueAsString(void *object, int field, int i, 
     SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
         case 0: pp->setUuid(string2long(value)); return true;
+        case 1: pp->setIs_switch_call(string2bool(value)); return true;
         default: return false;
     }
 }
@@ -3426,7 +3446,7 @@ const char *SplitCallDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 1: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 2: return omnetpp::opp_typename(typeid(TransportAddress));
         default: return nullptr;
     };
 }
@@ -3441,7 +3461,7 @@ void *SplitCallDescriptor::getFieldStructValuePointer(void *object, int field, i
     }
     SplitCall *pp = (SplitCall *)object; (void)pp;
     switch (field) {
-        case 1: return (void *)(&pp->getInto()); break;
+        case 2: return (void *)(&pp->getInto()); break;
         default: return nullptr;
     }
 }
@@ -3451,6 +3471,7 @@ Register_Class(SplitResponse)
 SplitResponse::SplitResponse(const char *name, short kind) : ::BaseResponseMessage(name,kind)
 {
     this->uuid = 0;
+    this->is_switch_call = false;
     this->result = 0;
 }
 
@@ -3474,6 +3495,7 @@ SplitResponse& SplitResponse::operator=(const SplitResponse& other)
 void SplitResponse::copy(const SplitResponse& other)
 {
     this->uuid = other.uuid;
+    this->is_switch_call = other.is_switch_call;
     this->result = other.result;
     this->first_node = other.first_node;
     this->second_node = other.second_node;
@@ -3483,6 +3505,7 @@ void SplitResponse::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::BaseResponseMessage::parsimPack(b);
     doParsimPacking(b,this->uuid);
+    doParsimPacking(b,this->is_switch_call);
     doParsimPacking(b,this->result);
     doParsimPacking(b,this->first_node);
     doParsimPacking(b,this->second_node);
@@ -3492,6 +3515,7 @@ void SplitResponse::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::BaseResponseMessage::parsimUnpack(b);
     doParsimUnpacking(b,this->uuid);
+    doParsimUnpacking(b,this->is_switch_call);
     doParsimUnpacking(b,this->result);
     doParsimUnpacking(b,this->first_node);
     doParsimUnpacking(b,this->second_node);
@@ -3505,6 +3529,16 @@ int SplitResponse::getUuid() const
 void SplitResponse::setUuid(int uuid)
 {
     this->uuid = uuid;
+}
+
+bool SplitResponse::getIs_switch_call() const
+{
+    return this->is_switch_call;
+}
+
+void SplitResponse::setIs_switch_call(bool is_switch_call)
+{
+    this->is_switch_call = is_switch_call;
 }
 
 int SplitResponse::getResult() const
@@ -3602,7 +3636,7 @@ const char *SplitResponseDescriptor::getProperty(const char *propertyname) const
 int SplitResponseDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 4+basedesc->getFieldCount() : 4;
+    return basedesc ? 5+basedesc->getFieldCount() : 5;
 }
 
 unsigned int SplitResponseDescriptor::getFieldTypeFlags(int field) const
@@ -3616,10 +3650,11 @@ unsigned int SplitResponseDescriptor::getFieldTypeFlags(int field) const
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
         FD_ISEDITABLE,
+        FD_ISEDITABLE,
         FD_ISCOMPOUND,
         FD_ISCOMPOUND,
     };
-    return (field>=0 && field<4) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<5) ? fieldTypeFlags[field] : 0;
 }
 
 const char *SplitResponseDescriptor::getFieldName(int field) const
@@ -3632,11 +3667,12 @@ const char *SplitResponseDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "uuid",
+        "is_switch_call",
         "result",
         "first_node",
         "second_node",
     };
-    return (field>=0 && field<4) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<5) ? fieldNames[field] : nullptr;
 }
 
 int SplitResponseDescriptor::findField(const char *fieldName) const
@@ -3644,9 +3680,10 @@ int SplitResponseDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='u' && strcmp(fieldName, "uuid")==0) return base+0;
-    if (fieldName[0]=='r' && strcmp(fieldName, "result")==0) return base+1;
-    if (fieldName[0]=='f' && strcmp(fieldName, "first_node")==0) return base+2;
-    if (fieldName[0]=='s' && strcmp(fieldName, "second_node")==0) return base+3;
+    if (fieldName[0]=='i' && strcmp(fieldName, "is_switch_call")==0) return base+1;
+    if (fieldName[0]=='r' && strcmp(fieldName, "result")==0) return base+2;
+    if (fieldName[0]=='f' && strcmp(fieldName, "first_node")==0) return base+3;
+    if (fieldName[0]=='s' && strcmp(fieldName, "second_node")==0) return base+4;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -3660,11 +3697,12 @@ const char *SplitResponseDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
+        "bool",
         "int",
         "TransportAddress",
         "TransportAddress",
     };
-    return (field>=0 && field<4) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<5) ? fieldTypeStrings[field] : nullptr;
 }
 
 const char **SplitResponseDescriptor::getFieldPropertyNames(int field) const
@@ -3676,7 +3714,7 @@ const char **SplitResponseDescriptor::getFieldPropertyNames(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 1: {
+        case 2: {
             static const char *names[] = { "enum",  nullptr };
             return names;
         }
@@ -3693,7 +3731,7 @@ const char *SplitResponseDescriptor::getFieldProperty(int field, const char *pro
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 1:
+        case 2:
             if (!strcmp(propertyname,"enum")) return "SplitResult";
             return nullptr;
         default: return nullptr;
@@ -3739,9 +3777,10 @@ std::string SplitResponseDescriptor::getFieldValueAsString(void *object, int fie
     SplitResponse *pp = (SplitResponse *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getUuid());
-        case 1: return enum2string(pp->getResult(), "SplitResult");
-        case 2: {std::stringstream out; out << pp->getFirst_node(); return out.str();}
-        case 3: {std::stringstream out; out << pp->getSecond_node(); return out.str();}
+        case 1: return bool2string(pp->getIs_switch_call());
+        case 2: return enum2string(pp->getResult(), "SplitResult");
+        case 3: {std::stringstream out; out << pp->getFirst_node(); return out.str();}
+        case 4: {std::stringstream out; out << pp->getSecond_node(); return out.str();}
         default: return "";
     }
 }
@@ -3757,7 +3796,8 @@ bool SplitResponseDescriptor::setFieldValueAsString(void *object, int field, int
     SplitResponse *pp = (SplitResponse *)object; (void)pp;
     switch (field) {
         case 0: pp->setUuid(string2long(value)); return true;
-        case 1: pp->setResult((SplitResult)string2enum(value, "SplitResult")); return true;
+        case 1: pp->setIs_switch_call(string2bool(value)); return true;
+        case 2: pp->setResult((SplitResult)string2enum(value, "SplitResult")); return true;
         default: return false;
     }
 }
@@ -3771,8 +3811,8 @@ const char *SplitResponseDescriptor::getFieldStructName(int field) const
         field -= basedesc->getFieldCount();
     }
     switch (field) {
-        case 2: return omnetpp::opp_typename(typeid(TransportAddress));
         case 3: return omnetpp::opp_typename(typeid(TransportAddress));
+        case 4: return omnetpp::opp_typename(typeid(TransportAddress));
         default: return nullptr;
     };
 }
@@ -3787,8 +3827,8 @@ void *SplitResponseDescriptor::getFieldStructValuePointer(void *object, int fiel
     }
     SplitResponse *pp = (SplitResponse *)object; (void)pp;
     switch (field) {
-        case 2: return (void *)(&pp->getFirst_node()); break;
-        case 3: return (void *)(&pp->getSecond_node()); break;
+        case 3: return (void *)(&pp->getFirst_node()); break;
+        case 4: return (void *)(&pp->getSecond_node()); break;
         default: return nullptr;
     }
 }

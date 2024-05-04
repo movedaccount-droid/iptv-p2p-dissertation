@@ -114,6 +114,7 @@ void Node::init_partnerlink_manager() {
     if (origin) {
         // join our two origins, so that we have a starter link to split from
         partnerlink_manager.send_link_origin_nodes_message(origin_tad);
+        std::cout << "origin partnerlink coming up..." << std::endl;
     }
     partnerlink_manager.update_display_string();
 }
@@ -287,6 +288,7 @@ void Node::handleTimerEvent(cMessage *msg) {
         }
     } else if (msg == stream_manager.playout_timer) {
         stream_manager.playout();
+        partnerlink_manager.record_histogram();
     } else if (msg == stream_manager.exchange_timer) {
         std::map<TransportAddress, std::vector<int>> latest_blocks = partnerlink_manager.get_partner_latest_blocks();
         std::map<TransportAddress, TransportAddress> associations = partnerlink_manager.get_associations();
@@ -326,6 +328,10 @@ void Node::set_arrow(TransportAddress tad, std::string requested_type, bool enab
 
 void Node::add_std_dev(const std::string& name, double value) {
     globalStatistics->addStdDev(name, value);
+}
+
+void Node::record_histogram(const std::string& name, double value) {
+    globalStatistics->recordHistogram(name, value);
 }
 
 // sending messages. our object structure is Bad

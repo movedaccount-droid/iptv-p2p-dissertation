@@ -69,6 +69,7 @@ public:
 
     // statistics
     void add_std_dev(const std::string& name, double value);
+    void record_histogram(const std::string& name, double value);
 
     // message sending. our object structure is bad
     void send_rpc(TransportAddress tad, BaseCallMessage* msg);

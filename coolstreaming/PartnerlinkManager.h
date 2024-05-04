@@ -52,7 +52,6 @@ public:
     std::map<TransportAddress, PartnerlinkEntry> partners; // map of partners and relevant stats
     std::map<int, SplitCall*> currently_splitting; // maps uuids to the message that requested the split, so we can respond via rpc_send_response later
     std::map<TransportAddress, Failure*> fail_connection_timers; // timers to fail a partner if we stop receiving buffermaps
-    std::set<int> active_switch_messages; // uuids assocated with any mCache-switching Split messages we have sent, so that we know to handle them differently on return
     int Mc; // current number of partners. note that this is not the size of the partners set - ex. when we first join, this will be M, whilst partners.size() is 0.
             // you could also think of this as the "potential" number of partners, if everything resolves nicely excluding panic messages
 
@@ -79,6 +78,7 @@ public:
     void insert_partner_to_partners(TransportAddress partner);
     void remove_partner_from_partners(TransportAddress partner);
     bool is_timed_out(simtime_t origin_time, simtime_t timeout);
+    void record_histogram();
 
     // lifecycle
     void init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc, int tp_in, bool ds);
@@ -101,9 +101,7 @@ public:
     // switching nodes from mcache
     void start_switch_from_mcache(TransportAddress switch_to);
     void reset_switch_timer();
-    void finalize_mcache_switch(int uuid);
-    void fail_mcache_switch(int uuid);
-
+    void finalize_mcache_switch();
 
     // LINK_ORIGIN_NODES // UDP
     // construct the initial link between our two friendly origin nodes

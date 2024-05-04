@@ -87,11 +87,12 @@ void StreamManager::reselect_parents_and_exchange_partners(std::map<TransportAdd
         // we might be reselecting parents because we're no longer partners with them at all.
         // in that case we should send them one last hail mary buffermap to end our subscription,
         // else if they're still alive they will send us blocks Forever
+        // revised note: the use of TCP also resolves this
 
         std::set<TransportAddress> removed_parents = reselect_parents(partner_latest_blocks);
         for (TransportAddress parent : removed_parents) {
             // TODO: sending the unassociated transportaddress here is Very Bad
-            // send_buffer_map_message(parent, TransportAddress(), panicking);
+            send_buffer_map_message(parent, TransportAddress(), panicking);
         }
     }
     for (auto partner : associations) {
@@ -157,6 +158,11 @@ void StreamManager::playout() {
         }
     }
     playout_index++;
+    int pc = 0;
+    for (TransportAddress parent : substream_parents) {
+        if (!parent.isUnspecified()) pc++;
+    }
+    parent->record_histogram("!Parent Count", pc);
     update_display_string();
 }
 

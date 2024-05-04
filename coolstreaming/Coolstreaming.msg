@@ -104,11 +104,13 @@ enum SplitResult {
 
 packet SplitCall extends BaseCallMessage {
     int uuid; // to associate TrySplit with this SplitCall later
+    bool is_switch_call; // if this was called for a scheduled switch or an entry
     TransportAddress into;
 }
 
 packet SplitResponse extends BaseResponseMessage {
     int uuid;
+    bool is_switch_call;
     int result enum (SplitResult);
     TransportAddress first_node;
     TransportAddress second_node;

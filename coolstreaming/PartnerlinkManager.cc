@@ -211,6 +211,11 @@ bool PartnerlinkManager::is_timed_out(simtime_t origin_time, simtime_t timeout) 
     return simTime() - origin_time > timeout;
 }
 
+void PartnerlinkManager::record_histogram() {
+    parent->record_histogram("!Mc", Mc);
+    parent->record_histogram("!Partner Count", (int)partners.size());
+}
+
 // lifecycle
 void PartnerlinkManager::init(Node* p, int m, int mc, double pts, double pants, double pansts, double sis, int ssc, int tp_in, bool ds) {
     parent = p;
@@ -336,24 +341,24 @@ void PartnerlinkManager::check_panic_status() {
 
 void PartnerlinkManager::setup_panic() {
 
-    // checking partners.size here seems silly, but remember that nodes
-    // receiving less than M / 2 partners at entry will immediately start
-    // panicking; Mc might be M - 2, but partners will still be 0!
+    // this try-catch might seem silly, but remember that nodes
+    // receiving less than M / 2 candidate partners at entry will
+    // immediately start panicking; Mc might be M - 2, but partners will still be 0!
+    // we therefore might not have any partners to forward a panic to
 
-    if (partners.size() > 0) {
+    try {
         send_panic_message(get_random_partner(), parent->getThisNode());
         setOrReplace(panic_timeout_timer, "panic message timed out", panic_timeout);
-    }
+    } catch (const char* c) {}
 }
 
 void PartnerlinkManager::setup_panic_split() {
-    if (partners.size() > 0) {
+    try {
         send_panic_split_message(get_random_partner(), parent->getThisNode());
         setOrReplace(panic_split_timeout_timer, "panic message timed out", panic_split_timeout);
-    }
+    } catch (const char* c) {}
 }
 
-// TODO: actually hook these into the Node functions
 void PartnerlinkManager::timeout_panic() {
     parent->cancelAndDelete(panic_timeout_timer);
     panic_timeout_timer = NULL;
@@ -377,8 +382,7 @@ void PartnerlinkManager::reset_switch_timer() {
     setOrReplace(switch_timer, "switch_timer", switch_interval);
 }
 
-void PartnerlinkManager::finalize_mcache_switch(int uuid) {
-    active_switch_messages.erase(uuid);
+void PartnerlinkManager::finalize_mcache_switch() {
     // request two random associated nodes to link, only picking
     // nodes that will panic if we have to
     std::map<TransportAddress, TransportAddress> associations = get_associations();
@@ -401,10 +405,6 @@ void PartnerlinkManager::finalize_mcache_switch(int uuid) {
             remove_partner_from_partners(replaced);
         }
     } catch (const char* c) {} // i don't think this can happen. but i'd rather not find out!
-}
-
-void PartnerlinkManager::fail_mcache_switch(int uuid) {
-    active_switch_messages.erase(uuid);
 }
 
 // LINK_ORIGIN_NODES // UDP
@@ -440,7 +440,6 @@ void PartnerlinkManager::receive_get_candidate_partners_response(GetCandidatePar
     for (auto candidate : get_candidate_partners_response->getCandidates()) {
         send_split_message(candidate.first);
     }
-    // TODO: we need to enable this eventually
     setOrReplace(switch_timer, "switch_timer", switch_interval);
     parent->getParentModule()->getParentModule()->bubble(std::string("received ")
         .append(std::to_string(get_candidate_partners_response->getCandidates().size()))
@@ -451,10 +450,10 @@ void PartnerlinkManager::receive_get_candidate_partners_response(GetCandidatePar
 // request a node to split a relationship with a partner, and put this node in the middle
 void PartnerlinkManager::send_split_message(TransportAddress tad, bool is_mcache_switch) {
     int uuid = rand();
-    if (is_mcache_switch) active_switch_messages.insert(uuid); // see switch_from_mcache()
     SplitCall* split_call = new SplitCall();
     split_call->setInto(parent->getThisNode());
     split_call->setUuid(uuid);
+    split_call->setIs_switch_call(is_mcache_switch);
     parent->send_rpc(tad, split_call);
 }
 
@@ -481,12 +480,12 @@ void PartnerlinkManager::receive_split_message_and_try_split_with_partner(SplitC
 void PartnerlinkManager::send_split_failure_response(SplitCall* split_call) {
     SplitResponse* split_response = new SplitResponse();
     split_response->setResult(FAILED);
+    split_response->setIs_switch_call(split_call->getIs_switch_call());
     split_response->setUuid(split_call->getUuid());
     parent->send_rpc_response(split_call, split_response);
 }
 
 void PartnerlinkManager::receive_split_response(SplitResponse* split_response) {
-    bool was_scheduled_switch = active_switch_messages.find(split_response->getUuid()) != active_switch_messages.end();
     if (split_response->getResult() == SUCCESS) {
         if (parent->leaving) {
             // send Leave messages to force the other nodes to panic faster
@@ -496,22 +495,20 @@ void PartnerlinkManager::receive_split_response(SplitResponse* split_response) {
             // if we already know one of these, we start Panicking
             insert_partner_to_partners(split_response->getFirst_node());
             insert_partner_to_partners(split_response->getSecond_node());
-            if (was_scheduled_switch) {
-                finalize_mcache_switch(split_response->getUuid());
+            if (split_response->getIs_switch_call()) {
+                finalize_mcache_switch();
             }
             update_and_check();
         }
     } else {
-        if (was_scheduled_switch) {
-            fail_mcache_switch(split_response->getUuid());
-        } else {
+        if (!split_response->getIs_switch_call()) {
             count(-2); // causing the node to start sending PanicSplits
         }
     }
 }
 
 void PartnerlinkManager::timeout_split_response(SplitCall* split_call) {
-    if (!active_switch_messages.erase(split_call->getUuid())) {
+    if (!split_call->getIs_switch_call()) {
         count(-2); // causing the node to start sending PanicSplits
     };
 }
@@ -546,17 +543,27 @@ void PartnerlinkManager::receive_try_split_message_and_try_split(TrySplitCall* t
 }
 
 void PartnerlinkManager::receive_try_split_response(TrySplitResponse* try_split_response) {
-
-    // we could by now already be partners with the new node. in that case our old partner has already
-    // connected to it, but we and the new node will be down a connection, so we both end up in panic.
-    // still, this is the best outcome in this case - no way to revert the old partnership - so we allow it to happen.
-    // we could also by some miserable outcome no longer be partners with our splitting partner.
-    // the implications of this are difficult to trace, so we simply fail the request and let the
-    // two old partnered nodes panic, which is at least consistent and will not introduce any new links to the network.
-    // the same logic applies to responding whilst we are leaving
-
     SplitCall* split_call = currently_splitting[try_split_response->getUuid()];
-    if (try_split_response->getResult() == FAILED
+    if (split_call == NULL) {
+
+        // we really shouldn't do this, since this node shouldn't know the call timed out.
+        // but the only difference is that the message doesn't get sent, which would have been
+        // ignored anyway. the alternative is to handle all of the rpc timeouts ourselves,
+        // which is literally the point of using them! so we accept this as flawed and move on
+
+        return;
+
+        // re: this next condition: we could by now already be partners with the new node.
+        // in that case our old partner has already connected to it, but we and the new node
+        // will be down a connection, so we both end up in panic.
+
+        // still, this is the best outcome in this case - no way to revert the old partnership - so we allow it to happen.
+        // we could also by some miserable outcome no longer be partners with our splitting partner.
+        // the implications of this are difficult to trace, so we simply fail the request and let the
+        // two old partnered nodes panic, which is at least consistent and will not introduce any new links to the network.
+        // the same logic applies to responding whilst we are leaving
+
+    } else if (try_split_response->getResult() == FAILED
             || partners.find(try_split_response->getFrom()) == partners.end()) {
         send_split_failure_response(split_call);
     } else {
@@ -566,6 +573,7 @@ void PartnerlinkManager::receive_try_split_response(TrySplitResponse* try_split_
         SplitResponse* split_response = new SplitResponse();
         split_response->setResult(SUCCESS);
         split_response->setUuid(try_split_response->getUuid());
+        split_response->setIs_switch_call(split_call->getIs_switch_call());
         split_response->setFirst_node(parent->getThisNode());
         split_response->setSecond_node(try_split_response->getFrom());
         parent->send_rpc_response(split_call, split_response);
@@ -573,7 +581,7 @@ void PartnerlinkManager::receive_try_split_response(TrySplitResponse* try_split_
 }
 void PartnerlinkManager::timeout_try_split_response(TrySplitCall* try_split_call) {
     SplitCall* split_call = currently_splitting[try_split_call->getUuid()];
-    if (split_call != NULL) send_split_failure_response(split_call); // might have been timed out / deleted
+    if (split_call != NULL) send_split_failure_response(split_call); // might have been timed out / deleted. same as above
 }
 
 // LEAVE // UDP
@@ -597,7 +605,6 @@ void PartnerlinkManager::receive_leave_message(Leave* leave) {
 
 // PANIC // UDP
 // gossip a message looking for another panicking node we do not know, recovering one link to our node if found
-// TODO: we need to oincorporate panicking in to the buffer map, we waren't riht now and just model everything as if iit is not panicking
 TransportAddress PartnerlinkManager::get_best_next_hop_matching_panic_status(bool panic_status, TransportAddress panicking, TransportAddress last_hop) {
     try {
         auto partner_with_panic_status = [=](std::pair<const TransportAddress, PartnerlinkEntry> pair) {
