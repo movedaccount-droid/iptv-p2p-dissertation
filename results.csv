@@ -1,0 +1,31 @@
+run,repetition,module,name,count,sumweights,mean,stddev,min,max,underflows,overflows,rowtype,data...
+coolstreaming-0-20240504-13:47:20-226345,0,SimpleUnderlayNetwork.finisherModule,!Mc,58742,58742,15.900565183344,0.32066756658125,13,16,0,0,binedges,13,14,15,16,17
+coolstreaming-0-20240504-13:47:20-226345,0,SimpleUnderlayNetwork.finisherModule,!Mc,,,,,,,,,binvalues,12,354,5097,53279
+coolstreaming-1-20240504-13:48:27-226345,1,SimpleUnderlayNetwork.finisherModule,!Mc,62183,62183,15.898235852243,0.32741720706721,13,16,0,0,binedges,13,14,15,16,17
+coolstreaming-1-20240504-13:48:27-226345,1,SimpleUnderlayNetwork.finisherModule,!Mc,,,,,,,,,binvalues,19,434,5403,56327
+coolstreaming-2-20240504-13:49:42-226345,2,SimpleUnderlayNetwork.finisherModule,!Mc,63460,63460,15.900330917113,0.32484810814662,13,16,0,0,binedges,13,14,15,16,17
+coolstreaming-2-20240504-13:49:42-226345,2,SimpleUnderlayNetwork.finisherModule,!Mc,,,,,,,,,binvalues,27,420,5404,57609
+coolstreaming-3-20240504-13:51:02-226345,3,SimpleUnderlayNetwork.finisherModule,!Mc,61054,61054,15.880613882792,0.35395087847533,12,16,0,0,binedges,12,13,14,15,16,17
+coolstreaming-3-20240504-13:51:02-226345,3,SimpleUnderlayNetwork.finisherModule,!Mc,,,,,,,,,binvalues,2,33,504,6174,54341
+coolstreaming-4-20240504-13:52:23-226345,4,SimpleUnderlayNetwork.finisherModule,!Mc,61996,61996,15.891863991225,0.33600164848657,12,16,0,0,binedges,12,13,14,15,16,17
+coolstreaming-4-20240504-13:52:23-226345,4,SimpleUnderlayNetwork.finisherModule,!Mc,,,,,,,,,binvalues,2,14,456,5742,55782
+coolstreaming-0-20240504-13:47:20-226345,0,SimpleUnderlayNetwork.finisherModule,!Parent Count,58869,58869,9.2840034653213,2.5782605043113,0,10,0,0,binedges,0,1,2,3,4,5,6,7,8,9,10,11,12,13
+coolstreaming-0-20240504-13:47:20-226345,0,SimpleUnderlayNetwork.finisherModule,!Parent Count,,,,,,,,,binvalues,4215,0,0,0,0,0,0,0,0,0,54654,0,0
+coolstreaming-1-20240504-13:48:27-226345,1,SimpleUnderlayNetwork.finisherModule,!Parent Count,62320,62320,9.3207637997433,2.5161680740834,0,10,0,0,binedges,0,1,2,3,4,5,6,7,8,9,10,11,12,13
+coolstreaming-1-20240504-13:48:27-226345,1,SimpleUnderlayNetwork.finisherModule,!Parent Count,,,,,,,,,binvalues,4233,0,0,0,0,0,0,0,0,0,58087,0,0
+coolstreaming-2-20240504-13:49:42-226345,2,SimpleUnderlayNetwork.finisherModule,!Parent Count,63586,63586,9.3374327682194,2.487322713063,0,10,0,0,binedges,0,1,2,3,4,5,6,7,8,9,10,11,12,13
+coolstreaming-2-20240504-13:49:42-226345,2,SimpleUnderlayNetwork.finisherModule,!Parent Count,,,,,,,,,binvalues,4213,0,0,0,0,0,0,0,0,0,59373,0,0
+coolstreaming-3-20240504-13:51:02-226345,3,SimpleUnderlayNetwork.finisherModule,!Parent Count,61167,61167,9.3144996485033,2.5268947688103,0,10,0,0,binedges,0,1,2,3,4,5,6,7,8,9,10,11,12,13
+coolstreaming-3-20240504-13:51:02-226345,3,SimpleUnderlayNetwork.finisherModule,!Parent Count,,,,,,,,,binvalues,4193,0,0,0,0,0,0,0,0,0,56974,0,0
+coolstreaming-4-20240504-13:52:23-226345,4,SimpleUnderlayNetwork.finisherModule,!Parent Count,62113,62113,9.3239740473009,2.5106473110024,0,10,0,0,binedges,0,1,2,3,4,5,6,7,8,9,10,11,12,13
+coolstreaming-4-20240504-13:52:23-226345,4,SimpleUnderlayNetwork.finisherModule,!Parent Count,,,,,,,,,binvalues,4199,0,0,0,0,0,0,0,0,0,57914,0,0
+coolstreaming-0-20240504-13:47:20-226345,0,SimpleUnderlayNetwork.finisherModule,!Partner Count,58742,58742,15.900565183344,0.32066756658125,13,16,0,0,binedges,13,14,15,16,17
+coolstreaming-0-20240504-13:47:20-226345,0,SimpleUnderlayNetwork.finisherModule,!Partner Count,,,,,,,,,binvalues,12,354,5097,53279
+coolstreaming-1-20240504-13:48:27-226345,1,SimpleUnderlayNetwork.finisherModule,!Partner Count,62183,62183,15.898235852243,0.32741720706721,13,16,0,0,binedges,13,14,15,16,17
+coolstreaming-1-20240504-13:48:27-226345,1,SimpleUnderlayNetwork.finisherModule,!Partner Count,,,,,,,,,binvalues,19,434,5403,56327
+coolstreaming-2-20240504-13:49:42-226345,2,SimpleUnderlayNetwork.finisherModule,!Partner Count,63460,63460,15.900330917113,0.32484810814662,13,16,0,0,binedges,13,14,15,16,17
+coolstreaming-2-20240504-13:49:42-226345,2,SimpleUnderlayNetwork.finisherModule,!Partner Count,,,,,,,,,binvalues,27,420,5404,57609
+coolstreaming-3-20240504-13:51:02-226345,3,SimpleUnderlayNetwork.finisherModule,!Partner Count,61054,61054,15.880613882792,0.35395087847533,12,16,0,0,binedges,12,13,14,15,16,17
+coolstreaming-3-20240504-13:51:02-226345,3,SimpleUnderlayNetwork.finisherModule,!Partner Count,,,,,,,,,binvalues,2,33,504,6174,54341
+coolstreaming-4-20240504-13:52:23-226345,4,SimpleUnderlayNetwork.finisherModule,!Partner Count,61996,61996,15.891863991225,0.33600164848657,12,16,0,0,binedges,12,13,14,15,16,17
+coolstreaming-4-20240504-13:52:23-226345,4,SimpleUnderlayNetwork.finisherModule,!Partner Count,,,,,,,,,binvalues,2,14,456,5742,55782

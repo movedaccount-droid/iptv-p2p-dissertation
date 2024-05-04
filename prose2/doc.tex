@@ -10,7 +10,10 @@
 \usepackage{acro}
 \usepackage{amsmath}
 \usepackage{circuitikz}
+\usepackage{lmodern}
 \usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{pgf}
 \usepackage{todonotes}
 \addbibresource{jabref.bib}
 
@@ -253,12 +256,121 @@ The well-specified stream manager proved unproblematic, but placed new constrain
 The full development process took over a month. We were therefore not able to complete any further models or make any inter-model comparisons on QoS benefits.
 
 \section{Results and Analysis} \label{results}
-In testing our model, we join two origin nodes and 30 client nodes over the course of 90 seconds. Nodes live on average 500 seconds before churning; we allow 300 seconds for the overlay to stabilize before a 2000 second measurement period. The 500Kbps source video is split into 10 substreams, containing blocks of one second duration. Partner and membership count \(M\) is limited to 16. We perform five tests on each scenario to draw a fair average.
+We repeat five tests on two scenarios, joining two origin nodes and 30 client nodes over the course of 90 seconds. Nodes live on average 500 seconds before churning; we allow 300 seconds for the overlay to stabilize before a 2000 second measurement period. The 500Kbps source video is split into 10 substreams, containing blocks of one second duration. Partner and membership count \(M\) is limited to 16.
 
-We first test our model on a simple underlay without packet dropping, bandwidth limitations or timeouts. We find that our partnership mechanism works well in this environment, averaging 14.89 partners across all nodes over the entire measurement period. We also, however, find our manually-tracked potential partner count \(M_c\) to be the same value, as our failure mechanisms are almost never engaged in this abstracted underlay, suggesting limitations to these results. No node is ever seen with below 11 partners. We find that our model retains a satisfactory number of parent-child relationships with an average of 9.30. Our block efficiency is reasonable - of all received blocks, 1.92\% are duplicates and 4.65\% are outside the bounds of the receiver's buffer, almost all being too old. Despite this, our playout probability is poor: only 61.58\% of blocks are received before playout time, far below expectation.
+Partner counts are recorded globally as a histogram at each node's playout to gain an overall view of the system. Block statistics are recorded locally as a scalar and averaged across all nodes.
 
-We test again on a realistic underlay simulating the best-effort internet, including bandwidth limitations, packet loss and queuing. Under this environment, the partnership mechanism fails: despite recording an average \(M_c\) of 12.94, our actual partner count averages 1.78. We explore this and the resultant changes made to \textit{Partnerlink} in section \ref{css:comparison}. Surprisingly, our playout performs very similarly - nodes maintain an average of 9.10 parents and a playout rate of 62.00\%. As we believe the partnership manager fails slowly over a node's lifespan, this suggests transmitted blocks must be across relationships made before failure begins; our partnerships are therefore very long lived. This playout rate is in spite of a major hit to efficiency - 6.62\% of all received blocks are now out of bounds, and 11.9\% are now duplicates. The mechanics allowing playout rate to remain so high under these circumstances are unknown.
+We first test our model on a simple underlay without packet dropping, bandwidth limitations or timeouts. Table \ref{simple_histogram} shows that our partnership mechanism works well in this environment, averaging 15.89 partners across all nodes over the entire measurement period. We also find our manually-tracked potential partner count \(M_c\) to be the same value, though this may not be surprising, as our failure mechanisms are almost never engaged in this abstracted underlay. No node is ever seen below 12 partners in Figure \ref{simple_mc_count}. Our block efficiency shown in Table \ref{simple_scalars} is reasonable - of all received blocks, 3.78\% are duplicates and 2.51\% are outside the bounds of the receiver's buffer, almost all being too old. Despite this, our playout probability is poor: only 64.82\% of blocks are received before playout time, far below expectation.
 
+We test again on a realistic underlay simulating the best-effort internet, including bandwidth limitations, packet loss and queuing. Under this environment, the partnership mechanism fails: despite recording an average \(M_c\) of 13.65 in Table \ref{inet_histogram}, our actual partner count averages 2.04. Figures \ref{inet_mc_count} and \ref{inet_partner_count} reveal a reasonable middle-ground surrounded by nodes simultaneously reporting \(M_c = 16\) and \(partner\ count = 0\) - we explore this and the resultant changes made to \textit{Partnerlink} in section \ref{css:comparison}. Surprisingly, our playout performs very similarly, with a playout rate of 62.66\%. As we believe the partnership manager fails slowly over a node's lifespan, this suggests transmitted blocks must be across relationships made before failure begins; our partnerships are therefore very long lived. This playout rate is in spite of a major hit to efficiency - 9.49\% of all received blocks are now out of bounds, and 8.86\% are now duplicates. The mechanics allowing playout rate to remain so high under these circumstances are unknown.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}|p{3cm}|  }
+		\hline
+		\multicolumn{4}{|c|}{Partner Histograms at Each Simple Playout} \\
+		\hline
+		Histogram & Mean & Std. & Variance \\
+		\hline
+		Mc   & 15.89    & 0.33 &   0.11\\
+		Partner Count &   15.89  & 0.33   & 0.11\\
+		\hline
+	\end{tabular} 
+	\caption{Statistical analysis of simple underlay partner counts at each playout.}
+	\label{simple_histogram}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ |p{6cm}||p{3cm}|  }
+		\hline
+		\multicolumn{2}{|c|}{Block Scalars over Simple Node Lifetime} \\
+		\hline
+		Scalar & Mean \\
+		\hline
+		Hit Playouts   & 267.85 \\
+		Missed Playouts   & 145.36 \\
+		Accepted Blocks   & 273.27 \\
+		Out-of-bounds Blocks   & 11.04 \\
+		Duplicate Blocks   & 7.34 \\
+		\hline
+	\end{tabular} 
+	\caption{Statistical analysis of simple underlay block statistics throughout the average node's lifetime.}
+	\label{simple_scalar}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}|p{3cm}|  }
+		\hline
+		\multicolumn{4}{|c|}{Partner Histograms at Each Inet Playout} \\
+		\hline
+		Histogram & Mean & Std. & Variance \\
+		\hline
+		Mc   & 13.65    & 4.24 &   17.98\\
+		Partner Count &   2.04  & 3.79  & 14.44 \\
+		\hline
+	\end{tabular} 
+	\caption{Statistical analysis of realistic internet underlay histogram values at each playout.}
+	\label{inet_histogram}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ |p{6cm}||p{3cm}|  }
+		\hline
+		\multicolumn{2}{|c|}{Block Scalars over Inet Node Lifetime} \\
+		\hline
+		Scalar & Mean \\
+		\hline
+		Hit Playouts   & 171.33 \\
+		Missed Playouts   & 102.09 \\
+		Accepted Blocks   & 193.53 \\
+		Out-of-bounds Blocks   & 18.36 \\
+		Duplicate Blocks   & 20.59 \\
+		\hline
+	\end{tabular} 
+	\caption{Statistical analysis of realistic internet underlay block statistics throughout the average node's lifetime.}
+	\label{inet_scalar}
+\end{table}
+
+\begin{figure}[!ht]
+	\centering
+	\resizebox{0.7\textwidth}{!}{%
+		\input{simple_mc_count.pgf}
+	}%
+	\caption{Histogram of \(M_c\) at each playout within the simple underlay experiment.}
+	\label{simple_mc_count}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\resizebox{0.7\textwidth}{!}{%
+		\input{simple_partner_count.pgf}
+	}%
+	\caption{Histogram of actual partner count at each playout within the simple underlay experiment.}
+	\label{simple_partner_count}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\resizebox{0.7\textwidth}{!}{%
+		\input{inet_mc_count.pgf}
+	}%
+	\caption{Histogram of \(M_c\) at each playout within the realistic internet underlay experiment.}
+	\label{inet_mc_count}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\resizebox{0.7\textwidth}{!}{%
+		\input{inet_partner_count.pgf}
+	}%
+	\caption{Histogram of actual partner count at each playout within the realistic internet underlay experiment.}
+	\label{inet_partner_count}
+\end{figure}
+
+\clearpage
 \section{Discussion} \label{problems}
 \textit{What went wrong?} \textit{New Coolstreaming} is not particularly unique as an overlay; it fits our basic model and no features within should prove particularly challenging to implement. In this section, we explore the \textit{Coolstreaming} family as a whole, and illuminate the many obstacles overcome in their implementation.
 
