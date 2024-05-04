@@ -1,0 +1,39 @@
+\acswitchoff 
+\babel@toc {english}{}\relax 
+\contentsline {section}{\numberline {1}Declaration of Originality}{1}{}%
+\contentsline {section}{\numberline {2}Acknowledgements}{1}{}%
+\contentsline {section}{\numberline {3}Introduction}{4}{}%
+\contentsline {section}{\numberline {4}Literature Review}{4}{}%
+\contentsline {subsection}{\numberline {4.1}Peer-to-Peer Streaming Fundamentals}{5}{}%
+\contentsline {subsection}{\numberline {4.2}Performance Heuristics}{6}{}%
+\contentsline {subsection}{\numberline {4.3}Churn}{7}{}%
+\contentsline {subsection}{\numberline {4.4}Overlay Structure}{8}{}%
+\contentsline {subsection}{\numberline {4.5}Peer Selection Strategies}{9}{}%
+\contentsline {subsection}{\numberline {4.6}Chunk Schedulers}{11}{}%
+\contentsline {subsection}{\numberline {4.7}Coolstreaming}{12}{}%
+\contentsline {subsection}{\numberline {4.8}Coolstreaming-Compatible Churn Improvements}{14}{}%
+\contentsline {subsection}{\numberline {4.9}Monolithic Single Solutions}{15}{}%
+\contentsline {section}{\numberline {5}Methodology}{16}{}%
+\contentsline {section}{\numberline {6}Implementation}{17}{}%
+\contentsline {section}{\numberline {7}Results and Analysis}{18}{}%
+\contentsline {section}{\numberline {8}Discussion}{19}{}%
+\contentsline {subsection}{\numberline {8.1}The Coolstreaming Family Tree}{19}{}%
+\contentsline {subsection}{\numberline {8.2}What does Coolstreaming need to be?}{21}{}%
+\contentsline {subsection}{\numberline {8.3}The Fully-Connected Network Problem}{21}{}%
+\contentsline {subsection}{\numberline {8.4}Playout De-synchronization}{23}{}%
+\contentsline {subsection}{\numberline {8.5}Requesting the Block}{24}{}%
+\contentsline {subsection}{\numberline {8.6}Production Optimizations}{24}{}%
+\contentsline {section}{\numberline {9}Introducing \textit {coolstreaming-spiked}}{25}{}%
+\contentsline {subsection}{\numberline {9.1}Architecture}{26}{}%
+\contentsline {subsection}{\numberline {9.2}Membership Manager}{26}{}%
+\contentsline {subsection}{\numberline {9.3}Partnership Manager and \textit {Partnerlink}}{27}{}%
+\contentsline {subsubsection}{\numberline {9.3.1}\textit {Partnerlink} Description}{27}{}%
+\contentsline {subsubsection}{\numberline {9.3.2}\textit {Partnerlink} Initiation}{28}{}%
+\contentsline {subsubsection}{\numberline {9.3.3}\textit {Partnerlink} Panicking}{29}{}%
+\contentsline {subsubsection}{\numberline {9.3.4}\textit {Partnerlink} Leaving}{31}{}%
+\contentsline {subsubsection}{\numberline {9.3.5}\textit {Partnerlink} Switching}{31}{}%
+\contentsline {subsubsection}{\numberline {9.3.6}\textit {Partnerlink} Rationale}{32}{}%
+\contentsline {subsection}{\numberline {9.4}Stream Manager}{33}{}%
+\contentsline {subsection}{\numberline {9.5}Comparison of \textit {coolstreaming-spiked} to our implementation}{34}{}%
+\contentsline {section}{\numberline {10}Conclusion}{35}{}%
+\contentsline {section}{\numberline {11}Further Research}{36}{}%

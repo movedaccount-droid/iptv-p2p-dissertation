@@ -19,6 +19,89 @@
 
 \refsection{0}
   \datalist[entry]{cms/global//global/global}
+    \entry{Awiphan2010}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=e17de212e241abdddd56f8e3d6bad354}{%
+           family={Awiphan},
+           familyi={A\bibinitperiod},
+           given={Suphakit},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=dab50aa3b3f76ef48ebc036d56f48b0b}{%
+           family={Su},
+           familyi={S\bibinitperiod},
+           given={Zhou},
+           giveni={Z\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9759f7e1f21e24b9d16df8f37b991bb3}{%
+           family={Katto},
+           familyi={K\bibinitperiod},
+           given={Jiro},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{265bd3c454fa634e13766a2db682b4a4}
+      \strng{fullhash}{265bd3c454fa634e13766a2db682b4a4}
+      \strng{bibnamehash}{265bd3c454fa634e13766a2db682b4a4}
+      \strng{authorbibnamehash}{265bd3c454fa634e13766a2db682b4a4}
+      \strng{authornamehash}{265bd3c454fa634e13766a2db682b4a4}
+      \strng{authorfullhash}{265bd3c454fa634e13766a2db682b4a4}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2010 7th IEEE Consumer Communications and Networking Conference}
+      \field{title}{ToMo: A Two-Layer Mesh/Tree Structure for Live Streaming in P2P Overlay Network}
+      \field{year}{2010}
+      \field{pages}{1\bibrangedash 5}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/CCNC.2010.5421709
+      \endverb
+      \keyw{Tree data structures;Delay;Streaming media;Application software;Communications Society;Data engineering;IP networks;Multicast protocols;Robust control;Proposals}
+    \endentry
+    \entry{Baumgart2007}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=de766501b8d945e9a4b9292bc0dd624c}{%
+           family={Baumgart},
+           familyi={B\bibinitperiod},
+           given={Ingmar},
+           giveni={I\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9fedb1873266beef8474c5b5e8aa062f}{%
+           family={Heep},
+           familyi={H\bibinitperiod},
+           given={Bernhard},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b77d5838eef741825c9c60d057fb06b0}{%
+           family={Krause},
+           familyi={K\bibinitperiod},
+           given={Stephan},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{f0d2e9079f2490e81e4fb6dd21f3ce66}
+      \strng{fullhash}{f0d2e9079f2490e81e4fb6dd21f3ce66}
+      \strng{bibnamehash}{f0d2e9079f2490e81e4fb6dd21f3ce66}
+      \strng{authorbibnamehash}{f0d2e9079f2490e81e4fb6dd21f3ce66}
+      \strng{authornamehash}{f0d2e9079f2490e81e4fb6dd21f3ce66}
+      \strng{authorfullhash}{f0d2e9079f2490e81e4fb6dd21f3ce66}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of 10th IEEE Global Internet Symposium (GI '07) in conjunction with IEEE INFOCOM 2007, Anchorage, AK, USA}
+      \field{month}{5}
+      \field{title}{Over{S}im: A Flexible Overlay Network Simulation Framework}
+      \field{year}{2007}
+      \field{pages}{79\bibrangedash 84}
+      \range{pages}{6}
+    \endentry
     \entry{Beraldi2010}{inproceedings}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=7b0e862cdf301063c88476ad3152f091}{%
@@ -216,6 +299,105 @@
       \verb 10.1007/1-4020-2258-1_16
       \endverb
     \endentry
+    \entry{Carta2010}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=b99c5f2c9d5353c1ad4737e9abaab47d}{%
+           family={Carta},
+           familyi={C\bibinitperiod},
+           given={Alessandra},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=eb9a294b3de43f233bed8a0892fcf225}{%
+           family={Mellia},
+           familyi={M\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f1c418189c85ae3f14f1af09a1aae49d}{%
+           family={Meo},
+           familyi={M\bibinitperiod},
+           given={Michela},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f8fbe8c9f7c184624dd86494f1e91545}{%
+           family={Traverso},
+           familyi={T\bibinitperiod},
+           given={Stefano},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{1113676c3df5873f600b497e70c4e39b}
+      \strng{fullhash}{875c1cb80fb18ca545f5dcb2a8e3650a}
+      \strng{bibnamehash}{875c1cb80fb18ca545f5dcb2a8e3650a}
+      \strng{authorbibnamehash}{875c1cb80fb18ca545f5dcb2a8e3650a}
+      \strng{authornamehash}{1113676c3df5873f600b497e70c4e39b}
+      \strng{authorfullhash}{875c1cb80fb18ca545f5dcb2a8e3650a}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2010 IEEE Global Telecommunications Conference GLOBECOM 2010}
+      \field{title}{Efficient uplink bandwidth utilization in p2p-tv streaming systems}
+      \field{year}{2010}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+    \endentry
+    \entry{Chu2002}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=e29468d3c31c1a69ad9fdb25d9a07319}{%
+           family={Chu},
+           familyi={C\bibinitperiod},
+           given={Yang-hua},
+           giveni={Y\bibinithyphendelim h\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c0e16e04fb9664bfcb4708d86864eaec}{%
+           family={Rao},
+           familyi={R\bibinitperiod},
+           given={S.G.},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=696a20c28f6cf1c4401141b7009cbc89}{%
+           family={Seshan},
+           familyi={S\bibinitperiod},
+           given={S.},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=0f5b8b674eea6432492c32e093925682}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Hui},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{5ea61e97a42fd99d07c477227d6b0ab3}
+      \strng{fullhash}{af49dfb929b8a33d897ee8ed8473a2c4}
+      \strng{bibnamehash}{af49dfb929b8a33d897ee8ed8473a2c4}
+      \strng{authorbibnamehash}{af49dfb929b8a33d897ee8ed8473a2c4}
+      \strng{authornamehash}{5ea61e97a42fd99d07c477227d6b0ab3}
+      \strng{authorfullhash}{af49dfb929b8a33d897ee8ed8473a2c4}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Journal on Selected Areas in Communications}
+      \field{number}{8}
+      \field{title}{A case for end system multicast}
+      \field{volume}{20}
+      \field{year}{2002}
+      \field{pages}{1456\bibrangedash 1471}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1109/JSAC.2002.803066
+      \endverb
+      \keyw{Computer aided software engineering;Multicast protocols;Error correction;Unicast;Proposals;Scalability;Delay;Switches;Web and internet services;Internetworking}
+    \endentry
     \entry{Cohen2017}{standard}{}
       \name{author}{1}{}{%
         {{un=0,uniquepart=base,hash=48e49f55c3b1ebfe9cf1954935b19d8d}{%
@@ -304,6 +486,48 @@
       \verb 10.1109/TPDS.2010.63
       \endverb
       \keyw{Large-scale systems;Peer to peer computing;Streaming media;Topology;Bandwidth;System performance;TV broadcasting;Real time systems;Fluid dynamics;Watches;P2P streaming systems;diffusion algorithms;overlay;fluid models}
+    \endentry
+    \entry{Deering1989}{misc}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=6697dcfb293470690a9bb31dbfe6c86a}{%
+           family={Deering},
+           familyi={D\bibinitperiod},
+           given={Dr.\bibnamedelimi Steve\bibnamedelima E.},
+           giveni={D\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim E\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {RFC Editor}%
+      }
+      \strng{namehash}{6697dcfb293470690a9bb31dbfe6c86a}
+      \strng{fullhash}{6697dcfb293470690a9bb31dbfe6c86a}
+      \strng{bibnamehash}{6697dcfb293470690a9bb31dbfe6c86a}
+      \strng{authorbibnamehash}{6697dcfb293470690a9bb31dbfe6c86a}
+      \strng{authornamehash}{6697dcfb293470690a9bb31dbfe6c86a}
+      \strng{authorfullhash}{6697dcfb293470690a9bb31dbfe6c86a}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{This memo specifies the extensions required of a host implementation of the Internet Protocol (IP) to support multicasting. Recommended procedure for IP multicasting in the Internet. This RFC obsoletes RFCs 998 and 1054. {[}STANDARDS-TRACK{]}}
+      \field{howpublished}{RFC 1112}
+      \field{month}{8}
+      \field{number}{1112}
+      \field{pagetotal}{17}
+      \field{series}{Request for Comments}
+      \field{title}{{Host extensions for IP multicasting}}
+      \field{year}{1989}
+      \verb{doi}
+      \verb 10.17487/RFC1112
+      \endverb
+      \verb{urlraw}
+      \verb https://www.rfc-editor.org/info/rfc1112
+      \endverb
+      \verb{url}
+      \verb https://www.rfc-editor.org/info/rfc1112
+      \endverb
     \endentry
     \entry{Floyd2000}{article}{}
       \name{author}{4}{}{%
@@ -1360,6 +1584,49 @@
       \endverb
       \keyw{Streaming media;Job shop scheduling;Space exploration;Internet;Web server;Space technology;Large-scale systems;Network servers;Unicast;Delay;Peer-to-peer networks;scheduling;system design;video streaming}
     \endentry
+    \entry{Liu2010}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=1e9bc19e11b086ec8acf81ee47d9fd93}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Chia-Yi},
+           giveni={C\bibinithyphendelim Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4eec6e3ff5ff35e556a3de3fddd0aa02}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Kuochen},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=df4ab44f554bfcfe9812cacbec73c788}{%
+           family={Hsieh},
+           familyi={H\bibinitperiod},
+           given={Yi-Ling},
+           giveni={Y\bibinithyphendelim L\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{ba4e502cefc5f01e742499ae4b269dd6}
+      \strng{fullhash}{ba4e502cefc5f01e742499ae4b269dd6}
+      \strng{bibnamehash}{ba4e502cefc5f01e742499ae4b269dd6}
+      \strng{authorbibnamehash}{ba4e502cefc5f01e742499ae4b269dd6}
+      \strng{authornamehash}{ba4e502cefc5f01e742499ae4b269dd6}
+      \strng{authorfullhash}{ba4e502cefc5f01e742499ae4b269dd6}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{21st Annual IEEE International Symposium on Personal, Indoor and Mobile Radio Communications}
+      \field{title}{Efficient push-pull based P2P multi-streaming using application level multicast}
+      \field{year}{2010}
+      \field{pages}{2586\bibrangedash 2590}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1109/PIMRC.2010.5671773
+      \endverb
+      \keyw{Peer to peer computing;Delay;Forward error correction;Streaming media;Protocols;Simulation;Internet;Application level multicast;forward error correction;P2P streaming;pull-based;push-based}
+    \endentry
     \entry{Liu2008}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=7b6ee7253d0b6ff8d31a7d6daed3d88e}{%
@@ -1825,6 +2092,45 @@
       \endverb
       \keyw{Peer to peer computing;Network coding;Streaming media;Static VAr compensators;Protocols;Bandwidth;Scalability;Codecs;Automatic voltage control;Fluctuations}
     \endentry
+    \entry{Pal2017}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=bb396510fc4be9d1b72ed99e110dd84a}{%
+           family={Pal},
+           familyi={P\bibinitperiod},
+           given={Kunwar},
+           giveni={K\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=4d76cc8f30c582bb2c5c0a03ed1bf18e}{%
+           family={Govil},
+           familyi={G\bibinitperiod},
+           given={Mahesh\bibnamedelima Chadra},
+           giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=86c018d7849889eb75721081471e9138}{%
+           family={Ahmed},
+           familyi={A\bibinitperiod},
+           given={Mushtaq},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{23b9e72a83dc30e81776b0e42af8d167}
+      \strng{fullhash}{23b9e72a83dc30e81776b0e42af8d167}
+      \strng{bibnamehash}{23b9e72a83dc30e81776b0e42af8d167}
+      \strng{authorbibnamehash}{23b9e72a83dc30e81776b0e42af8d167}
+      \strng{authornamehash}{23b9e72a83dc30e81776b0e42af8d167}
+      \strng{authorfullhash}{23b9e72a83dc30e81776b0e42af8d167}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Intelligent Engineering \& Systems}
+      \field{number}{3}
+      \field{title}{Comparative Analysis of Utilization Based Hybrid Overlay for Live Video Streaming in P2P Network.}
+      \field{volume}{10}
+      \field{year}{2017}
+    \endentry
     \entry{Pouwelse2005}{inbook}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=d2cf29d9a89e6ec368422ed7571d4c95}{%
@@ -2040,6 +2346,45 @@
       \verb http://arxiv.org/abs/cs/0612118
       \endverb
     \endentry
+    \entry{Seeling2012}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=f92a6fbf5e9f626de8994429f0a3a087}{%
+           family={Seeling},
+           familyi={S\bibinitperiod},
+           given={Patrick},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e5883236e64d11b6c74c9bddea54c831}{%
+           family={Reisslein},
+           familyi={R\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{5c4f9829489d29b50f6a7485288961a3}
+      \strng{fullhash}{5c4f9829489d29b50f6a7485288961a3}
+      \strng{bibnamehash}{5c4f9829489d29b50f6a7485288961a3}
+      \strng{authorbibnamehash}{5c4f9829489d29b50f6a7485288961a3}
+      \strng{authornamehash}{5c4f9829489d29b50f6a7485288961a3}
+      \strng{authorfullhash}{5c4f9829489d29b50f6a7485288961a3}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Communications Surveys \& Tutorials}
+      \field{number}{4}
+      \field{title}{Video Transport Evaluation With H.264 Video Traces}
+      \field{volume}{14}
+      \field{year}{2012}
+      \field{pages}{1142\bibrangedash 1165}
+      \range{pages}{24}
+      \verb{doi}
+      \verb 10.1109/SURV.2011.082911.00067
+      \endverb
+      \keyw{Encoding;Video coding;Static VAr compensators;Scalability;Transform coding;Streaming media;H.264 encoded video;hierarchical B frames;medium grain scalability (MGS);network transport;simulation;traffic variability;video trace}
+    \endentry
     \entry{Sina2020}{article}{}
       \name{author}{4}{}{%
         {{un=0,uniquepart=base,hash=f2450e9771e524712fa270ddbc9c75c3}{%
@@ -2248,6 +2593,39 @@
       \endverb
       \keyw{Node churn,Node churn model,Peer selection strategies,Peer-to-peer streaming}
     \endentry
+    \entry{Vishnumurthy2007}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=6cc7f24063c3d1c8f9374ef8bc344edd}{%
+           family={Vishnumurthy},
+           familyi={V\bibinitperiod},
+           given={Vivek},
+           giveni={V\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=cbcaec7c29c3cc217c53eca913fcb758}{%
+           family={Francis},
+           familyi={F\bibinitperiod},
+           given={Paul},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{44acff68de2544fc07649a0587049361}
+      \strng{fullhash}{44acff68de2544fc07649a0587049361}
+      \strng{bibnamehash}{44acff68de2544fc07649a0587049361}
+      \strng{authorbibnamehash}{44acff68de2544fc07649a0587049361}
+      \strng{authornamehash}{44acff68de2544fc07649a0587049361}
+      \strng{authorfullhash}{44acff68de2544fc07649a0587049361}
+      \field{sortinit}{V}
+      \field{sortinithash}{afb52128e5b4dc4b843768c0113d673b}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Usenix Annual Technical Conference}
+      \field{title}{A Comparison of Structured and Unstructured P2P Approaches to Heterogeneous Random Peer Selection.}
+      \field{year}{2007}
+      \field{pages}{309\bibrangedash 322}
+      \range{pages}{14}
+    \endentry
     \entry{Wang2013}{inproceedings}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=1f647bb6da8304b7be380ec58eb6373a}{%
@@ -2290,6 +2668,49 @@
       \verb 10.1109/ICIST.2013.6747752
       \endverb
       \keyw{Bandwidth;Peer-to-peer computing;Streaming media;Quality of service;Delays;Internet;Algorithm design and analysis}
+    \endentry
+    \entry{Wang2008}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=e067ef39f5d09b98511fbe6774b2917c}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Yongzhi},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=635ba5bef7607c4bfec4f2a7cd3fed5c}{%
+           family={Fu},
+           familyi={F\bibinitperiod},
+           given={Tom\bibnamedelima Z.J.},
+           giveni={T\bibinitperiod\bibinitdelim Z\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a2c7f516ae53bb4478d4a27108e4ab1c}{%
+           family={Chiu},
+           familyi={C\bibinitperiod},
+           given={Dah\bibnamedelima Ming},
+           giveni={D\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{ed2a425a8ac859a3b7a1f884b1120d4f}
+      \strng{fullhash}{ed2a425a8ac859a3b7a1f884b1120d4f}
+      \strng{bibnamehash}{ed2a425a8ac859a3b7a1f884b1120d4f}
+      \strng{authorbibnamehash}{ed2a425a8ac859a3b7a1f884b1120d4f}
+      \strng{authornamehash}{ed2a425a8ac859a3b7a1f884b1120d4f}
+      \strng{authorfullhash}{ed2a425a8ac859a3b7a1f884b1120d4f}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2008 46th Annual Allerton Conference on Communication, Control, and Computing}
+      \field{title}{Analysis of load balancing algorithms in P2P streaming}
+      \field{year}{2008}
+      \field{pages}{960\bibrangedash 967}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/ALLERTON.2008.4797662
+      \endverb
+      \keyw{Algorithm design and analysis;Load management;Bandwidth;Peer to peer computing;Throughput;Load flow analysis;Load modeling;Buildings;Chaos;Scheduling algorithm}
     \endentry
     \entry{Wu2009}{inproceedings}{}
       \name{author}{3}{}{%
@@ -2583,6 +3004,43 @@
       \verb{url}
       \verb https://api.semanticscholar.org/CorpusID:11798656
       \endverb
+    \endentry
+    \entry{Zink2004}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=e29cf938cdb71468856630648d4b6401}{%
+           family={Zink},
+           familyi={Z\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=a5fbe27cc607263a4725b1d71ee0e3ba}{%
+           family={Mauthe},
+           familyi={M\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{a7372c88ce952ec382fb418dce2051a4}
+      \strng{fullhash}{a7372c88ce952ec382fb418dce2051a4}
+      \strng{bibnamehash}{a7372c88ce952ec382fb418dce2051a4}
+      \strng{authorbibnamehash}{a7372c88ce952ec382fb418dce2051a4}
+      \strng{authornamehash}{a7372c88ce952ec382fb418dce2051a4}
+      \strng{authorfullhash}{a7372c88ce952ec382fb418dce2051a4}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings. 30th Euromicro Conference, 2004.}
+      \field{title}{P2P streaming using multiple description coded video}
+      \field{year}{2004}
+      \field{pages}{240\bibrangedash 247}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/EURMIC.2004.1333377
+      \endverb
+      \keyw{Streaming media;Peer to peer computing;Bandwidth;DSL;Downlink;Modems;Computer science;Application software;Communication cables;Video sharing}
     \endentry
   \enddatalist
 \endrefsection
