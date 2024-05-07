@@ -23,17 +23,17 @@
 \contentsline {subsection}{\numberline {8.4}Playout De-synchronization}{28}{}%
 \contentsline {subsection}{\numberline {8.5}Requesting the Block}{29}{}%
 \contentsline {subsection}{\numberline {8.6}Production Optimizations}{29}{}%
-\contentsline {section}{\numberline {9}Introducing \textit {coolstreaming-spiked}}{30}{}%
+\contentsline {section}{\numberline {9}Introducing \textit {coolstreaming-spiked}}{31}{}%
 \contentsline {subsection}{\numberline {9.1}Architecture}{31}{}%
 \contentsline {subsection}{\numberline {9.2}Membership Manager}{31}{}%
 \contentsline {subsection}{\numberline {9.3}Partnership Manager and \textit {Partnerlink}}{32}{}%
 \contentsline {subsubsection}{\numberline {9.3.1}\textit {Partnerlink} Description}{32}{}%
 \contentsline {subsubsection}{\numberline {9.3.2}\textit {Partnerlink} Initiation}{33}{}%
 \contentsline {subsubsection}{\numberline {9.3.3}\textit {Partnerlink} Panicking}{34}{}%
-\contentsline {subsubsection}{\numberline {9.3.4}\textit {Partnerlink} Leaving}{36}{}%
-\contentsline {subsubsection}{\numberline {9.3.5}\textit {Partnerlink} Switching}{37}{}%
+\contentsline {subsubsection}{\numberline {9.3.4}\textit {Partnerlink} Leaving}{37}{}%
+\contentsline {subsubsection}{\numberline {9.3.5}\textit {Partnerlink} Switching}{38}{}%
 \contentsline {subsubsection}{\numberline {9.3.6}\textit {Partnerlink} Rationale}{38}{}%
-\contentsline {subsection}{\numberline {9.4}Stream Manager}{38}{}%
-\contentsline {subsection}{\numberline {9.5}Comparison of \textit {coolstreaming-spiked} to our implementation}{40}{}%
+\contentsline {subsection}{\numberline {9.4}Stream Manager}{39}{}%
+\contentsline {subsection}{\numberline {9.5}Comparison of \textit {coolstreaming-spiked} to our implementation}{41}{}%
 \contentsline {section}{\numberline {10}Conclusion}{41}{}%
-\contentsline {section}{\numberline {11}Further Research}{41}{}%
+\contentsline {section}{\numberline {11}Further Research}{42}{}%

@@ -14,7 +14,6 @@
 \usepackage{mathtools}
 \usepackage{multirow}
 \usepackage{pgf}
-\usepackage{todonotes}
 \addbibresource{jabref.bib}
 
 \DeclareAcronym{qoe}{
@@ -117,7 +116,7 @@ Livestreaming presents a unique set of challenges compared to traditional P2P ne
 \cite{Friedman2015} surveys existing designs and expresses their structure in four key modules:
 
 \begin{itemize}
-	\item The \textit{player module}, which consumes the received video signal to display to the user. The current playout index and any halting, buffering or chunk skipping mechanisms are also held here.
+	\item The \textit{player module}, which consumes the received video signal to display to the user. The current  and any halting, buffering or chunk skipping mechanisms are also held here.
 	\item The \textit{streaming module}, which reads buffered chunks to exchange with neighbors in the overlay, and makes requests on behalf of the player ahead of playout. Depending on the chunk dissemination strategy, discussed in Section \ref{litreview:schedulers}, this will also hold responsibility over gossiping the availability of chunks in the local buffers, or requesting long-term block service through the formation of parent-child relationships.
 	\item The \textit{overlay module}, which manages a set of short-term \textit{known} nodes and long-term \textit{neighbor} nodes ready for video transmission. These sets are built mainly from a list retrieved on interval from the origin node or through gossiping.
 	\item The \textit{network module}, abstracting the lower-level networking stack and applying any necessary encryption.
@@ -262,7 +261,7 @@ Partner counts are recorded globally as a histogram at each node's playout to ga
 
 We first test our model on a simple underlay without packet dropping, bandwidth limitations or timeouts. Table \ref{simple_histogram} shows that our partnership mechanism works well in this environment, averaging 15.89 partners across all nodes over the entire measurement period. We also find our manually-tracked potential partner count \(M_c\) to be the same value, though this may not be surprising, as our failure mechanisms are almost never engaged in this abstracted underlay. No node is ever seen below 12 partners in Figure \ref{simple_mc_count}. Our block efficiency shown in Table \ref{simple_scalar} is reasonable - of all received blocks, 3.78\% are duplicates and 2.51\% are outside the bounds of the receiver's buffer, almost all being too old. Despite this, our playout probability is poor: only 64.82\% of blocks are received before playout time, far below expectation.
 
-We test again on a realistic underlay simulating the best-effort internet, including bandwidth limitations, packet loss and queuing. Under this environment, the partnership mechanism fails: despite recording an average \(M_c\) of 13.65 in Table \ref{inet_histogram}, our actual partner count averages 2.04. Figures \ref{inet_mc_count} and \ref{inet_partner_count} reveal a reasonable middle-ground surrounded by nodes simultaneously reporting \(M_c = 16\) and \(partner\ count = 0\) - we explore this and the resultant changes made to \textit{Partnerlink} in section \ref{css:comparison}. Surprisingly, our playout performs very similarly, with a playout rate of 62.66\%. As we believe the partnership manager fails slowly over a node's lifespan, this suggests transmitted blocks must be across relationships made before failure begins; our partnerships are therefore very long lived. This playout rate is in spite of a major hit to efficiency - 9.49\% of all received blocks are now out of bounds, and 8.86\% are now duplicates. The mechanics allowing playout rate to remain so high under these circumstances are unknown.
+We test again on a realistic underlay simulating the best-effort internet, including bandwidth limitations, packet loss and queuing. Under this environment, the partnership mechanism fails: despite recording an average \(M_c\) of 13.65 in Table \ref{inet_histogram}, our actual partner count averages 2.04. Figures \ref{inet_mc_count} and \ref{inet_partner_count} reveal a reasonable middle-ground surrounded by nodes simultaneously reporting \(M_c = 16\) and \(partner\ count = 0\) - we explore this and the resultant changes made to \textit{Partnerlink} in section \ref{css:comparison}. Surprisingly, our playout performs very similarly, with a playout rate of 62.66\%. Two problems are therefore implied: that our expected partner count is de-syncing over the course of network, and that our subscriptions are not wound down correctly after a partnership ends. This playout rate is in spite of a major hit to efficiency - 9.49\% of all received blocks are now out of bounds, and 8.86\% are now duplicates. The mechanics allowing playout rate to remain so high under these circumstances are unknown.
 
 \begin{table}[h!]
 	\centering
@@ -276,7 +275,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 		Partner Count &   15.89  & 0.33   & 0.11\\
 		\hline
 	\end{tabular} 
-	\caption{Statistical analysis of simple underlay partner counts at each playout.}
+	\caption{Statistical analysis of simple underlay partner counts at each playout}
 	\label{simple_histogram}
 \end{table}
 
@@ -295,7 +294,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 		Duplicate Blocks   & 7.34 \\
 		\hline
 	\end{tabular} 
-	\caption{Statistical analysis of simple underlay block statistics throughout the average node's lifetime.}
+	\caption{Statistical analysis of simple underlay block statistics throughout the average node's lifetime}
 	\label{simple_scalar}
 \end{table}
 
@@ -311,7 +310,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 		Partner Count &   2.04  & 3.79  & 14.44 \\
 		\hline
 	\end{tabular} 
-	\caption{Statistical analysis of realistic internet underlay histogram values at each playout.}
+	\caption{Statistical analysis of realistic internet underlay histogram values at each playout}
 	\label{inet_histogram}
 \end{table}
 
@@ -330,7 +329,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 		Duplicate Blocks   & 20.59 \\
 		\hline
 	\end{tabular} 
-	\caption{Statistical analysis of realistic internet underlay block statistics throughout the average node's lifetime.}
+	\caption{Statistical analysis of realistic internet underlay block statistics throughout the average node's lifetime}
 	\label{inet_scalar}
 \end{table}
 
@@ -339,7 +338,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 	\resizebox{0.7\textwidth}{!}{%
 		\input{simple_mc_count.pgf}
 	}%
-	\caption{Histogram of \(M_c\) at each playout within the simple underlay experiment.}
+	\caption{Histogram of \(M_c\) at each playout within the simple underlay experiment}
 	\label{simple_mc_count}
 \end{figure}
 
@@ -348,7 +347,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 	\resizebox{0.7\textwidth}{!}{%
 		\input{simple_partner_count.pgf}
 	}%
-	\caption{Histogram of actual partner count at each playout within the simple underlay experiment.}
+	\caption{Histogram of actual partner count at each playout within the simple underlay experiment}
 	\label{simple_partner_count}
 \end{figure}
 
@@ -357,7 +356,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 	\resizebox{0.7\textwidth}{!}{%
 		\input{inet_mc_count.pgf}
 	}%
-	\caption{Histogram of \(M_c\) at each playout within the realistic internet underlay experiment.}
+	\caption{Histogram of \(M_c\) at each playout within the realistic internet underlay experiment}
 	\label{inet_mc_count}
 \end{figure}
 
@@ -366,7 +365,7 @@ We test again on a realistic underlay simulating the best-effort internet, inclu
 	\resizebox{0.7\textwidth}{!}{%
 		\input{inet_partner_count.pgf}
 	}%
-	\caption{Histogram of actual partner count at each playout within the realistic internet underlay experiment.}
+	\caption{Histogram of actual partner count at each playout within the realistic internet underlay experiment}
 	\label{inet_partner_count}
 \end{figure}
 
@@ -384,13 +383,13 @@ We have so far regarded \textit{Coolstreaming} as an overarching name for the me
 	\item As \textit{"the new Coolstreaming,"} in \textit{Inside the New Coolstreaming: Principles, Measurements and Performance Implications} \cite{Li2008}. Within this the name \textit{Coolstreaming} is intended, but \textit{New Coolstreaming} became colloquial as a result of its title. 
 \end{itemize}
 
-All of these papers specify the model so far discussed as \textit{New Coolstreaming}, despite the name differences, except the first. Throughout this paper we have used the unambiguous title \textit{DONet}. In literature, however, the name \textit{Coolstreaming} simultaneously refers both to the older \textit{DONet} model and the newer \textit{New Coolstreaming} model.
+The first paper defines what we have described as \textit{DONet}; the remaining three regard \textit{New Coolstreaming}. Hence, two papers describe the separate \textit{DONet} and newer \textit{New Coolstreaming} models under the shared name \textit{Coolstreaming}.
 
 This has lead to confusion amongst research peers. \cite{Kondo2014} describes the \textit{SCAMP} membership protocol, the push-pull mechanism and the bootstrap node as belonging to the same model, despite \textit{SCAMP} being specific to the mesh-pull \textit{DONet}. \cite{Beraldi2010} makes similar errors. \cite{Lan2011} takes \textit{DONet} as its key example of a buffer-map driven overlay, but ascribes it the synchronization method seen in \textit{New Coolstreaming}. Several more examples can be found of valid discussion of a model, but with \cite{Xie2007} being cited in \cite{Zhang2005}'s place, or vice versa. Further confusion exists within the papers themselves:  \cite{Li2008} describes the stream manager and new mCache system as part of the \textit{"initial Coolstreaming system"} and replaced in \textit{"the new Coolstreaming system"}, despite all of these components being introduced in \textit{New Coolstreaming} only.
 
 This escalates considering the structure of the final three papers. Despite its name, \cite{Xie2007} is the canon definition of \textit{New Coolstreaming}, provided alongside analysis of a real-world test period to determine convergence rates, start-up delay and other overlay-specific statistics. The other papers duplicate this and add further discussion: \cite{Li2007} splits users into categories, identifying network traversal problems and their respective impact on contribution. \cite{Li2008} performs an additional simulation to identify ideal values for key system parameters.
 
-As a result of this duplication, each paper hence opens with a definition of \textit{New Coolstreaming}. Large swaths of this text are word-for-word identical between papers, though occasional and necessary details are cut in the latter two papers. For instance, connection management for partners is resolved in \cite{Xie2007} by a mention of TCP - which includes a leaving and timeout mechanism, if specified. In the other papers, TCP is never mentioned; no other connection management is described. Mechanisms to fill the bootstrap node's \textit{mCache} alongside one key function related to playout initialization are similarly constrained to this earlier paper, despite these papers claiming to \textit{"describe the architecture and components in the new Coolstreaming system"}. The outcome of this is that out of three papers, two with names implying upgrades, all appearing to contain complete specifications, only the oldest can be followed to completion.
+As a result of this duplication, each paper hence opens with a definition of \textit{New Coolstreaming}, though occasional and necessary details are cut in the latter two. For instance, connection management for partners is resolved in \cite{Xie2007} by a mention of TCP - which includes a leaving and timeout mechanism, if specified. In the other papers, TCP is never mentioned; no other connection management is described. Mechanisms to fill the bootstrap node's \textit{mCache} alongside one key function related to playout initialization are similarly constrained to this earlier paper, despite these papers claiming to \textit{"describe the architecture and components in the new Coolstreaming system"}. The outcome of this is that out of three papers, two with names implying upgrades, all appearing to contain complete specifications, only the oldest can be followed to completion. The correct specification for \textit{New Coolstreaming} is not the paper named \textit{New Coolstreaming}, but instead the paper sharing names with the older \textit{DONet}.
 
 Luckily, we appear to be the only researchers to fall into this trap. We accept responsibility in this instance: whilst the decision to focus on a single, seemingly up-to-date specification was valid, we should have been more eager to revisit the other papers as issues arose. Our results are partially affected, as we implement manual connection management over UDP instead of TCP, increasing our network's propensity to errors. We also retain the modified \textit{SCAMP} implementation from \textit{DONet}, although as later discussed this should not meaningfully influence our findings. Regardless, we stand by the conclusions we draw throughout the remaining paper. We next explore the role of \textit{Coolstreaming} in current research and the priorities we aim to follow.
 
@@ -432,7 +431,7 @@ Suppose a node \textit{n} joins a network of size \textit{M + 1}. All existing n
 			\node [font=\LARGE] at (12.5,19.25) {M = 4};
 		\end{circuitikz}
 	}%
-	\caption{Node \textit{n} cannot easily join this fully-connected network.}
+	\caption{Node \textit{n} cannot easily join this fully-connected network}
 	\label{fig1}
 \end{figure}
 
@@ -466,7 +465,7 @@ Several solutions exist, though none are trivial. Our final implementation reque
 			\draw [short] (8,10) .. controls (2.75,11.5) and (2.5,17.25) .. (8,18.75);
 		\end{circuitikz}
 	}%
-	\caption{A solved topology, as according to the pairing method.}
+	\caption{A solved topology, as according to the pairing method}
 	\label{fig2}
 \end{figure}
 
@@ -488,7 +487,7 @@ Nodes entering \textit{New Coolstreaming} are provided an algorithm to calculate
 
 Without additional manipulation any new node would be forwarded the first partner's entire buffer on subscription, since the subscription map can only communicate "on" or "off." We must instead manipulate the latest block mapping to retrieve the correct stream. The node must advertise a latest block of -1 across all substreams until a first block is determined and a subscription is to be made. Upon subscription, the node must advertise to its new parent a latest block on substream \(i\) of \(B_i - K\). This fools the parent into forwarding blocks from the correct index, after which the buffer map can be advertised as usual. Caution must be taken to only advertise these false blocks to their respective parent node, to avoid incurring illicit subscriptions from other newly joining nodes.
 
-This mechanism is efficient and easily reproducible, but never explicitly stated. Our specification elaborates further to ease development.
+This mechanism is efficient and easily reproducible, but never explicitly stated. Our specification elaborates further to ease development. Though this raises the issue of starting playout index: now we know which block to request, where do we start playback in relation? Buffering systems can take the common approach, waiting at that block until some percentage of the buffer has been filled to begin. Non-buffering systems are more complex, as playback must be placed early to reach playout as the buffer is readily filled. \textit{New Coolstreaming} regards the playout strategy as beyond its responsibility, despite playout position determining the buffer bounds. Resolution of this will require comparison of many possible approaches: we leave this as a future avenue of research.
 
 \subsection{Production Optimizations} \label{problems:prodopt}
 \textit{DONet} defers to \textit{SCAMP} for membership connection management, before replacing several key components. Where \textit{SCAMP} automatically adjusts membership count in sync with the size of the system, \textit{DONet} enforces a hard limit of \textit{M} nodes, usually 4. The indirection mechanism is also adjusted, with only nodes within the origin's view being available as contacts. As \textit{DONet} only uses \textit{SCAMP} to gather a random partial view, and does not use it as a means of message transmission itself, \textit{DONet} does not require \textit{SCAMP}'s full set of assurances. It is therefore free to make changes that influence the path of gossiped messages throughout the network. Whilst we have not been able to perform experiments to prove this, we hypothesize that these restrictions make no negative impact on the network, acting only to reduce message overhead.
@@ -570,7 +569,7 @@ We now describe the \textit{Partnerlink} algorithm. We first make two constraint
 			
 		\end{tikzpicture}
 	}%
-	\caption{The base topology from which \textit{Partnerlink} must operate.}
+	\caption{The base topology from which \textit{Partnerlink} must operate}
 	\label{fig3}
 \end{figure}
 
@@ -625,7 +624,7 @@ If a node does not satisfy \(M_c = M\), it is described as \textit{panicking}. A
 			\input{panicsplit.txt}
 		}%
 		\caption{Gossiping and recovering a \textit{PanicSplit} message}
-		\label{panic}
+		\label{panicsplit}
 	\end{figure}
 	
 	\item If \(M_c = M - 2\), we fall back to the splitting method. We gossip a \textit{PanicSplit} message containing our \textit{NodeID} to a random partner - mechanically, this operates as a gossiped \textit{Split} request. This message contains a field \textit{LastHopOpinion}, initialized to \textit{CANT\_HELP}. The same direction priorities apply, although now targetting non-panicking nodes and with a restriction on gossiping to locked partners. If a node receives a \textit{PanicSplit} with \textit{LastHopOpinion CANT\_HELP}, the node performs similar checks as in a regular \textit{Split} - that we are not already partnered with nor hold any locks against the contained node. If the checks pass, the message is gossiped to a random unlocked partner with a \textit{LastHopOpinion} \textit{CAN\_HELP}, and the contained node and random partner are locked; else, it is marked \textit{CANT\_HELP}.
@@ -652,7 +651,7 @@ To avoid unneeded panics when disconnecting a node, it is intuitive to pair node
 		\input{leave.txt}
 	}%
 	\caption{Associating peers and cleanly leaving the network}
-	\label{panic}
+	\label{leave}
 \end{figure}
 
 Nodes should be associated deterministically - that is, for as long as a node holds the same set of partners, the associated peer for each partner should not change. Given a set of partners \(\{A, B, C, ...\}\), the associated peer for \(A\) is \(B\), and for \(B\) is \(A\). If there is an odd number of partners, the final peer is associated with a null \textit{NodeID}. Peers receiving a buffer map should store the new associated peer corresponding to this partnership, replacing any prior peer. If the partnership fails or times out, the node should first attempt to connect to their associated peer. If this connection fails, the node was associated with null, or no association was ever provided, the node should reduce \(M_c\) by 1, entering a panic state.
@@ -700,13 +699,13 @@ The implementation tested in Section \ref{results} is not an implementation of \
 
 \begin{itemize}
 	\item Our implementation retains the \textit{DONet} version of \textit{SCAMP}, with all its oddities. We do not anticipate this aspect of the system to have any impact on performance, and the component outputs are the same.
-	\item Our implementation does not include any locking mechanism - instead, more advanced link counting is used to resolve overlapping message streams without hiding nodes from overlay adjustment. The interactions that arise are nearly impossible to reason and are very likely the reason for the desyncing \(M_c\) and partner counts we note in our results. The locking mechanism is proposed due to our experiences with this other approach. This will have an impact on results, as we expect \textit{coolstreaming-spiked} to perform much more reliably.
+	\item Our implementation does not include any locking mechanism - instead, more advanced link counting is used to resolve overlapping message streams without hiding nodes from overlay adjustment. The interactions that arise cannot be reasoned with in any structured form, and are very likely the reason for the de-syncing \(M_c\) we note in our results; the locking mechanism is proposed due to this experience. This will have an impact on results, as we expect \textit{coolstreaming-spiked} to perform much more reliably.
 	\item Our implementation does not make any use of TCP connections, instead relying on UDP either directly or through \textit{OverSim}'s RPC support. This is related at once to the cut-down paper we worked from, that TCP support in \textit{OverSim} is a somewhat hidden feature, and our own oversight. This negatively impacts our results, as TCP networking is essential in the design of \textit{Coolstreaming}.
 	\item Our implementation initiates playout similarly to the described buffering playout strategy, though no other buffering is performed. This strange hybrid approach, whilst not invalid, is unlikely to be seen in a real research model and should ideally instead align with one or the other.
 \end{itemize}
 
 The changes we have made to \textit{coolstreaming-spiked} since our implementation aim to resolve the poor performance seen in our results. Although this invalidates our final performance figures, we are confident the changes we have made should improve rather than dampen the model.
-
+\
 \section{Conclusion} \label{conclusion}
 In this paper, we discuss several research improvements that could be made on top of the popular P2P streaming network \textit{New Coolstreaming}. The objective of the paper is to implement these improvements in simulation alongside a monolithic \textit{AQCS} solution, taking measurements to quantify their impact on QoE. During implementation, we instead hit upon several key issues within the \textit{New Coolstreaming} protocol for research purposes. The new research-oriented model \textit{coolstreaming-spiked} is produced, with a stronger specification and less variable implementation. As part of this, \textit{Partnerlink} allows nodes within the network to form wide-spanning partnership webs at any scale, without triggering any unnecessary churn or reselection.
 

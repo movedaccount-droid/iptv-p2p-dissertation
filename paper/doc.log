@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2024.4.29)  7 MAY 2024 21:35
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2022/dev/Debian) (preloaded format=xelatex 2024.4.29)  7 MAY 2024 22:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -966,70 +966,43 @@ Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@dima=\skip80
 \bigstrutjot=\dimen290
 )
-(/usr/share/texlive/texmf-dist/tex/latex/todonotes/todonotes.sty
-Package: todonotes 2021/06/04 v1.1.5 Todonotes source and documentation.
-Package: todonotes 2021/06/04
-
-(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
-Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
-
-(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
-(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
-\XKV@toks=\toks37
-\XKV@tempa@toks=\toks38
-)
-\XKV@depth=\count454
-File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
-))
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
-zlibrarypositioning.code.tex
-File: tikzlibrarypositioning.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)
-\c@@todonotes@numberoftodonotes=\count455
-)
-\g__acro_qoe_int=\count456
-\g__acro_qos_int=\count457
-\g__acro_p2p_int=\count458
-\g__acro_cdn_int=\count459
-\g__acro_dht_int=\count460
-\g__acro_ip_int=\count461
-\g__acro_rtt_int=\count462
-\g__acro_tcp_int=\count463
+\g__acro_qoe_int=\count454
+\g__acro_qos_int=\count455
+\g__acro_p2p_int=\count456
+\g__acro_cdn_int=\count457
+\g__acro_dht_int=\count458
+\g__acro_ip_int=\count459
+\g__acro_rtt_int=\count460
+\g__acro_tcp_int=\count461
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
 Package csquotes Info: Redefining alias 'default' -> 'english'.
- (./doc.aux
-
-LaTeX Warning: Label `panic' multiply defined.
-
-
-LaTeX Warning: Label `panic' multiply defined.
-
-)
+ (./doc.aux)
 \openout1 = `doc.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 54.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 53.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 5
-4.
- (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
+3.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
 Package biblatex Info: Trying to load language 'english' -> 'cms-american'...
 Package biblatex Info: ... file 'cms-american.lbx' found.
 
@@ -1061,8 +1034,8 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'doc.bbl' found.
  (./doc.bbl)
-Package biblatex Info: Reference section=0 on input line 54.
-Package biblatex Info: Reference segment=0 on input line 54.
+Package biblatex Info: Reference section=0 on input line 53.
+Package biblatex Info: Reference segment=0 on input line 53.
 
 (/usr/share/texlive/texmf-dist/tex/latex/translations/translations-basic-dictio
 nary-english.trsl
@@ -1070,15 +1043,8 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 54.
-
-
-Package todonotes Warning: The length marginparwidth is less than 2cm and will 
-most likely cause issues with the appearance of inserted todonotes. The issue c
-an be solved by adding a line like \setlength {\marginparwidth }{2cm} prior to 
-loading the todonotes package. on input line 54.
-
-[1
+or `english'. on input line 53.
+ [1
 
 ] [1] (./doc.toc
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 7
@@ -1088,7 +1054,6 @@ File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 7
 .
-
 (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -1124,18 +1089,18 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 
 [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14]
-Overfull \hbox (3.34651pt too wide) in paragraph at lines 209--210
+Overfull \hbox (3.34651pt too wide) in paragraph at lines 208--209
 \T1/lmr/m/it/12 New Cool-stream-ing\T1/lmr/m/n/12 's over-lay man-age-ment broa
 dly over-laps with Chameleon's,
  []
 
 [15] [16] [17] [18] [19]
-Overfull \hbox (1.43304pt too wide) in paragraph at lines 269--279
+Overfull \hbox (1.43304pt too wide) in paragraph at lines 268--278
  [][] 
  []
 
 
-Overfull \hbox (1.43304pt too wide) in paragraph at lines 304--314
+Overfull \hbox (1.43304pt too wide) in paragraph at lines 303--313
  [][] 
  []
 
@@ -1180,7 +1145,7 @@ Missing character: There is no   ("2009) in font ec-lmss10!
 Missing character: There is no   ("2009) in font ec-lmss10!
 Missing character: There is no   ("2009) in font ec-lmss10!
 ) [20] [21] [22] [23]
-Overfull \hbox (8.38216pt too wide) in paragraph at lines 381--382
+Overfull \hbox (8.38216pt too wide) in paragraph at lines 380--381
 \T1/lmr/m/it/12 over-lay net-work for peer-to-peer live me-dia stream-ing []\T1
 /lmr/m/n/12 X. Zhang et al. 2005 
  []
@@ -1193,73 +1158,70 @@ Missing character: There is no ✘ ("2718) in font ec-lmr12!
 Missing character: There is no ✘ ("2718) in font ec-lmr12!
 Missing character: There is no ✘ ("2718) in font ec-lmr12!
 ) [35] [36] (./leave.txt) [37] [38] [39]
-Overfull \hbox (21.69958pt too wide) in paragraph at lines 699--700
+Overfull \hbox (21.69958pt too wide) in paragraph at lines 698--699
 \T1/lmr/m/n/12 The im-ple-men-ta-tion tested in Sec-tion 7[] is not an im-ple-m
 en-ta-tion of \T1/lmr/m/it/12 coolstreaming-
  []
 
 [40] [41]
-Overfull \hbox (13.99649pt too wide) in paragraph at lines 717--717
+Overfull \hbox (13.99649pt too wide) in paragraph at lines 716--716
 [][]\T1/lmr/m/n/12 Awiphan, Suphakit, Zhou Su, and Jiro Katto. 2010. Tomo: a tw
 o-layer mesh/tree
  []
 
 
-Overfull \hbox (10.43486pt too wide) in paragraph at lines 717--717
+Overfull \hbox (10.43486pt too wide) in paragraph at lines 716--716
 [][]\T1/lmr/m/n/12 Beraldi, Roberto, Marco Galiffa, and Hus-sein Al-nuweiri. 20
 10. W-coolstreaming
  []
 
-
-Overfull \hbox (4.15863pt too wide) in paragraph at lines 717--717
+[42]
+Overfull \hbox (4.15863pt too wide) in paragraph at lines 716--716
 \T1/lmr/m/it/12 2010 ieee global telecom-mu-ni-ca-tions con-fer-ence globe-com 
 2010, \T1/lmr/m/n/12 1^^U6. IEEE. 
  []
 
-[42]
-Overfull \hbox (15.87527pt too wide) in paragraph at lines 717--717
+
+Overfull \hbox (15.87527pt too wide) in paragraph at lines 716--716
 [][]\T1/lmr/m/n/12 Floyd, Sally, Mark Han-d-ley, Ji-ten-dra Pad-hye, and Jörg W
 id-mer. 2000. Equation-
  []
 
 [43]
-Overfull \hbox (5.701pt too wide) in paragraph at lines 717--717
+Overfull \hbox (5.701pt too wide) in paragraph at lines 716--716
 [][]\T1/lmr/m/n/12 Ho, Cheng-Yun, Ming-Hsiang Huang, Cheng-Yuan Ho, and Chien-C
 hao Tseng.
  []
 
 
-Overfull \hbox (9.47412pt too wide) in paragraph at lines 717--717
+Overfull \hbox (9.47412pt too wide) in paragraph at lines 716--716
 \T1/lmr/m/n/12 2014. Band-width and la-tency aware con-tri-bu-tion es-ti-ma-tio
 n in p2p stream-
  []
 
-[44] [45]
-Overfull \hbox (3.20444pt too wide) in paragraph at lines 717--717
+[44] [45] [46]
+Overfull \hbox (3.20444pt too wide) in paragraph at lines 716--716
 \T1/lmr/m/n/12 2012. Ef-fect of node churn on frame in-ter-val for peer-to-peer
  video stream-
  []
 
 Missing character: There is no ł ("142) in font ec-lmr12!
-[46]
+[47]
 Missing character: There is no ‐ ("2010) in font ec-lmr12!
 Missing character: There is no ‐ ("2010) in font ec-lmr12!
 Missing character: There is no ‐ ("2010) in font ec-lmr12!
-[47] [48] [49] (./doc.aux)
-
-LaTeX Warning: There were multiply-defined labels.
-
+[48] [49] (./doc.aux)
 Package logreq Info: Writing requests to 'doc.run.xml'.
 \openout1 = `doc.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 44923 strings out of 476191
- 1103620 string characters out of 5812072
- 2371014 words of memory out of 5000000
- 65138 multiletter control sequences out of 15000+600000
+ 44416 strings out of 476191
+ 1092586 string characters out of 5812072
+ 2358491 words of memory out of 5000000
+ 64648 multiletter control sequences out of 15000+600000
  554624 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 115i,10n,118p,1667b,5025s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 115i,10n,118p,1667b,5005s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on doc.pdf (50 pages).
