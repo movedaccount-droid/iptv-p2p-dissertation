@@ -149,7 +149,7 @@ void StreamManager::playout() {
         buffers.insert(latest_blocks[ss]);
         push_substream_blocks_to_subscribers(ss);
     } else {
-        // TODO: nodes probably can get Very Fucked Up in bad cases. but we might not have the deadline space to fix that....
+        // TODO: nodes probably can get messed up in bad cases. but we might not have the deadline space to fix that....
         if (buffers.erase(playout_index)) {
             hit_playouts++;
         } else {

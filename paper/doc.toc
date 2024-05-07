@@ -31,9 +31,9 @@
 \contentsline {subsubsection}{\numberline {9.3.2}\textit {Partnerlink} Initiation}{33}{}%
 \contentsline {subsubsection}{\numberline {9.3.3}\textit {Partnerlink} Panicking}{34}{}%
 \contentsline {subsubsection}{\numberline {9.3.4}\textit {Partnerlink} Leaving}{36}{}%
-\contentsline {subsubsection}{\numberline {9.3.5}\textit {Partnerlink} Switching}{36}{}%
-\contentsline {subsubsection}{\numberline {9.3.6}\textit {Partnerlink} Rationale}{37}{}%
-\contentsline {subsection}{\numberline {9.4}Stream Manager}{37}{}%
-\contentsline {subsection}{\numberline {9.5}Comparison of \textit {coolstreaming-spiked} to our implementation}{39}{}%
-\contentsline {section}{\numberline {10}Conclusion}{40}{}%
-\contentsline {section}{\numberline {11}Further Research}{40}{}%
+\contentsline {subsubsection}{\numberline {9.3.5}\textit {Partnerlink} Switching}{37}{}%
+\contentsline {subsubsection}{\numberline {9.3.6}\textit {Partnerlink} Rationale}{38}{}%
+\contentsline {subsection}{\numberline {9.4}Stream Manager}{38}{}%
+\contentsline {subsection}{\numberline {9.5}Comparison of \textit {coolstreaming-spiked} to our implementation}{40}{}%
+\contentsline {section}{\numberline {10}Conclusion}{41}{}%
+\contentsline {section}{\numberline {11}Further Research}{41}{}%

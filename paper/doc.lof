@@ -7,3 +7,7 @@
 \contentsline {figure}{\numberline {5}{\ignorespaces Node \textit {n} cannot easily join this fully-connected network.}}{27}{}%
 \contentsline {figure}{\numberline {6}{\ignorespaces A solved topology, as according to the pairing method.}}{27}{}%
 \contentsline {figure}{\numberline {7}{\ignorespaces The base topology from which \textit {Partnerlink} must operate.}}{32}{}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Process of a joining node splitting a partnership}}{33}{}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Gossiping and recovering a \textit {Panic} message}}{34}{}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Gossiping and recovering a \textit {PanicSplit} message}}{35}{}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Associating peers and cleanly leaving the network}}{37}{}%

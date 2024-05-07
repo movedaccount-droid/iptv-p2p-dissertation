@@ -124,7 +124,7 @@ int PartnerlinkManager::get_starting_index() {
     return starting_index - tp;
 }
 
-// TODO: this is doumb as fuck and needs removing at some point
+// TODO: this is doumb and needs removing at some point
 std::vector<TransportAddress> PartnerlinkManager::get_partner_k() {
     std::vector<TransportAddress> partner_k;
     for (auto partner : partners) {

@@ -29,11 +29,12 @@ or any other options.
 10. ctrl+b to check initial build
 
 11. copy the contents of this directory:
-oversim-20190424/src/overlay/myoverlay
+oversim-20190424/src/overlay/coolstreaming
 oversim-20190424/simulations/omnetpp.ini
 
 12. hit f11 or run with omnetpp.ini focused in the editor. select
-"myoverlay" or "myapplication" to run
+"coolstreaming" to run
 
-HostOverlay and MyOverlay are the old build serving example of. some kind of protocol
-Node is the coolstreaming implementation
+this will work for up to 50s before hitting memory errors.
+you will need to enable tkenv for any further sims, though
+i don't remember how to do that. sorry!

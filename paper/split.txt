@@ -1,0 +1,127 @@
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Shape: Circle [id:dp8953240616457853] 
+\draw   (70,125) .. controls (70,111.19) and (81.19,100) .. (95,100) .. controls (108.81,100) and (120,111.19) .. (120,125) .. controls (120,138.81) and (108.81,150) .. (95,150) .. controls (81.19,150) and (70,138.81) .. (70,125) -- cycle ;
+%Shape: Circle [id:dp7747973588760233] 
+\draw   (150,125) .. controls (150,111.19) and (161.19,100) .. (175,100) .. controls (188.81,100) and (200,111.19) .. (200,125) .. controls (200,138.81) and (188.81,150) .. (175,150) .. controls (161.19,150) and (150,138.81) .. (150,125) -- cycle ;
+%Shape: Circle [id:dp9827779746829242] 
+\draw   (110,195) .. controls (110,181.19) and (121.19,170) .. (135,170) .. controls (148.81,170) and (160,181.19) .. (160,195) .. controls (160,208.81) and (148.81,220) .. (135,220) .. controls (121.19,220) and (110,208.81) .. (110,195) -- cycle ;
+%Straight Lines [id:da07511657393359683] 
+\draw    (120,125) -- (150,125) ;
+%Straight Lines [id:da17705323842767717] 
+\draw    (95,100) -- (90,60) ;
+%Straight Lines [id:da38173877996402683] 
+\draw    (175,100) -- (180,60) ;
+%Straight Lines [id:da254981219797765] 
+\draw    (195,110) -- (220,60) ;
+%Straight Lines [id:da4980529981658417] 
+\draw    (75,110) -- (64,88) -- (50,60) ;
+%Straight Lines [id:da739082832356024] 
+\draw    (70,130) -- (50,110) ;
+%Straight Lines [id:da13659890031418154] 
+\draw    (200,130) -- (220,110) ;
+%Shape: Rectangle [id:dp6233797003239422] 
+\draw   (50,60) -- (220,60) -- (220,250) -- (50,250) -- cycle ;
+%Shape: Circle [id:dp6962587685147491] 
+\draw   (270,125) .. controls (270,111.19) and (281.19,100) .. (295,100) .. controls (308.81,100) and (320,111.19) .. (320,125) .. controls (320,138.81) and (308.81,150) .. (295,150) .. controls (281.19,150) and (270,138.81) .. (270,125) -- cycle ;
+%Shape: Circle [id:dp46960132860389225] 
+\draw   (350,125) .. controls (350,111.19) and (361.19,100) .. (375,100) .. controls (388.81,100) and (400,111.19) .. (400,125) .. controls (400,138.81) and (388.81,150) .. (375,150) .. controls (361.19,150) and (350,138.81) .. (350,125) -- cycle ;
+%Shape: Circle [id:dp6506048939204596] 
+\draw   (310,195) .. controls (310,181.19) and (321.19,170) .. (335,170) .. controls (348.81,170) and (360,181.19) .. (360,195) .. controls (360,208.81) and (348.81,220) .. (335,220) .. controls (321.19,220) and (310,208.81) .. (310,195) -- cycle ;
+%Straight Lines [id:da29766028026779767] 
+\draw    (295,100) -- (290,60) ;
+%Straight Lines [id:da2839803852111007] 
+\draw    (375,100) -- (380,60) ;
+%Straight Lines [id:da5619464203144997] 
+\draw    (395,110) -- (420,60) ;
+%Straight Lines [id:da01858159335512133] 
+\draw    (275,110) -- (264,88) -- (250,60) ;
+%Straight Lines [id:da18632437432001558] 
+\draw    (270,130) -- (250,110) ;
+%Straight Lines [id:da8372117893482255] 
+\draw    (400,130) -- (420,110) ;
+%Shape: Rectangle [id:dp32027177505877413] 
+\draw   (250,60) -- (420,60) -- (420,250) -- (250,250) -- cycle ;
+%Straight Lines [id:da10054665513933769] 
+\draw    (318,178) -- (296.27,151.55) ;
+\draw [shift={(295,150)}, rotate = 50.6] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6022414735531424] 
+\draw    (320,120) -- (348,120) ;
+\draw [shift={(350,120)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da9851718826162325] 
+\draw    (350,128) -- (322,128) ;
+\draw [shift={(320,128)}, rotate = 360] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Shape: Circle [id:dp3990553509383965] 
+\draw   (470,125) .. controls (470,111.19) and (481.19,100) .. (495,100) .. controls (508.81,100) and (520,111.19) .. (520,125) .. controls (520,138.81) and (508.81,150) .. (495,150) .. controls (481.19,150) and (470,138.81) .. (470,125) -- cycle ;
+%Shape: Circle [id:dp26030488211882075] 
+\draw   (550,125) .. controls (550,111.19) and (561.19,100) .. (575,100) .. controls (588.81,100) and (600,111.19) .. (600,125) .. controls (600,138.81) and (588.81,150) .. (575,150) .. controls (561.19,150) and (550,138.81) .. (550,125) -- cycle ;
+%Shape: Circle [id:dp45292748213417355] 
+\draw   (510,195) .. controls (510,181.19) and (521.19,170) .. (535,170) .. controls (548.81,170) and (560,181.19) .. (560,195) .. controls (560,208.81) and (548.81,220) .. (535,220) .. controls (521.19,220) and (510,208.81) .. (510,195) -- cycle ;
+%Straight Lines [id:da6869103500669449] 
+\draw    (495,100) -- (490,60) ;
+%Straight Lines [id:da27169753554595655] 
+\draw    (575,100) -- (580,60) ;
+%Straight Lines [id:da9169795075233717] 
+\draw    (595,110) -- (620,60) ;
+%Straight Lines [id:da520949825042951] 
+\draw    (475,110) -- (464,88) -- (450,60) ;
+%Straight Lines [id:da22847877529825855] 
+\draw    (470,130) -- (450,110) ;
+%Straight Lines [id:da37953820169620966] 
+\draw    (600,130) -- (620,110) ;
+%Shape: Rectangle [id:dp019659418037475174] 
+\draw   (450,60) -- (620,60) -- (620,250) -- (450,250) -- cycle ;
+%Straight Lines [id:da447605607223331] 
+\draw    (516.73,176.45) -- (495,150) ;
+\draw [shift={(518,178)}, rotate = 230.6] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6422882555799647] 
+\draw    (553.08,176.32) -- (570,150) ;
+\draw [shift={(552,178)}, rotate = 302.74] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+
+% Text Node
+\draw (166,119) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle M$};
+% Text Node
+\draw (86,119) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle M$};
+% Text Node
+\draw (130,191) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{8.67pt}\setlength\topsep{0pt}
+\begin{center}
+0
+\end{center}
+
+\end{minipage}};
+% Text Node
+\draw (366,119) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle M$};
+% Text Node
+\draw (284,119) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle M$};
+% Text Node
+\draw (330,191) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{8.67pt}\setlength\topsep{0pt}
+\begin{center}
+0
+\end{center}
+
+\end{minipage}};
+% Text Node
+\draw (255,166) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\scriptsize <request>}};
+% Text Node
+\draw (306,82) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\scriptsize <negotiate>}};
+% Text Node
+\draw (566,119) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle M$};
+% Text Node
+\draw (486,119) node [anchor=north west][inner sep=0.75pt]   [align=left] {$\displaystyle M$};
+% Text Node
+\draw (530,191) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{8.67pt}\setlength\topsep{0pt}
+\begin{center}
+2
+\end{center}
+
+\end{minipage}};
+% Text Node
+\draw (512,81) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\scriptsize <accept>}};
+
+
+\end{tikzpicture}

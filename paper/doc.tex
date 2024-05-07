@@ -260,7 +260,7 @@ We repeat five tests on two scenarios, joining two origin nodes and 30 client no
 
 Partner counts are recorded globally as a histogram at each node's playout to gain an overall view of the system. Block statistics are recorded locally as a scalar and averaged across all nodes.
 
-We first test our model on a simple underlay without packet dropping, bandwidth limitations or timeouts. Table \ref{simple_histogram} shows that our partnership mechanism works well in this environment, averaging 15.89 partners across all nodes over the entire measurement period. We also find our manually-tracked potential partner count \(M_c\) to be the same value, though this may not be surprising, as our failure mechanisms are almost never engaged in this abstracted underlay. No node is ever seen below 12 partners in Figure \ref{simple_mc_count}. Our block efficiency shown in Table \ref{simple_scalars} is reasonable - of all received blocks, 3.78\% are duplicates and 2.51\% are outside the bounds of the receiver's buffer, almost all being too old. Despite this, our playout probability is poor: only 64.82\% of blocks are received before playout time, far below expectation.
+We first test our model on a simple underlay without packet dropping, bandwidth limitations or timeouts. Table \ref{simple_histogram} shows that our partnership mechanism works well in this environment, averaging 15.89 partners across all nodes over the entire measurement period. We also find our manually-tracked potential partner count \(M_c\) to be the same value, though this may not be surprising, as our failure mechanisms are almost never engaged in this abstracted underlay. No node is ever seen below 12 partners in Figure \ref{simple_mc_count}. Our block efficiency shown in Table \ref{simple_scalar} is reasonable - of all received blocks, 3.78\% are duplicates and 2.51\% are outside the bounds of the receiver's buffer, almost all being too old. Despite this, our playout probability is poor: only 64.82\% of blocks are received before playout time, far below expectation.
 
 We test again on a realistic underlay simulating the best-effort internet, including bandwidth limitations, packet loss and queuing. Under this environment, the partnership mechanism fails: despite recording an average \(M_c\) of 13.65 in Table \ref{inet_histogram}, our actual partner count averages 2.04. Figures \ref{inet_mc_count} and \ref{inet_partner_count} reveal a reasonable middle-ground surrounded by nodes simultaneously reporting \(M_c = 16\) and \(partner\ count = 0\) - we explore this and the resultant changes made to \textit{Partnerlink} in section \ref{css:comparison}. Surprisingly, our playout performs very similarly, with a playout rate of 62.66\%. As we believe the partnership manager fails slowly over a node's lifespan, this suggests transmitted blocks must be across relationships made before failure begins; our partnerships are therefore very long lived. This playout rate is in spite of a major hit to efficiency - 9.49\% of all received blocks are now out of bounds, and 8.86\% are now duplicates. The mechanics allowing playout rate to remain so high under these circumstances are unknown.
 
@@ -587,6 +587,17 @@ We now discuss the systems and messages in place to allow for these operations.
 
 \subsubsection{\textit{Partnerlink} Initiation} \label{css:partnerlink:initiation}
 A node \(n\) entering the network for the first time awaits the first \textit{SCAMP Inview} message to initialize the \textit{Partnerlink} manager. A list of up to \(M / 2\) candidate partners is requested from the contained node, retrieved at random from its \textit{mCache}. This is necessary as the local node's \textit{mCache} needs time to fill with peers; relying on it for first partners comes with substantial startup delay.
+
+\begin{figure}[!ht]
+	\centering
+	\resizebox{0.8\textwidth}{!}{%
+		\input{split.txt}
+	}%
+\caption{Process of a joining node splitting a partnership}
+\label{split}
+\end{figure}
+
+
 Upon reception at node \textit{n}, these nodes are all locked and sent a \textit{Split} message. This performs the split operation discussed in Section \ref{problems:fcn}, attempting to place the node in-between an existing partnership. The node also initializes \(M_c\) to \(M_r * 2\), where \(M_r\) is the number of nodes received from the initial exchange. Node \(a\) receiving a \textit{Split} message checks that no partnership nor lock is held against \(n\) - if not, the node forwards a \textit{TrySplit} message to a random unlocked partner \(b\), holding locks against it and \(n\). Node \(b\) performs the same checks, additionally requiring that \(a\) is not locked. If the checks pass, it returns a \textit{TrySplitSuccess} message, breaks the connection with its old partner and initiates with the new node. Node \(a\) receiving a \textit{TrySplitSuccess} breaks similarly and unlocks the two nodes, after which the exchange is complete. Upon successful TCP connection, node \(n\) removes its lock on node \(a\). The newly joined node has now gained two links, breaking only one in the process. If all \textit{Split} messages respond successfully, the node will have created exactly \(M\) partnerships.
 
 If node \(b\) fails its checks, it responds a \textit{TrySplitFailure}. If node \(a\) receives a \textit{TrySplitFailure}, fails its own checks or does not know another unlocked partner, a \textit{SplitFailure} is forwarded back to the new node \(n\), reducing \(M_c\) by 2 and unlocking the contacted node. This causes the node to immediately begin panicking.
@@ -595,10 +606,27 @@ If node \(b\) fails its checks, it responds a \textit{TrySplitFailure}. If node 
 If a node does not satisfy \(M_c = M\), it is described as \textit{panicking}. A node checks its panic state after each update to \(M_c\), from which we begin to look for alternative ways to create new links in the system.
 
 \begin{itemize}
+	\begin{figure}[!ht]
+		\centering
+		\resizebox{0.8\textwidth}{!}{%
+			\input{panic.txt}
+		}%
+		\caption{Gossiping and recovering a \textit{Panic} message}
+		\label{panic}
+	\end{figure}
 	\item If \(M_c = M - 1\), we cannot fill our empty partners by splitting, as we would breach our limit. We instead gossip a 
 	\textit{Panic} message containing our \textit{NodeID} to a random partner, similar to the hypothesized mechanism behind \textit{DONet} partnerships. This message is directed across the network towards panicking nodes with priority, as determined from their gossiped status. Otherwise, the message is directed towards any node that is not the original panicking node or the last hop. As a last resort the message is directed to any available node, or else dropped. If a panicking node receives a \textit{Panic} message it initiates a connection with the contained node and increases its \(M_c\) by 1. The original node receiving this connection does the same, unless it has since stopped panicking, in which case the connection is rejected.
 	
 	This joins two panicking nodes together directly and grants one new link each. This is mostly effective in very small networks, where nodes impacted by an improper exit are few hops apart. As networks grow and crystallize, the hops between panicking nodes will increase, worsening delay before node recovery. Note that locks do not influence the transmission of this message, as its result on a partner does not influence a node's local link count.
+	
+	\begin{figure}[!ht]
+		\centering
+		\resizebox{0.8\textwidth}{!}{%
+			\input{panicsplit.txt}
+		}%
+		\caption{Gossiping and recovering a \textit{PanicSplit} message}
+		\label{panic}
+	\end{figure}
 	
 	\item If \(M_c = M - 2\), we fall back to the splitting method. We gossip a \textit{PanicSplit} message containing our \textit{NodeID} to a random partner - mechanically, this operates as a gossiped \textit{Split} request. This message contains a field \textit{LastHopOpinion}, initialized to \textit{CANT\_HELP}. The same direction priorities apply, although now targetting non-panicking nodes and with a restriction on gossiping to locked partners. If a node receives a \textit{PanicSplit} with \textit{LastHopOpinion CANT\_HELP}, the node performs similar checks as in a regular \textit{Split} - that we are not already partnered with nor hold any locks against the contained node. If the checks pass, the message is gossiped to a random unlocked partner with a \textit{LastHopOpinion} \textit{CAN\_HELP}, and the contained node and random partner are locked; else, it is marked \textit{CANT\_HELP}.
 	
@@ -617,6 +645,15 @@ These messages are gossiped to partners, though they could instead be gossiped t
 
 \subsubsection{\textit{Partnerlink} Leaving} \label{css:partnerlink:leaving}
 To avoid unneeded panics when disconnecting a node, it is intuitive to pair nodes back together, undoing the splitting we performed to enter. If we perform this at leave time, however, an unclean disconnect will still panic all children, adding \(M\) panicking nodes to the network - a substantial breakdown in overlay structure. Instead, we continually inform nodes of their \textit{associated peer} alongside buffer maps. A clean leave then commands nodes to switch connections to the node they were previously informed of, and nodes detecting a failing node can switch automatically without external assistance. This mechanism allows for overlay repair without any additional control in most cases.
+
+\begin{figure}[!ht]
+	\centering
+	\resizebox{0.8\textwidth}{!}{%
+		\input{leave.txt}
+	}%
+	\caption{Associating peers and cleanly leaving the network}
+	\label{panic}
+\end{figure}
 
 Nodes should be associated deterministically - that is, for as long as a node holds the same set of partners, the associated peer for each partner should not change. Given a set of partners \(\{A, B, C, ...\}\), the associated peer for \(A\) is \(B\), and for \(B\) is \(A\). If there is an odd number of partners, the final peer is associated with a null \textit{NodeID}. Peers receiving a buffer map should store the new associated peer corresponding to this partnership, replacing any prior peer. If the partnership fails or times out, the node should first attempt to connect to their associated peer. If this connection fails, the node was associated with null, or no association was ever provided, the node should reduce \(M_c\) by 1, entering a panic state.
 

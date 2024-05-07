@@ -679,10 +679,10 @@
       \field{title}{Network Architectures for Live Peer-to-Peer Media Streaming}
       \field{year}{2007}
       \verb{urlraw}
-      \verb https://api.semanticscholar.org/CorpusID:14967108
+      \verb https://digitalcommons.unl.edu/cgi/viewcontent.cgi?article=1082&context=csetechreports
       \endverb
       \verb{url}
-      \verb https://api.semanticscholar.org/CorpusID:14967108
+      \verb https://digitalcommons.unl.edu/cgi/viewcontent.cgi?article=1082&context=csetechreports
       \endverb
     \endentry
     \entry{Goh2013}{inproceedings}{}
@@ -739,10 +739,10 @@
       \field{title}{A comparative study of tree-based and mesh-based overlay P2P media streaming}
       \field{year}{2013}
       \verb{urlraw}
-      \verb https://api.semanticscholar.org/CorpusID:13803281
+      \verb https://gvpress.com/journals/IJMUE/vol8_no4/10.pdf
       \endverb
       \verb{url}
-      \verb https://api.semanticscholar.org/CorpusID:13803281
+      \verb https://gvpress.com/journals/IJMUE/vol8_no4/10.pdf
       \endverb
     \endentry
     \entry{Guo2008}{inbook}{}
@@ -792,6 +792,48 @@
       \verb 10.1007/978-3-540-79549-0_38
       \endverb
     \endentry
+    \entry{Hei2008}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=79d28783e6c40a34d0b431269c1da585}{%
+           family={Hei},
+           familyi={H\bibinitperiod},
+           given={Xiaojun},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=bc6c6f66f139beef784a50d9f1485019}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=1,uniquepart=given,hash=e578fddb1d7974001b0f866a9e3e13f4}{%
+           family={Ross},
+           familyi={R\bibinitperiod},
+           given={Keith},
+           giveni={K\bibinitperiod},
+           givenun=1}}%
+      }
+      \strng{namehash}{e06f4e8a56168d79411710dfec08342e}
+      \strng{fullhash}{e06f4e8a56168d79411710dfec08342e}
+      \strng{bibnamehash}{e06f4e8a56168d79411710dfec08342e}
+      \strng{authorbibnamehash}{e06f4e8a56168d79411710dfec08342e}
+      \strng{authornamehash}{e06f4e8a56168d79411710dfec08342e}
+      \strng{authorfullhash}{e06f4e8a56168d79411710dfec08342e}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Understanding the Start-up Delay of Mesh-pull Peer-to-Peer Live Streaming Systems}
+      \field{year}{2008}
+      \verb{urlraw}
+      \verb https://eeweb.engineering.nyu.edu/faculty/yongliu/docs/xiaojun_delay.pdf
+      \endverb
+      \verb{url}
+      \verb https://eeweb.engineering.nyu.edu/faculty/yongliu/docs/xiaojun_delay.pdf
+      \endverb
+    \endentry
     \entry{Hei2007}{article}{}
       \name{author}{3}{}{%
         {{un=0,uniquepart=base,hash=79d28783e6c40a34d0b431269c1da585}{%
@@ -806,12 +848,12 @@
            given={Yong},
            giveni={Y\bibinitperiod},
            givenun=0}}%
-        {{un=0,uniquepart=base,hash=c2e119f22d4ef9df7cfb63c82975b459}{%
+        {{un=1,uniquepart=given,hash=c2e119f22d4ef9df7cfb63c82975b459}{%
            family={Ross},
            familyi={R\bibinitperiod},
            given={Keith\bibnamedelima W.},
            giveni={K\bibinitperiod\bibinitdelim W\bibinitperiod},
-           givenun=0}}%
+           givenun=1}}%
       }
       \strng{namehash}{cb29f4aecc51d0ee0bf0109d538dd727}
       \strng{fullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
@@ -852,12 +894,12 @@
            given={Yong},
            giveni={Y\bibinitperiod},
            givenun=0}}%
-        {{un=0,uniquepart=base,hash=c2e119f22d4ef9df7cfb63c82975b459}{%
+        {{un=1,uniquepart=given,hash=c2e119f22d4ef9df7cfb63c82975b459}{%
            family={Ross},
            familyi={R\bibinitperiod},
            given={Keith\bibnamedelima W.},
            giveni={K\bibinitperiod\bibinitdelim W\bibinitperiod},
-           givenun=0}}%
+           givenun=1}}%
       }
       \strng{namehash}{cb29f4aecc51d0ee0bf0109d538dd727}
       \strng{fullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
@@ -868,7 +910,6 @@
       \field{extraname}{2}
       \field{sortinit}{H}
       \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
-      \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
@@ -884,50 +925,6 @@
       \verb 10.1109/MCOM.2008.4473088
       \endverb
       \keyw{IPTV;Streaming media;IP networks;Telecommunication traffic;Spine;Research and development;Costs;Measurement techniques;Monitoring;Service oriented architecture}
-    \endentry
-    \entry{Hei2008}{inproceedings}{}
-      \name{author}{3}{}{%
-        {{un=0,uniquepart=base,hash=79d28783e6c40a34d0b431269c1da585}{%
-           family={Hei},
-           familyi={H\bibinitperiod},
-           given={Xiaojun},
-           giveni={X\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=bc6c6f66f139beef784a50d9f1485019}{%
-           family={Liu},
-           familyi={L\bibinitperiod},
-           given={Yong},
-           giveni={Y\bibinitperiod},
-           givenun=0}}%
-        {{un=0,uniquepart=base,hash=c2e119f22d4ef9df7cfb63c82975b459}{%
-           family={Ross},
-           familyi={R\bibinitperiod},
-           given={Keith\bibnamedelima W.},
-           giveni={K\bibinitperiod\bibinitdelim W\bibinitperiod},
-           givenun=0}}%
-      }
-      \strng{namehash}{cb29f4aecc51d0ee0bf0109d538dd727}
-      \strng{fullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
-      \strng{bibnamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
-      \strng{authorbibnamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
-      \strng{authornamehash}{cb29f4aecc51d0ee0bf0109d538dd727}
-      \strng{authorfullhash}{cb29f4aecc51d0ee0bf0109d538dd727}
-      \field{extraname}{3}
-      \field{sortinit}{H}
-      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
-      \field{extradate}{2}
-      \field{extradatescope}{labelyear}
-      \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Understanding the Start-up Delay of Mesh-pull Peer-to-Peer Live Streaming Systems}
-      \field{year}{2008}
-      \verb{urlraw}
-      \verb https://api.semanticscholar.org/CorpusID:12141682
-      \endverb
-      \verb{url}
-      \verb https://api.semanticscholar.org/CorpusID:12141682
-      \endverb
     \endentry
     \entry{Ho2013}{inproceedings}{}
       \name{author}{4}{}{%
@@ -1715,10 +1712,10 @@
       \field{title}{Layer Allocation Algorithms in Layered Peer-to-Peer Streaming}
       \field{year}{2004}
       \verb{urlraw}
-      \verb https://api.semanticscholar.org/CorpusID:16884016
+      \verb https://link.springer.com/chapter/10.1007/978-3-540-30141-7_25
       \endverb
       \verb{url}
-      \verb https://api.semanticscholar.org/CorpusID:16884016
+      \verb https://link.springer.com/chapter/10.1007/978-3-540-30141-7_25
       \endverb
     \endentry
     \entry{LoCigno2008}{inproceedings}{}
@@ -1838,10 +1835,10 @@
       \field{title}{Understanding mesh-based peer-to-peer streaming}
       \field{year}{2006}
       \verb{urlraw}
-      \verb https://api.semanticscholar.org/CorpusID:1728223
+      \verb https://dl.acm.org/doi/10.1145/1378191.1378204
       \endverb
       \verb{url}
-      \verb https://api.semanticscholar.org/CorpusID:1728223
+      \verb https://dl.acm.org/doi/10.1145/1378191.1378204
       \endverb
     \endentry
     \entry{Magharei2014}{article}{}
@@ -2502,10 +2499,10 @@
       \field{title}{Towards a Better Understanding of Churn in Peer-to-Peer Networks}
       \field{year}{2004}
       \verb{urlraw}
-      \verb https://api.semanticscholar.org/CorpusID:18754274
+      \verb https://www.cs.uoregon.edu/Reports/TR-2004-006.pdf
       \endverb
       \verb{url}
-      \verb https://api.semanticscholar.org/CorpusID:18754274
+      \verb https://www.cs.uoregon.edu/Reports/TR-2004-006.pdf
       \endverb
     \endentry
     \entry{UUSee2007}{online}{}
@@ -2999,10 +2996,10 @@
       \field{pages}{222\bibrangedash 231}
       \range{pages}{10}
       \verb{urlraw}
-      \verb https://api.semanticscholar.org/CorpusID:11798656
+      \verb https://www.jocm.us/index.php?m=content&c=index&a=show&catid=39&id=89
       \endverb
       \verb{url}
-      \verb https://api.semanticscholar.org/CorpusID:11798656
+      \verb https://www.jocm.us/index.php?m=content&c=index&a=show&catid=39&id=89
       \endverb
     \endentry
     \entry{Zink2004}{inproceedings}{}

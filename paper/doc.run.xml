@@ -41,19 +41,18 @@
   >
 ]>
 <requests version="1.0">
-  <internal package="biblatex" priority="9" active="1">
+  <internal package="biblatex" priority="9" active="0">
     <generic>latex</generic>
     <provides type="dynamic">
-      <file>doc.aux</file>
-      <file>doc-blx.bib</file>
+      <file>doc.bcf</file>
     </provides>
     <requires type="dynamic">
       <file>doc.bbl</file>
     </requires>
     <requires type="static">
       <file>blx-dm.def</file>
+      <file>blx-unicode.def</file>
       <file>blx-compat.def</file>
-      <file>blx-bibtex.def</file>
       <file>biblatex.def</file>
       <file>chicago-authordate.bbx</file>
       <file>chicago-authordate-trad.bbx</file>
@@ -65,15 +64,14 @@
       <file>cms-american.lbx</file>
     </requires>
   </internal>
-  <external package="biblatex" priority="5" active="1">
-    <generic>bibtex</generic>
+  <external package="biblatex" priority="5" active="0">
+    <generic>biber</generic>
     <cmdline>
-      <binary>bibtex</binary>
-      <option>-min-crossrefs 2</option>
+      <binary>biber</binary>
       <infile>doc</infile>
     </cmdline>
     <input>
-      <file>doc.aux</file>
+      <file>doc.bcf</file>
     </input>
     <output>
       <file>doc.bbl</file>
@@ -82,15 +80,10 @@
       <file>doc.bbl</file>
     </provides>
     <requires type="dynamic">
-      <file>doc.aux</file>
-      <file>doc-blx.bib</file>
+      <file>doc.bcf</file>
     </requires>
     <requires type="editable">
       <file>jabref.bib</file>
-      <file>cites.bib</file>
-    </requires>
-    <requires type="static">
-      <file>biblatex.bst</file>
     </requires>
   </external>
 </requests>
